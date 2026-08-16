@@ -228,7 +228,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-16b";
+const UI_BUILD = "ui-2026-08-16c";
 const $ = function (id) { return document.getElementById(id); };
 let rows = [];
 let cur  = null;
@@ -326,7 +326,7 @@ async function openDetail(rowNo) {
     $("dPreview").textContent = d.preview;
 
     setStatus(null);
-    disarm(true);
+    disarm();
     $("listView").classList.add("hide");
     $("detailView").classList.remove("hide");
     window.scrollTo(0, 0);
@@ -398,75 +398,61 @@ async function skip() {
   }
 }
 
-/* ---------- 送信（2段階） ---------- */
-const ARM_SECONDS = 30;               // 待ち時間。短いと押す前に解除されます
-let armed = false, armTimer = null, armTick = null;
-
-function disarm(quiet) {
-  const wasArmed = armed;
-  armed = false;
-  clearTimeout(armTimer);
-  clearInterval(armTick);
+/* ---------- 送信 ----------
+ *  以前は「2回押す」方式でしたが、通信に1〜2秒かかるため
+ *  1回目の保存中にもう一度押すと、送信段階に進めませんでした。
+ *  確認ダイアログ方式に変更し、押した瞬間にボタンを止めます。
+ */
+function disarm() {                     // 残っている呼び出し先（何もしません）
   const b = $("bSend");
-  b.textContent = "送信する";
-  b.classList.remove("armed");
-  b.disabled = false;
-  if (wasArmed && !quiet) {
-    setStatus("work", "時間が過ぎたので送信を取り消しました。まだ送っていません。\nもう一度「送信する」から操作してください。");
-  }
-}
-
-function arm() {
-  armed = true;
-  let left = ARM_SECONDS;
-  const b = $("bSend");
-  const word = isTest ? "テスト送信する" : "本当に送信する";
-  b.classList.add("armed");
-  b.textContent = word + "（あと" + left + "秒）";
-
-  armTick = setInterval(function () {
-    left--;
-    if (left > 0 && armed) b.textContent = word + "（あと" + left + "秒）";
-  }, 1000);
-
-  armTimer = setTimeout(function () { disarm(false); }, ARM_SECONDS * 1000);
+  if (b) { b.disabled = false; b.textContent = "送信する"; b.classList.remove("armed"); }
 }
 
 async function send() {
   if (!cur) return;
-
-  if (!armed) {
-    const ok = await save(true);      // 送信前に必ず保存
-    if (!ok) return;
-    arm();
-    setStatus("work", (isTest
-      ? "テスト送信です。お客様には届きません。宛先はテスト用アドレスです。"
-      : "★本番送信です。" + cur.from + " に実際に届きます。")
-      + "\n送るには、赤いボタンをもう一度押してください（" + ARM_SECONDS + "秒以内）。");
-    return;
-  }
-
-  clearTimeout(armTimer);
-  clearInterval(armTick);
   const b = $("bSend");
+  if (b.disabled) return;               // 連打を無視します
+
   b.disabled = true;
-  b.textContent = "送信しています…";
-  setStatus("work", "送信しています…");
+  b.textContent = "準備しています…";
 
   try {
-    const r = await api({ mode: "send", row: cur.rowNo });
-    if (!r.ok) {
-      setStatus("bad", "送信できませんでした\n理由：" + (r.error || "（理由が返っていません）"));
-      disarm(true);
+    const ok = await save(true);        // 送信前に必ず保存
+    if (!ok) return;
+
+    const q = isTest
+      ? "テスト送信します。\n\n宛先はテスト用アドレスです。\nお客様には届きません。\n\nよろしいですか？"
+      : "★本番送信します。\n\n" + cur.from + " に実際に届きます。\n\nよろしいですか？";
+
+    if (!confirm(q)) {
+      setStatus("work", "送信を取りやめました。まだ送っていません。");
       return;
     }
+
+    b.textContent = "送信しています…";
+    b.classList.add("armed");
+    setStatus("work", "送信しています…（1〜2秒かかります）");
+
+    const r = await api({ mode: "send", row: cur.rowNo });
+
+    if (!r || !r.ok) {
+      setStatus("bad", "送信できませんでした\n理由：" +
+        ((r && r.error) ? r.error : JSON.stringify(r)));
+      return;
+    }
+
     setStatus("ok", r.test
-      ? "テスト送信しました。\n宛先：" + r.to + "\n（お客様には届いていません。台帳も更新していません）"
+      ? "テスト送信しました。\n宛先：" + r.to +
+        "\n（お客様には届いていません。台帳も更新していません）"
       : "送信しました。\n宛先：" + r.to + "\n台帳を「送信済」に更新しました。");
     setTimeout(backToList, 2600);
+
   } catch (e) {
     setStatus("bad", "送信できませんでした\n理由：" + e.message);
-    disarm(true);
+  } finally {
+    b.disabled = false;
+    b.textContent = "送信する";
+    b.classList.remove("armed");
   }
 }
 
@@ -475,7 +461,7 @@ $("back").addEventListener("click", backToList);
 $("bSave").addEventListener("click", function () { save(false); });
 $("bSkip").addEventListener("click", skip);
 $("bSend").addEventListener("click", send);
-$("dDraft").addEventListener("input", function () { disarm(true); });
+
 
 loadList();
 </script>
