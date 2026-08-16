@@ -110,7 +110,7 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 
 /* ---- 通知 ---- */
 .toast{
-  position:fixed;left:50%;bottom:22px;transform:translateX(-50%);
+  position:fixed;left:50%;top:calc(10px + env(safe-area-inset-top));transform:translateX(-50%);
   background:var(--ink);color:#fff;font-size:14px;
   padding:11px 20px;border-radius:999px;z-index:50;
   max-width:90vw;text-align:center;
@@ -118,6 +118,19 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 }
 .toast.on{opacity:1}
 .toast.bad{background:var(--stop)}
+
+/* ---- 結果表示（消えません） ---- */
+.status{
+  margin-top:14px;padding:11px 14px;border-radius:var(--radius);
+  font-size:14px;line-height:1.65;border:1px solid;
+  white-space:pre-wrap;word-break:break-word;
+}
+.status .stamp{display:block;font-size:12px;opacity:.75;margin-top:3px}
+.status.ok{background:var(--send-2);color:var(--send);border-color:#bcd8cd}
+.status.bad{background:var(--stop-2);color:var(--stop);border-color:#e8cabe}
+.status.work{background:#eef1f4;color:var(--ink-2);border-color:var(--line)}
+
+.buildtag{font-size:11px;color:var(--ink-2);opacity:.7;letter-spacing:.03em}
 
 .empty{text-align:center;color:var(--ink-2);padding:50px 20px;font-size:14px}
 .hide{display:none}
@@ -133,6 +146,7 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       <span class="badge" id="mode">確認中</span>
     </div>
     <div class="count" id="count"></div>
+    <div class="buildtag" id="buildtag"></div>
   </header>
 
   <!-- 一覧 -->
@@ -163,6 +177,8 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       <h2>実際に送られる形</h2>
       <div class="box" id="dPreview"></div>
     </div>
+
+    <div class="status hide" id="status"></div>
 
     <div class="acts">
       <button class="act" id="bSave">下書きを保存</button>
@@ -212,6 +228,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
+const UI_BUILD = "ui-2026-08-16b";
 const $ = function (id) { return document.getElementById(id); };
 let rows = [];
 let cur  = null;
@@ -223,6 +240,21 @@ function toast(msg, bad) {
   t.className = "toast on" + (bad ? " bad" : "");
   clearTimeout(toast._t);
   toast._t = setTimeout(function () { t.className = "toast"; }, 3200);
+}
+
+/* 結果を画面に残す。トーストと違い、自動では消えません */
+function setStatus(kind, msg) {
+  const el = $("status");
+  if (!kind) { el.className = "status hide"; el.textContent = ""; return; }
+  const d = new Date();
+  const hh = ("0" + d.getHours()).slice(-2), mm = ("0" + d.getMinutes()).slice(-2),
+        ss = ("0" + d.getSeconds()).slice(-2);
+  el.className = "status " + kind;
+  el.textContent = msg;
+  const t = document.createElement("span");
+  t.className = "stamp";
+  t.textContent = hh + ":" + mm + ":" + ss;
+  el.appendChild(t);
 }
 
 function esc(s) {
@@ -242,6 +274,7 @@ async function loadList() {
 
     $("mode").textContent = isTest ? "テスト送信中" : "本番送信";
     $("mode").className   = isTest ? "badge" : "badge live";
+    $("buildtag").textContent = "画面 " + UI_BUILD + " ／ API " + (r.build || "?");
     $("count").textContent = rows.length
       ? "承認を待っている案件が " + rows.length + " 件あります"
       : "";
@@ -292,7 +325,8 @@ async function openDetail(rowNo) {
     $("dDraft").value         = d.draft;
     $("dPreview").textContent = d.preview;
 
-    disarm();
+    setStatus(null);
+    disarm(true);
     $("listView").classList.add("hide");
     $("detailView").classList.remove("hide");
     window.scrollTo(0, 0);
@@ -311,47 +345,91 @@ function backToList() {
 async function save(silent) {
   if (!cur) return false;
   const text = $("dDraft").value.trim();
-  if (!text) { toast("本文が空です", true); return false; }
+  if (!text) { setStatus("bad", "本文が空です。保存しませんでした。"); return false; }
+
+  const b = $("bSave");
+  const label = b.textContent;
+  b.disabled = true;
+  b.textContent = "保存しています…";
+  setStatus("work", silent ? "送信の前に下書きを保存しています…" : "下書きを保存しています…");
 
   try {
     const r = await api({ mode: "save", row: cur.rowNo, text: text });
-    if (!r.ok) { toast(r.error, true); return false; }
+    if (!r.ok) {
+      setStatus("bad", "保存できませんでした\n理由：" + (r.error || "（理由が返っていません）"));
+      return false;
+    }
     cur.draft = text;
-    if (!silent) toast("下書きを保存しました");
+    setStatus("ok", silent
+      ? "下書きを保存しました。つづけて送信できます。"
+      : "下書きを保存しました（" + cur.rowNo + "行目）");
     return true;
-  } catch (e) { toast(e.message, true); return false; }
+  } catch (e) {
+    setStatus("bad", "保存できませんでした\n理由：" + e.message);
+    return false;
+  } finally {
+    b.disabled = false;
+    b.textContent = label;
+  }
 }
 
 /* ---------- 対応しない ---------- */
 async function skip() {
   if (!cur) return;
   if (!confirm("この案件に返信しません。よろしいですか？")) return;
+
+  const b = $("bSkip");
+  b.disabled = true;
+  b.textContent = "記録しています…";
+  setStatus("work", "対応しないものとして記録しています…");
+
   try {
     const r = await api({ mode: "skip", row: cur.rowNo });
-    if (!r.ok) { toast(r.error, true); return; }
-    toast("対応しないものとして記録しました");
-    setTimeout(backToList, 700);
-  } catch (e) { toast(e.message, true); }
+    if (!r.ok) {
+      setStatus("bad", "記録できませんでした\n理由：" + (r.error || "（理由が返っていません）"));
+      b.disabled = false; b.textContent = "対応しない";
+      return;
+    }
+    setStatus("ok", "対応しないものとして記録しました。一覧にもどります。");
+    setTimeout(backToList, 1400);
+  } catch (e) {
+    setStatus("bad", "記録できませんでした\n理由：" + e.message);
+    b.disabled = false; b.textContent = "対応しない";
+  }
 }
 
 /* ---------- 送信（2段階） ---------- */
-let armed = false, armTimer = null;
+const ARM_SECONDS = 30;               // 待ち時間。短いと押す前に解除されます
+let armed = false, armTimer = null, armTick = null;
 
-function disarm() {
+function disarm(quiet) {
+  const wasArmed = armed;
   armed = false;
   clearTimeout(armTimer);
+  clearInterval(armTick);
   const b = $("bSend");
   b.textContent = "送信する";
   b.classList.remove("armed");
   b.disabled = false;
+  if (wasArmed && !quiet) {
+    setStatus("work", "時間が過ぎたので送信を取り消しました。まだ送っていません。\nもう一度「送信する」から操作してください。");
+  }
 }
 
 function arm() {
   armed = true;
+  let left = ARM_SECONDS;
   const b = $("bSend");
-  b.textContent = isTest ? "テスト送信する（もう一度）" : "本当に送信する";
+  const word = isTest ? "テスト送信する" : "本当に送信する";
   b.classList.add("armed");
-  armTimer = setTimeout(disarm, 6000);
+  b.textContent = word + "（あと" + left + "秒）";
+
+  armTick = setInterval(function () {
+    left--;
+    if (left > 0 && armed) b.textContent = word + "（あと" + left + "秒）";
+  }, 1000);
+
+  armTimer = setTimeout(function () { disarm(false); }, ARM_SECONDS * 1000);
 }
 
 async function send() {
@@ -361,24 +439,34 @@ async function send() {
     const ok = await save(true);      // 送信前に必ず保存
     if (!ok) return;
     arm();
-    toast(isTest
-      ? "テスト送信です。お客様には届きません"
-      : "この内容で " + cur.from + " に送ります");
+    setStatus("work", (isTest
+      ? "テスト送信です。お客様には届きません。宛先はテスト用アドレスです。"
+      : "★本番送信です。" + cur.from + " に実際に届きます。")
+      + "\n送るには、赤いボタンをもう一度押してください（" + ARM_SECONDS + "秒以内）。");
     return;
   }
 
   clearTimeout(armTimer);
-  $("bSend").disabled = true;
-  $("bSend").textContent = "送信しています…";
+  clearInterval(armTick);
+  const b = $("bSend");
+  b.disabled = true;
+  b.textContent = "送信しています…";
+  setStatus("work", "送信しています…");
 
   try {
     const r = await api({ mode: "send", row: cur.rowNo });
-    if (!r.ok) { toast(r.error, true); disarm(); return; }
-    toast(r.test ? "テスト送信しました（" + r.to + "）" : "送信しました");
-    setTimeout(backToList, 1200);
+    if (!r.ok) {
+      setStatus("bad", "送信できませんでした\n理由：" + (r.error || "（理由が返っていません）"));
+      disarm(true);
+      return;
+    }
+    setStatus("ok", r.test
+      ? "テスト送信しました。\n宛先：" + r.to + "\n（お客様には届いていません。台帳も更新していません）"
+      : "送信しました。\n宛先：" + r.to + "\n台帳を「送信済」に更新しました。");
+    setTimeout(backToList, 2600);
   } catch (e) {
-    toast(e.message, true);
-    disarm();
+    setStatus("bad", "送信できませんでした\n理由：" + e.message);
+    disarm(true);
   }
 }
 
@@ -387,7 +475,7 @@ $("back").addEventListener("click", backToList);
 $("bSave").addEventListener("click", function () { save(false); });
 $("bSkip").addEventListener("click", skip);
 $("bSend").addEventListener("click", send);
-$("dDraft").addEventListener("input", disarm);
+$("dDraft").addEventListener("input", function () { disarm(true); });
 
 loadList();
 </script>
