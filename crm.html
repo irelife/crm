@@ -135,6 +135,25 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 .empty{text-align:center;color:var(--ink-2);padding:50px 20px;font-size:14px}
 .hide{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+/* ---- 添付ファイル ---- */
+.att-note{font-weight:400;font-size:12px;color:var(--ink-2);margin-left:8px}
+.att{display:flex;flex-direction:column;gap:10px}
+.att-pick{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
+  padding:9px 16px;border:1px solid var(--line,#d8dee6);border-radius:8px;
+  background:#fff;font-size:13px;cursor:pointer;user-select:none}
+.att-pick:hover{background:#f6f8fa}
+.att-pick::before{content:"＋";font-size:15px;line-height:1}
+.att-pick.busy{opacity:.5;pointer-events:none}
+.att-list{display:flex;flex-direction:column;gap:6px}
+.att-row{display:flex;align-items:center;gap:10px;padding:9px 12px;
+  border:1px solid var(--line,#d8dee6);border-radius:8px;background:#fbfcfd;font-size:13px}
+.att-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.att-row .sz{color:var(--ink-2);font-size:12px;flex:none}
+.att-row .rm{flex:none;border:none;background:transparent;color:#b0453a;
+  font-size:13px;cursor:pointer;padding:2px 4px}
+.att-row .rm:hover{text-decoration:underline}
+.att-empty{color:var(--ink-2);font-size:12.5px}
 </style>
 </head>
 <body>
@@ -171,6 +190,15 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
     <div class="sec">
       <h2>返信の本文（ここを直せます）</h2>
       <textarea id="dDraft" spellcheck="false"></textarea>
+    </div>
+
+    <div class="sec">
+      <h2>添付ファイル<span class="att-note">請求書・領収書など。2件まで</span></h2>
+      <div class="att">
+        <label class="att-pick" for="dFile">ファイルを選ぶ</label>
+        <input type="file" id="dFile" accept=".pdf,application/pdf,image/*" hidden>
+        <div class="att-list" id="dFiles"></div>
+      </div>
     </div>
 
     <div class="sec">
@@ -228,7 +256,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-16c";
+const UI_BUILD = "ui-2026-08-18a";
 const $ = function (id) { return document.getElementById(id); };
 let rows = [];
 let cur  = null;
@@ -330,6 +358,7 @@ async function openDetail(rowNo) {
     $("listView").classList.add("hide");
     $("detailView").classList.remove("hide");
     window.scrollTo(0, 0);
+    loadAttach();
 
   } catch (e) { toast(e.message, true); }
 }
@@ -420,9 +449,13 @@ async function send() {
     const ok = await save(true);        // 送信前に必ず保存
     if (!ok) return;
 
+    const att = attFiles.length
+      ? "\n添付：" + attFiles.map(function (f) { return f.name; }).join("、") + "\n"
+      : "\n添付：なし\n";
+
     const q = isTest
-      ? "テスト送信します。\n\n宛先はテスト用アドレスです。\nお客様には届きません。\n\nよろしいですか？"
-      : "★本番送信します。\n\n" + cur.from + " に実際に届きます。\n\nよろしいですか？";
+      ? "テスト送信します。\n\n宛先はテスト用アドレスです。\nお客様には届きません。\n" + att + "\nよろしいですか？"
+      : "★本番送信します。\n\n" + cur.from + " に実際に届きます。\n" + att + "\nよろしいですか？";
 
     if (!confirm(q)) {
       setStatus("work", "送信を取りやめました。まだ送っていません。");
@@ -456,7 +489,110 @@ async function send() {
   }
 }
 
+/* ============================================================
+ *  添付ファイル
+ *
+ *  ファイルの中身はJSONPでは送れない（URLに載りきらない）ため、
+ *  ここだけ POST で送ります。読み書きの他の処理はJSONPのままです。
+ * ============================================================ */
+function apiPost(params) {
+  return fetch(API, {
+    method: "POST",
+    headers: { "Content-Type": "text/plain;charset=utf-8" },
+    body: JSON.stringify(params),
+    redirect: "follow",
+  }).then(function (r) { return r.text(); })
+    .then(function (t) {
+      try { return JSON.parse(t); }
+      catch (e) { throw new Error("応答が読み取れませんでした"); }
+    });
+}
+
+let attFiles = [];
+
+function drawAttach() {
+  const box = $("dFiles");
+  if (!attFiles.length) {
+    box.innerHTML = '<div class="att-empty">添付なしで送信します</div>';
+    return;
+  }
+  box.innerHTML = attFiles.map(function (f) {
+    const kb = Math.max(1, Math.round(f.size / 1024));
+    return '<div class="att-row" data-id="' + esc(f.id) + '">'
+         +   '<span class="nm">' + esc(f.name) + '</span>'
+         +   '<span class="sz">' + kb + ' KB</span>'
+         +   '<button class="rm" type="button">はずす</button>'
+         + '</div>';
+  }).join("");
+
+  Array.prototype.forEach.call(box.querySelectorAll(".rm"), function (b) {
+    b.addEventListener("click", function () {
+      const id = b.parentNode.dataset.id;
+      dropAttach(id);
+    });
+  });
+}
+
+async function loadAttach() {
+  attFiles = [];
+  drawAttach();
+  if (!cur) return;
+  try {
+    const r = await api({ mode: "attachList", row: cur.rowNo });
+    if (r && r.ok) { attFiles = r.files || []; drawAttach(); }
+  } catch (e) { /* 一覧が取れなくても、送信そのものは止めない */ }
+}
+
+async function pickAttach(file) {
+  if (!cur || !file) return;
+  if (attFiles.length >= 2) { setStatus("bad", "添付は2件までです"); return; }
+  if (file.size > 5000000) { setStatus("bad", "ファイルが大きすぎます（約5MBまで）"); return; }
+
+  const lab = document.querySelector(".att-pick");
+  lab.classList.add("busy");
+  setStatus("work", "ファイルを読み込んでいます…");
+
+  try {
+    const dataUrl = await new Promise(function (resolve, reject) {
+      const rd = new FileReader();
+      rd.onload  = function () { resolve(rd.result); };
+      rd.onerror = function () { reject(new Error("ファイルを読めませんでした")); };
+      rd.readAsDataURL(file);
+    });
+
+    setStatus("work", "添付を預けています…");
+    const r = await apiPost({ mode: "attach", row: cur.rowNo, name: file.name, data: dataUrl });
+
+    if (!r || !r.ok) {
+      setStatus("bad", "添付できませんでした\n理由：" + ((r && r.error) || "（理由が返っていません）"));
+      return;
+    }
+    attFiles = r.files || [];
+    drawAttach();
+    setStatus("ok", "添付しました：" + file.name);
+
+  } catch (e) {
+    setStatus("bad", "添付できませんでした\n理由：" + e.message);
+  } finally {
+    lab.classList.remove("busy");
+    $("dFile").value = "";
+  }
+}
+
+async function dropAttach(id) {
+  if (!cur) return;
+  try {
+    const r = await api({ mode: "attachDrop", row: cur.rowNo, id: id });
+    if (r && r.ok) { attFiles = r.files || []; drawAttach(); setStatus("ok", "添付をはずしました"); }
+    else setStatus("bad", "はずせませんでした");
+  } catch (e) { setStatus("bad", "はずせませんでした\n理由：" + e.message); }
+}
+
 /* ---------- 起動 ---------- */
+$("dFile").addEventListener("change", function (e) {
+  const f = e.target.files && e.target.files[0];
+  if (f) pickAttach(f);
+});
 $("back").addEventListener("click", backToList);
 $("bSave").addEventListener("click", function () { save(false); });
 $("bSkip").addEventListener("click", skip);
