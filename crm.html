@@ -380,7 +380,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19a";
+const UI_BUILD = "ui-2026-08-19b";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -503,6 +503,8 @@ async function drawEigyou() {
         if (r && r.ok) {
           card.style.opacity = ".4";
           b.textContent = "戻しました";
+          const now = Number($("nEigyou").textContent);
+          if (!isNaN(now) && now > 0) $("nEigyou").textContent = now - 1;
           toast("承認待ちに戻しました。返信案ができるまで数分かかります。");
         } else {
           b.disabled = false; b.textContent = "営業ではない（承認待ちに戻す）";
@@ -560,10 +562,13 @@ async function loadList() {
 
     $("mode").textContent = isTest ? "テスト送信中" : "本番送信";
     $("mode").className   = isTest ? "badge" : "badge live";
-    $("buildtag").textContent = "画面 " + UI_BUILD + " ／ API " + (r.build || "?");
+    $("buildtag").textContent = "画面 " + UI_BUILD
+      + " ／ API "  + (r.build || "?")
+      + " ／ 一覧 " + (r.listBuild || "?");
 
     $("nOpen").textContent = listOpen.length;
     $("nDone").textContent = listDone.length;
+    $("nEigyou").textContent = (r.nEigyou != null) ? r.nEigyou : "";
 
     const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
     $("count").textContent = listOpen.length
