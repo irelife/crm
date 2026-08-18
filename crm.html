@@ -187,15 +187,32 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
   background:#eef1f5;color:var(--ink-2)}
 .tab.on .tab-n{background:#ffffff2e;color:#fff}
 
-/* ---- 経過日数のバッジ ---- */
-.days{font-size:12px;font-weight:700;padding:2px 8px;border-radius:9px;white-space:nowrap;
-  background:#eef1f5;color:#5b6773}
-.days.warn{background:#fdf3e0;color:#8a5a12}
-.days.late{background:#fbe9e6;color:#a8442a}
-.card.late{border-left:4px solid #c05a3d}
-.card.warn{border-left:4px solid #d9a441}
-.card.done{opacity:.62}
-.sent{font-size:12px;color:var(--ink-2);white-space:nowrap}
+/* ---- 経過日数と、カードの色分け ----
+   PIVOTの契約カードと同じように、カード全体を淡く塗ります。
+   ぱっと見て「急ぎがどれか」が分かるようにするためです。 */
+.days{font-size:12px;font-weight:700;padding:2px 9px;border-radius:9px;white-space:nowrap}
+
+/* 当日〜1日：おだやかな緑 */
+.card.fresh{background:#f2faf5;border-color:#c6e6d3}
+.card.fresh:hover,.card.fresh:focus-visible{border-color:#9fd4b6}
+.days.fresh{background:#dff2e6;color:#2f6f4f}
+
+/* 2〜3日：黄色 */
+.card.warn{background:#fdf8ec;border-color:#eeddb4}
+.card.warn:hover,.card.warn:focus-visible{border-color:#e2c98a}
+.days.warn{background:#f7e9c6;color:#8a5a12}
+
+/* 4日以上：赤 */
+.card.late{background:#fdf2f0;border-color:#f0cec6}
+.card.late:hover,.card.late:focus-visible{border-color:#e3ab9d}
+.days.late{background:#f8dcd5;color:#a8442a}
+.card.late .bldg{color:#8f3a24}
+
+/* 完了：うすいグレー */
+.card.done{background:#f7f8fa;border-color:#e4e8ed;opacity:.78}
+.card.done .bldg{color:var(--ink-2);font-weight:500}
+.sent{font-size:12px;color:var(--ink-2);white-space:nowrap;
+  background:#eceff3;padding:2px 9px;border-radius:9px}
 </style>
 </head>
 <body>
@@ -307,7 +324,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18c";
+const UI_BUILD = "ui-2026-08-18d";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -351,10 +368,10 @@ function daysLabel(d) {
   return d + "日経過";
 }
 function daysClass(d) {
-  if (d === null || d === undefined) return "";
+  if (d === null || d === undefined) return "fresh";
   if (d >= 4) return "late";
   if (d >= 2) return "warn";
-  return "";
+  return "fresh";
 }
 
 function cardHtml(x, done) {
