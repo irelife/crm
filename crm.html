@@ -154,6 +154,28 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
   font-size:13px;cursor:pointer;padding:2px 4px}
 .att-row .rm:hover{text-decoration:underline}
 .att-empty{color:var(--ink-2);font-size:12.5px}
+
+/* ---- やりとりの履歴 ---- */
+.th-note{font-weight:400;font-size:12px;color:var(--ink-2);margin-left:8px}
+.thread{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;
+  padding:12px;border:1px solid var(--line,#d8dee6);border-radius:10px;background:#f4f6f9}
+.thread.empty-wrap{padding:14px;background:#fbfcfd}
+.th-row{display:flex;flex-direction:column;max-width:82%}
+.th-row.in{align-self:flex-start;align-items:flex-start}
+.th-row.out,.th-row.draft{align-self:flex-end;align-items:flex-end}
+.th-who{font-size:11px;color:var(--ink-2);margin:0 4px 3px}
+.th-bub{padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.75;
+  white-space:pre-wrap;word-break:break-word}
+.th-row.in .th-bub{background:#fff;border:1px solid var(--line,#d8dee6);
+  border-bottom-left-radius:3px}
+.th-row.out .th-bub{background:#1f6b53;color:#fff;border-bottom-right-radius:3px}
+.th-row.draft .th-bub{background:#fff;border:1px dashed #1f6b53;color:var(--ink);
+  border-bottom-right-radius:3px}
+.th-row.cur .th-bub{box-shadow:0 0 0 2px #a8442a44}
+.th-more{border:none;background:transparent;color:#5b6773;font-size:12px;
+  cursor:pointer;padding:2px 4px;align-self:flex-start;margin-top:2px}
+.th-more:hover{text-decoration:underline}
+.th-empty{color:var(--ink-2);font-size:12.5px}
 </style>
 </head>
 <body>
@@ -182,8 +204,13 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       <p class="meta" id="dSubject"></p>
     </div>
 
+    <div class="sec" id="dThreadSec">
+      <h2>やりとりの履歴<span class="th-note" id="dThreadNote"></span></h2>
+      <div class="thread" id="dThread"></div>
+    </div>
+
     <div class="sec">
-      <h2>お客様からの問い合わせ</h2>
+      <h2>今回の問い合わせ</h2>
       <div class="box quiet" id="dContent"></div>
     </div>
 
@@ -256,7 +283,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18a";
+const UI_BUILD = "ui-2026-08-18b";
 const $ = function (id) { return document.getElementById(id); };
 let rows = [];
 let cur  = null;
@@ -358,6 +385,7 @@ async function openDetail(rowNo) {
     $("listView").classList.add("hide");
     $("detailView").classList.remove("hide");
     window.scrollTo(0, 0);
+    loadThread();
     loadAttach();
 
   } catch (e) { toast(e.message, true); }
@@ -487,6 +515,61 @@ async function send() {
     b.textContent = "送信する";
     b.classList.remove("armed");
   }
+}
+
+/* ============================================================
+ *  やりとりの履歴
+ *
+ *  同じメールアドレスの案件を、古い順に並べます。
+ *  お客様からの分は左、こちらが送った分は右に出します。
+ * ============================================================ */
+function threadBubble(x) {
+  const who = x.side === "in" ? "お客様"
+            : (x.side === "out" ? "弊社" : "弊社（この案件の返信案）");
+  const long = x.text.length > 220;
+  const head = long ? x.text.slice(0, 220) + "…" : x.text;
+  return '<div class="th-row ' + x.side + (x.cur ? " cur" : "") + '">'
+       +   '<div class="th-who">' + esc(who) + (x.at ? "　" + esc(x.at) : "") + '</div>'
+       +   '<div class="th-bub" data-full="' + esc(x.text) + '">' + esc(head) + '</div>'
+       +   (long ? '<button class="th-more" type="button">全文を見る</button>' : "")
+       + '</div>';
+}
+
+async function loadThread() {
+  const box  = $("dThread");
+  const note = $("dThreadNote");
+  box.className = "thread empty-wrap";
+  box.innerHTML = '<div class="th-empty">読み込んでいます…</div>';
+  note.textContent = "";
+  if (!cur) return;
+
+  let r;
+  try { r = await api({ mode: "thread", row: cur.rowNo }); }
+  catch (e) {
+    box.innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
+    return;
+  }
+
+  const items = (r && r.items) || [];
+  if (items.length <= 1) {
+    box.className = "thread empty-wrap";
+    box.innerHTML = '<div class="th-empty">この方とのやりとりは、今回がはじめてです</div>';
+    return;
+  }
+
+  box.className = "thread";
+  note.textContent = esc(r.mail || "") + "　" + items.length + "件";
+  box.innerHTML = items.map(threadBubble).join("");
+
+  Array.prototype.forEach.call(box.querySelectorAll(".th-more"), function (b) {
+    b.addEventListener("click", function () {
+      const bub = b.previousElementSibling;
+      bub.textContent = bub.dataset.full;
+      b.remove();
+    });
+  });
+
+  box.scrollTop = box.scrollHeight;      // いちばん新しいところを見せる
 }
 
 /* ============================================================
