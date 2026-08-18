@@ -251,6 +251,21 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 .prev summary::before{content:"▸ ";color:#9aa5b1}
 .prev[open] summary::before{content:"▾ "}
 .prev[open] summary{margin-bottom:8px}
+
+/* ---- 営業タブ ---- */
+.card.eigyou{background:#f7f7f8;border-color:#e2e4e8}
+.card.eigyou .bldg{color:var(--ink-2);font-weight:500}
+.flag{font-size:12px;font-weight:700;padding:2px 9px;border-radius:9px;
+  background:#eceff3;color:#6b7683;white-space:nowrap}
+.flag.doubt{background:#fdf3e0;color:#8a5a12}
+.reason{font-size:11.5px;color:#8a929c;margin:6px 0 0;line-height:1.6}
+.unbtn{margin-top:9px;padding:7px 12px;border:1px solid var(--line,#d8dee6);
+  border-radius:8px;background:#fff;font-family:inherit;font-size:12.5px;
+  color:var(--ink);cursor:pointer}
+.unbtn:hover{background:#f2f5f8;border-color:#b9c2cc}
+.eigyou-note{font-size:12.5px;color:var(--ink-2);line-height:1.7;
+  padding:11px 13px;border:1px solid var(--line,#d8dee6);border-radius:9px;
+  background:#fbfcfd;margin-bottom:12px}
 </style>
 </head>
 <body>
@@ -271,6 +286,7 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
     <div class="tabs">
       <button class="tab on" id="tabOpen" type="button">未返信<span class="tab-n" id="nOpen"></span></button>
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
+      <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
     </div>
     <div id="list"></div>
   </section>
@@ -364,7 +380,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18f";
+const UI_BUILD = "ui-2026-08-19a";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -433,12 +449,82 @@ function cardHtml(x, done) {
        + '</div>';
 }
 
+function eigyouCard(x) {
+  const cls = x.flag === "疑い" ? "doubt" : "";
+  return '<div class="card eigyou" data-row="' + x.rowNo + '">'
+       +   '<div class="card-top">'
+       +     '<span class="flag ' + cls + '">' + esc(x.flag) + '</span>'
+       +     '<span class="bldg">' + esc(x.subject || "（件名なし）") + '</span>'
+       +   '</div>'
+       +   '<div class="card-top"><span class="time">' + esc(x.received) + '　'
+       +     esc(x.from) + '</span></div>'
+       +   '<p class="snip">' + esc(x.content) + '</p>'
+       +   (x.reason ? '<p class="reason">判定の根拠：' + esc(x.reason) + '</p>' : "")
+       +   '<button class="unbtn" type="button">営業ではない（承認待ちに戻す）</button>'
+       + '</div>';
+}
+
+async function drawEigyou() {
+  $("tabOpen").className   = "tab";
+  $("tabDone").className   = "tab";
+  $("tabEigyou").className = "tab on";
+
+  $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
+  let rows = [];
+  try {
+    const r = await api({ mode: "eigyou" });
+    rows = (r && r.rows) || [];
+    $("nEigyou").textContent = rows.length;
+  } catch (e) {
+    $("list").innerHTML = '<div class="empty">読み込めませんでした</div>';
+    return;
+  }
+
+  const note = '<div class="eigyou-note">'
+    + '営業メールとして自動で弾いたものです。承認画面には出ていません。<br>'
+    + 'お客様からの問い合わせが混ざっていたら、下のボタンで戻してください。'
+    + '戻すと返信案が作られ、承認待ちに並びます。</div>';
+
+  if (!rows.length) {
+    $("list").innerHTML = note + '<div class="empty">営業と判定したものはありません</div>';
+    return;
+  }
+
+  $("list").innerHTML = note + rows.map(eigyouCard).join("");
+
+  Array.prototype.forEach.call($("list").querySelectorAll(".unbtn"), function (b) {
+    b.addEventListener("click", async function () {
+      const card = b.closest(".card");
+      const n = Number(card.dataset.row);
+      if (!confirm("この案件を承認待ちに戻します。\n返信案が作られ、通常の流れに乗ります。\n\nよろしいですか？")) return;
+      b.disabled = true; b.textContent = "戻しています…";
+      try {
+        const r = await api({ mode: "unEigyou", row: n });
+        if (r && r.ok) {
+          card.style.opacity = ".4";
+          b.textContent = "戻しました";
+          toast("承認待ちに戻しました。返信案ができるまで数分かかります。");
+        } else {
+          b.disabled = false; b.textContent = "営業ではない（承認待ちに戻す）";
+          toast((r && r.error) || "戻せませんでした", true);
+        }
+      } catch (e) {
+        b.disabled = false; b.textContent = "営業ではない（承認待ちに戻す）";
+        toast(e.message, true);
+      }
+    });
+  });
+}
+
 function drawList() {
+  if (listTab === "eigyou") { drawEigyou(); return; }
+
   const rows = (listTab === "open") ? listOpen : listDone;
   const done = (listTab === "done");
 
-  $("tabOpen").className = "tab" + (done ? "" : " on");
-  $("tabDone").className = "tab" + (done ? " on" : "");
+  $("tabOpen").className   = "tab" + (done ? "" : " on");
+  $("tabDone").className   = "tab" + (done ? " on" : "");
+  $("tabEigyou").className = "tab";
 
   if (!rows.length) {
     $("list").innerHTML = '<div class="empty">'
@@ -862,6 +948,7 @@ async function dropAttach(id) {
 /* ---------- 起動 ---------- */
 $("tabOpen").addEventListener("click", function () { listTab = "open"; drawList(); });
 $("tabDone").addEventListener("click", function () { listTab = "done"; drawList(); });
+$("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
   if (f) pickAttach(f);
