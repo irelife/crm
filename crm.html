@@ -176,6 +176,26 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
   cursor:pointer;padding:2px 4px;align-self:flex-start;margin-top:2px}
 .th-more:hover{text-decoration:underline}
 .th-empty{color:var(--ink-2);font-size:12.5px}
+
+/* ---- 未返信／完了のタブ ---- */
+.tabs{display:flex;gap:6px;margin-bottom:12px}
+.tab{flex:1;padding:9px 10px;border:1px solid var(--line,#d8dee6);border-radius:9px;
+  background:#fff;font-family:inherit;font-size:13.5px;font-weight:600;color:var(--ink-2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.tab.on{background:var(--ink,#1b2430);border-color:var(--ink,#1b2430);color:#fff}
+.tab-n{font-size:12px;font-weight:700;padding:1px 7px;border-radius:9px;
+  background:#eef1f5;color:var(--ink-2)}
+.tab.on .tab-n{background:#ffffff2e;color:#fff}
+
+/* ---- 経過日数のバッジ ---- */
+.days{font-size:12px;font-weight:700;padding:2px 8px;border-radius:9px;white-space:nowrap;
+  background:#eef1f5;color:#5b6773}
+.days.warn{background:#fdf3e0;color:#8a5a12}
+.days.late{background:#fbe9e6;color:#a8442a}
+.card.late{border-left:4px solid #c05a3d}
+.card.warn{border-left:4px solid #d9a441}
+.card.done{opacity:.62}
+.sent{font-size:12px;color:var(--ink-2);white-space:nowrap}
 </style>
 </head>
 <body>
@@ -192,6 +212,10 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 
   <!-- 一覧 -->
   <section id="listView">
+    <div class="tabs">
+      <button class="tab on" id="tabOpen" type="button">未返信<span class="tab-n" id="nOpen"></span></button>
+      <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
+    </div>
     <div id="list"></div>
   </section>
 
@@ -283,9 +307,8 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18b";
+const UI_BUILD = "ui-2026-08-18c";
 const $ = function (id) { return document.getElementById(id); };
-let rows = [];
 let cur  = null;
 let isTest = true;
 
@@ -318,48 +341,90 @@ function esc(s) {
 }
 
 /* ---------- 一覧 ---------- */
+let listOpen = [];
+let listDone = [];
+let listTab  = "open";
+
+function daysLabel(d) {
+  if (d === null || d === undefined) return "";
+  if (d === 0) return "本日";
+  return d + "日経過";
+}
+function daysClass(d) {
+  if (d === null || d === undefined) return "";
+  if (d >= 4) return "late";
+  if (d >= 2) return "warn";
+  return "";
+}
+
+function cardHtml(x, done) {
+  const soudan = x.kind === "入居者相談" ? " soudan" : "";
+  const snip   = (x.draft || "").replace(/\s+/g, " ").slice(0, 90);
+  const cls    = done ? "done" : daysClass(x.days);
+  const right  = done
+    ? '<span class="sent">' + esc(x.status) + (x.sentAt ? "　" + esc(x.sentAt) : "") + '</span>'
+    : '<span class="days ' + daysClass(x.days) + '">' + esc(daysLabel(x.days)) + '</span>';
+
+  return '<div class="card ' + cls + '" tabindex="0" data-row="' + x.rowNo + '">'
+       +   '<div class="card-top">'
+       +     '<span class="kind' + soudan + '">' + esc(x.kind || "未分類") + '</span>'
+       +     '<span class="bldg">' + esc(x.building || "物件名なし") + '</span>'
+       +     right
+       +   '</div>'
+       +   '<div class="card-top"><span class="time">' + esc(x.received) + '</span></div>'
+       +   '<p class="snip">' + esc(snip) + '</p>'
+       + '</div>';
+}
+
+function drawList() {
+  const rows = (listTab === "open") ? listOpen : listDone;
+  const done = (listTab === "done");
+
+  $("tabOpen").className = "tab" + (done ? "" : " on");
+  $("tabDone").className = "tab" + (done ? " on" : "");
+
+  if (!rows.length) {
+    $("list").innerHTML = '<div class="empty">'
+      + (done ? "完了した案件はまだありません" : "未返信の案件はありません")
+      + '</div>';
+    return;
+  }
+
+  $("list").innerHTML = rows.map(function (x) { return cardHtml(x, done); }).join("");
+
+  Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
+    const n = Number(el.dataset.row);
+    el.addEventListener("click", function () { openDetail(n); });
+    el.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDetail(n); }
+    });
+  });
+}
+
 async function loadList() {
   $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
   try {
     const r = await api({ mode: "list" });
     if (!r.ok) throw new Error(r.error || "読み込めませんでした");
 
-    rows   = r.rows || [];
-    isTest = !!r.test;
+    listOpen = r.open || [];
+    listDone = r.done || [];
+    isTest   = !!r.test;
 
     $("mode").textContent = isTest ? "テスト送信中" : "本番送信";
     $("mode").className   = isTest ? "badge" : "badge live";
     $("buildtag").textContent = "画面 " + UI_BUILD + " ／ API " + (r.build || "?");
-    $("count").textContent = rows.length
-      ? "承認を待っている案件が " + rows.length + " 件あります"
-      : "";
 
-    if (!rows.length) {
-      $("list").innerHTML = '<div class="empty">承認を待っている案件はありません</div>';
-      return;
-    }
+    $("nOpen").textContent = listOpen.length;
+    $("nDone").textContent = listDone.length;
 
-    $("list").innerHTML = rows.map(function (x, i) {
-      const soudan = x.kind === "入居者相談" ? " soudan" : "";
-      const snip   = x.draft.replace(/\s+/g, " ").slice(0, 90);
-      return '<div class="card" tabindex="0" data-i="' + i + '">'
-           +   '<div class="card-top">'
-           +     '<span class="kind' + soudan + '">' + esc(x.kind || "未分類") + '</span>'
-           +     '<span class="bldg">' + esc(x.building || "物件名なし") + '</span>'
-           +     '<span class="time">' + esc(x.received) + '</span>'
-           +   '</div>'
-           +   '<p class="snip">' + esc(snip) + '</p>'
-           + '</div>';
-    }).join("");
+    const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
+    $("count").textContent = listOpen.length
+      ? "返信を待っている案件が " + listOpen.length + " 件"
+        + (late ? "（うち4日以上たっているものが " + late + " 件）" : "")
+      : "返信を待っている案件はありません";
 
-    Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
-      el.addEventListener("click", function () { openDetail(rows[el.dataset.i].rowNo); });
-      el.addEventListener("keydown", function (e) {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault(); openDetail(rows[el.dataset.i].rowNo);
-        }
-      });
-    });
+    drawList();
 
   } catch (e) {
     $("list").innerHTML = '<div class="empty">' + esc(e.message) + '</div>';
@@ -672,6 +737,8 @@ async function dropAttach(id) {
 }
 
 /* ---------- 起動 ---------- */
+$("tabOpen").addEventListener("click", function () { listTab = "open"; drawList(); });
+$("tabDone").addEventListener("click", function () { listTab = "done"; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
   if (f) pickAttach(f);
