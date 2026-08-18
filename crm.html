@@ -364,7 +364,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18e";
+const UI_BUILD = "ui-2026-08-18f";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -493,40 +493,94 @@ async function loadList() {
 }
 
 /* ---------- 詳細 ---------- */
+let openSeq = 0;          // 連打したとき、古い応答で画面が戻らないようにする
+
 async function openDetail(rowNo) {
+  const seq = ++openSeq;
+
+  // ① まず、一覧が持っている情報だけで先に描く。通信を待たない。
+  const hint = (listOpen.concat(listDone))
+    .filter(function (x) { return x.rowNo === rowNo; })[0];
+
+  Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
+    el.classList.toggle("on", Number(el.dataset.row) === rowNo);
+  });
+
+  cur = { rowNo: rowNo };
+  $("dMeta").innerHTML = hint
+    ? "<b>" + esc(hint.building || "物件名なし") + "</b>　" + esc(hint.kind) + "　" + esc(hint.received)
+    : "読み込んでいます…";
+  $("dSubject").innerHTML   = "";
+  $("dContent").textContent = "";
+  $("dDraft").value         = hint ? (hint.draft || "") : "";
+  $("dPreview").textContent = "";
+  $("dThread").className    = "thread empty-wrap";
+  $("dThread").innerHTML    = '<div class="th-empty">読み込んでいます…</div>';
+  $("dThreadNote").textContent = "";
+  $("dFiles").innerHTML     = "";
+  attFiles = [];
+
+  setStatus(null);
+  disarm();
+  if (!isWide()) $("listView").classList.add("hide");
+  $("detailView").classList.remove("hide");
+  if (!isWide()) window.scrollTo(0, 0);
+
+  // ② 3つの問い合わせを同時に投げる。順番に待たない。
+  const pDetail = api({ mode: "detail",     row: rowNo });
+  const pThread = api({ mode: "thread",     row: rowNo });
+  const pAttach = api({ mode: "attachList", row: rowNo });
+
   try {
-    const d = await api({ mode: "detail", row: rowNo });
+    const d = await pDetail;
+    if (seq !== openSeq) return;                 // 別の案件が開かれていたら捨てる
     if (!d.ok) { toast(d.error, true); return; }
 
     cur = d;
-    Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
-      el.classList.toggle("on", Number(el.dataset.row) === rowNo);
-    });
     $("dMeta").innerHTML    = "<b>" + esc(d.building || "物件名なし") + "</b>　"
                             + esc(d.kind) + "　" + esc(d.received);
     $("dSubject").innerHTML = "件名：" + esc(d.subject);
     $("dContent").textContent = d.content;
-    $("dDraft").value         = d.draft;
+    if (!$("dDraft").value) $("dDraft").value = d.draft;   // 入力中なら上書きしない
     $("dPreview").textContent = d.preview;
+  } catch (e) {
+    if (seq === openSeq) toast(e.message, true);
+  }
 
-    setStatus(null);
-    disarm();
-    if (!isWide()) $("listView").classList.add("hide");
-    $("detailView").classList.remove("hide");
-    if (!isWide()) window.scrollTo(0, 0);
-    loadThread();
-    loadAttach();
+  pThread.then(function (r) { if (seq === openSeq) drawThread(r); }).catch(function () {
+    if (seq === openSeq) $("dThread").innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
+  });
 
-  } catch (e) { toast(e.message, true); }
+  pAttach.then(function (r) {
+    if (seq !== openSeq) return;
+    if (r && r.ok) { attFiles = r.files || []; drawAttach(); }
+  }).catch(function () { if (seq === openSeq) drawAttach(); });
 }
 
 function isWide() { return window.matchMedia("(min-width: 1000px)").matches; }
+
+/* 処理が終わった案件を、通信せずに画面から片づける */
+function finishRow(rowNo, toDone) {
+  const i = listOpen.map(function (x) { return x.rowNo; }).indexOf(rowNo);
+  if (i >= 0) {
+    const x = listOpen.splice(i, 1)[0];
+    if (toDone) { x.status = toDone; listDone.unshift(x); }
+  }
+  $("nOpen").textContent = listOpen.length;
+  $("nDone").textContent = listDone.length;
+  const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
+  $("count").textContent = listOpen.length
+    ? "返信を待っている案件が " + listOpen.length + " 件"
+      + (late ? "（うち4日以上たっているものが " + late + " 件）" : "")
+    : "返信を待っている案件はありません";
+  drawList();
+}
 
 function backToList() {
   $("detailView").classList.add("hide");
   $("listView").classList.remove("hide");
   cur = null;
-  loadList();
+  if (!isWide()) loadList();
 }
 
 /* ---------- 保存 ---------- */
@@ -579,7 +633,8 @@ async function skip() {
       return;
     }
     setStatus("ok", "完了として記録しました。");
-    setTimeout(backToList, 1200);
+    finishRow(cur.rowNo, "対応不要");
+    setTimeout(backToList, 1000);
   } catch (e) {
     setStatus("bad", "記録できませんでした\n理由：" + e.message);
     b.disabled = false; b.textContent = "対応しない";
@@ -637,7 +692,8 @@ async function send() {
       ? "テスト送信しました。\n宛先：" + r.to +
         "\n（お客様には届いていません。台帳も更新していません）"
       : "送信しました。\n宛先：" + r.to + "\n台帳を「送信済」に更新しました。");
-    setTimeout(backToList, 2600);
+    if (!r.test) finishRow(cur.rowNo, "送信済");
+    setTimeout(backToList, 2000);
 
   } catch (e) {
     setStatus("bad", "送信できませんでした\n理由：" + e.message);
@@ -666,30 +722,25 @@ function threadBubble(x) {
        + '</div>';
 }
 
-async function loadThread() {
+function drawThread(r) {
   const box  = $("dThread");
   const note = $("dThreadNote");
-  box.className = "thread empty-wrap";
-  box.innerHTML = '<div class="th-empty">読み込んでいます…</div>';
-  note.textContent = "";
-  if (!cur) return;
+  const items = (r && r.items) || [];
 
-  let r;
-  try { r = await api({ mode: "thread", row: cur.rowNo }); }
-  catch (e) {
+  if (!r || !r.ok) {
+    box.className = "thread empty-wrap";
     box.innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
     return;
   }
-
-  const items = (r && r.items) || [];
   if (items.length <= 1) {
     box.className = "thread empty-wrap";
     box.innerHTML = '<div class="th-empty">この方とのやりとりは、今回がはじめてです</div>';
+    note.textContent = "";
     return;
   }
 
   box.className = "thread";
-  note.textContent = esc(r.mail || "") + "　" + items.length + "件";
+  note.textContent = (r.mail || "") + "　" + items.length + "件";
   box.innerHTML = items.map(threadBubble).join("");
 
   Array.prototype.forEach.call(box.querySelectorAll(".th-more"), function (b) {
@@ -700,7 +751,13 @@ async function loadThread() {
     });
   });
 
-  box.scrollTop = box.scrollHeight;      // いちばん新しいところを見せる
+  box.scrollTop = box.scrollHeight;
+}
+
+async function loadThread() {
+  if (!cur) return;
+  try { drawThread(await api({ mode: "thread", row: cur.rowNo })); }
+  catch (e) { drawThread(null); }
 }
 
 /* ============================================================
