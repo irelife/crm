@@ -213,6 +213,44 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 .card.done .bldg{color:var(--ink-2);font-weight:500}
 .sent{font-size:12px;color:var(--ink-2);white-space:nowrap;
   background:#eceff3;padding:2px 9px;border-radius:9px}
+
+/* ============================================================
+ *  横に並べる（パソコンのとき）
+ *
+ *  左に一覧、右に詳細。一覧に戻らなくても次々に処理できます。
+ *  幅が足りないスマホでは、これまでどおり切り替え式のままです。
+ * ============================================================ */
+@media (min-width: 1000px) {
+  .wrap{max-width:1360px}
+  .split{display:flex;gap:18px;align-items:flex-start}
+  #listView{width:380px;flex:none;position:sticky;top:64px;
+    max-height:calc(100vh - 84px);overflow-y:auto;padding-right:4px}
+  #detailView{flex:1;min-width:0}
+  #detailView.hide{display:block}          /* 右側は常に置いておく */
+  #detailView.hide .sec,
+  #detailView.hide .acts,
+  #detailView.hide .status,
+  #detailView.hide .back{display:none}
+  #detailView.hide::before{
+    content:"左の一覧から案件を選んでください";
+    display:flex;align-items:center;justify-content:center;
+    height:340px;color:var(--ink-2);font-size:14px;
+    border:1px dashed var(--line,#d8dee6);border-radius:12px;background:#fbfcfd;
+  }
+  .back{display:none}                      /* 横並びのときは戻るボタン不要 */
+  .card.on{box-shadow:0 0 0 2px #1b243055}
+  /* 一覧のカードは少し詰める */
+  #listView .card{padding:11px 12px;margin-bottom:8px}
+  #listView .snip{-webkit-line-clamp:1}
+}
+
+.prev summary{font-size:14px;font-weight:600;cursor:pointer;color:var(--ink-2);
+  padding:9px 12px;border:1px solid var(--line,#d8dee6);border-radius:9px;background:#fbfcfd;
+  list-style:none}
+.prev summary::-webkit-details-marker{display:none}
+.prev summary::before{content:"▸ ";color:#9aa5b1}
+.prev[open] summary::before{content:"▾ "}
+.prev[open] summary{margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -228,6 +266,7 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
   </header>
 
   <!-- 一覧 -->
+  <div class="split" id="split">
   <section id="listView">
     <div class="tabs">
       <button class="tab on" id="tabOpen" type="button">未返信<span class="tab-n" id="nOpen"></span></button>
@@ -269,10 +308,10 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       </div>
     </div>
 
-    <div class="sec">
-      <h2>実際に送られる形</h2>
+    <details class="sec prev">
+      <summary>実際に送られる形を見る（宛名・署名つき）</summary>
       <div class="box" id="dPreview"></div>
-    </div>
+    </details>
 
     <div class="status hide" id="status"></div>
 
@@ -282,6 +321,7 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       <button class="act send" id="bSend">送信する</button>
     </div>
   </section>
+  </div>
 
 </div>
 
@@ -324,7 +364,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-18d";
+const UI_BUILD = "ui-2026-08-18e";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -408,6 +448,10 @@ function drawList() {
   }
 
   $("list").innerHTML = rows.map(function (x) { return cardHtml(x, done); }).join("");
+  if (cur) {
+    const on = $("list").querySelector('.card[data-row="' + cur.rowNo + '"]');
+    if (on) on.classList.add("on");
+  }
 
   Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
     const n = Number(el.dataset.row);
@@ -455,6 +499,9 @@ async function openDetail(rowNo) {
     if (!d.ok) { toast(d.error, true); return; }
 
     cur = d;
+    Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
+      el.classList.toggle("on", Number(el.dataset.row) === rowNo);
+    });
     $("dMeta").innerHTML    = "<b>" + esc(d.building || "物件名なし") + "</b>　"
                             + esc(d.kind) + "　" + esc(d.received);
     $("dSubject").innerHTML = "件名：" + esc(d.subject);
@@ -464,14 +511,16 @@ async function openDetail(rowNo) {
 
     setStatus(null);
     disarm();
-    $("listView").classList.add("hide");
+    if (!isWide()) $("listView").classList.add("hide");
     $("detailView").classList.remove("hide");
-    window.scrollTo(0, 0);
+    if (!isWide()) window.scrollTo(0, 0);
     loadThread();
     loadAttach();
 
   } catch (e) { toast(e.message, true); }
 }
+
+function isWide() { return window.matchMedia("(min-width: 1000px)").matches; }
 
 function backToList() {
   $("detailView").classList.add("hide");
@@ -529,8 +578,8 @@ async function skip() {
       b.disabled = false; b.textContent = "対応しない";
       return;
     }
-    setStatus("ok", "対応しないものとして記録しました。一覧にもどります。");
-    setTimeout(backToList, 1400);
+    setStatus("ok", "完了として記録しました。");
+    setTimeout(backToList, 1200);
   } catch (e) {
     setStatus("bad", "記録できませんでした\n理由：" + e.message);
     b.disabled = false; b.textContent = "対応しない";
