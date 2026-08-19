@@ -157,6 +157,11 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 
 /* ---- やりとりの履歴 ---- */
 .th-note{font-weight:400;font-size:12px;color:var(--ink-2);margin-left:8px}
+textarea.order{min-height:76px;font-size:15px}
+.order-acts{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
+.act.ai{background:#1f4d3d;color:#fff;border-color:#1f4d3d}
+.act.ai:disabled{opacity:.55}
+.order-note{font-size:13px;color:#6b7280}
 .thread{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;
   padding:12px;border:1px solid var(--line,#d8dee6);border-radius:10px;background:#f4f6f9}
 .thread.empty-wrap{padding:14px;background:#fbfcfd}
@@ -300,19 +305,29 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
       <p class="meta" id="dSubject"></p>
     </div>
 
+    <div class="sec">
+      <h2>今回の問い合わせ</h2>
+      <div class="box quiet" id="dContent"></div>
+    </div>
+
     <div class="sec" id="dThreadSec">
       <h2>やりとりの履歴<span class="th-note" id="dThreadNote"></span></h2>
       <div class="thread" id="dThread"></div>
     </div>
 
     <div class="sec">
-      <h2>今回の問い合わせ</h2>
-      <div class="box quiet" id="dContent"></div>
+      <h2>返信の本文（ここを直せます）</h2>
+      <textarea id="dDraft" spellcheck="false"></textarea>
     </div>
 
     <div class="sec">
-      <h2>返信の本文（ここを直せます）</h2>
-      <textarea id="dDraft" spellcheck="false"></textarea>
+      <h2>AIに書いてもらう<span class="att-note">どう返すかを一言で。文面はAIが整えます</span></h2>
+      <textarea id="dOrder" class="order" spellcheck="false"
+        placeholder="例：2番手申込の1番手確認への回答。1番手は審査中で、結果が出たら連絡すると伝えて。"></textarea>
+      <div class="order-acts">
+        <button class="act ai" id="bAi" type="button">この指示で書いてもらう</button>
+        <span class="order-note" id="dOrderNote"></span>
+      </div>
     </div>
 
     <div class="sec">
@@ -380,7 +395,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19b";
+const UI_BUILD = "ui-2026-08-19c";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -605,6 +620,8 @@ async function openDetail(rowNo) {
   $("dContent").textContent = "";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
   $("dPreview").textContent = "";
+  $("dOrder").value         = "";
+  $("dOrderNote").textContent = "";
   $("dThread").className    = "thread empty-wrap";
   $("dThread").innerHTML    = '<div class="th-empty">読み込んでいます…</div>';
   $("dThreadNote").textContent = "";
@@ -672,6 +689,53 @@ function backToList() {
   $("listView").classList.remove("hide");
   cur = null;
   if (!isWide()) loadList();
+}
+
+/* ============================================================
+ *  AIに書いてもらう
+ *
+ *  台帳には書きません。返ってきた文面を返信本文の欄に入れるだけです。
+ *  内容を見てから「下書きを保存」を押してください。
+ * ============================================================ */
+async function askAi() {
+  if (!cur) return;
+
+  const order = $("dOrder").value.trim();
+  if (!order) {
+    $("dOrderNote").textContent = "どう返すかを書いてから押してください";
+    $("dOrder").focus();
+    return;
+  }
+
+  const cur0 = $("dDraft").value.trim();
+  if (cur0 && !confirm("いま書かれている返信の本文を、AIの文面で置き換えます。よろしいですか。")) return;
+
+  const b = $("bAi");
+  b.disabled = true;
+  b.textContent = "書いています…";
+  $("dOrderNote").textContent = "";
+  setStatus("work", "AIが文面を作っています。10秒ほどかかります。");
+
+  const seq = openSeq;
+  try {
+    const r = await api({ mode: "rewrite", row: cur.rowNo, order: order });
+    if (seq !== openSeq) return;                 // 別の案件が開かれていたら捨てる
+
+    if (!r.ok) {
+      setStatus("bad", "書けませんでした\n理由：" + (r.error || "（理由が返っていません）"));
+      return;
+    }
+    $("dDraft").value = r.text;
+    setStatus("ok", "文面ができました。内容を確かめて、直すところがあれば直してください。"
+                  + "\nまだ保存していません。");
+    $("dOrderNote").textContent = "保存するまで台帳は変わりません";
+    disarm();
+  } catch (e) {
+    if (seq === openSeq) setStatus("bad", "書けませんでした\n理由：" + e.message);
+  } finally {
+    b.disabled = false;
+    b.textContent = "この指示で書いてもらう";
+  }
 }
 
 /* ---------- 保存 ---------- */
@@ -960,6 +1024,7 @@ $("dFile").addEventListener("change", function (e) {
 });
 $("back").addEventListener("click", backToList);
 $("bSave").addEventListener("click", function () { save(false); });
+$("bAi").addEventListener("click", askAi);
 $("bSkip").addEventListener("click", skip);
 $("bSend").addEventListener("click", send);
 
