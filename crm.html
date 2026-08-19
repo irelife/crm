@@ -408,7 +408,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19f";
+const UI_BUILD = "ui-2026-08-19g";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -655,13 +655,13 @@ async function openDetail(rowNo) {
   $("detailView").classList.remove("hide");
   if (!isWide()) window.scrollTo(0, 0);
 
-  // ② 3つの問い合わせを同時に投げる。順番に待たない。
-  const pDetail = api({ mode: "detail",     row: rowNo });
-  const pThread = api({ mode: "thread",     row: rowNo });
-  const pAttach = api({ mode: "attachList", row: rowNo });
-
+  /* ② 問い合わせは1回だけ。
+   *    以前は detail・thread・attachList を別々に投げていましたが、
+   *    GASはリクエストごとにプロジェクトを読み込み直すため、
+   *    その起動コストを3回払うことになり、表示が重くなっていました。
+   *    いまは detail の返り値に履歴と添付が入っています。 */
   try {
-    const d = await pDetail;
+    const d = await api({ mode: "detail", row: rowNo });
     if (seq !== openSeq) return;                 // 別の案件が開かれていたら捨てる
     if (!d.ok) { toast(d.error, true); return; }
 
@@ -670,21 +670,22 @@ async function openDetail(rowNo) {
                             + esc(d.kind) + "　" + esc(d.received);
     $("dSubject").innerHTML = "件名：" + esc(d.subject);
     $("dContent").textContent = d.content;
-    $("dRaw").textContent     = d.raw || "（原文がありません）";
+    $("dRaw").textContent     = d.raw || "（原文がありません。crmFillRaw を実行してください）";
     if (!$("dDraft").value) $("dDraft").value = d.draft;   // 入力中なら上書きしない
     $("dPreview").textContent = d.preview;
+
+    drawThread(d.thread || null);
+
+    if (d.attach && d.attach.ok) attFiles = d.attach.files || [];
+    else                          attFiles = [];
+    drawAttach();
   } catch (e) {
-    if (seq === openSeq) toast(e.message, true);
+    if (seq === openSeq) {
+      toast(e.message, true);
+      $("dThread").innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
+      drawAttach();
+    }
   }
-
-  pThread.then(function (r) { if (seq === openSeq) drawThread(r); }).catch(function () {
-    if (seq === openSeq) $("dThread").innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
-  });
-
-  pAttach.then(function (r) {
-    if (seq !== openSeq) return;
-    if (r && r.ok) { attFiles = r.files || []; drawAttach(); }
-  }).catch(function () { if (seq === openSeq) drawAttach(); });
 }
 
 function isWide() { return window.matchMedia("(min-width: 1000px)").matches; }
