@@ -349,7 +349,7 @@ textarea.order{min-height:76px;font-size:15px}
       </div>
     </div>
 
-    <details class="sec prev">
+    <details class="sec prev" id="dPrevBox">
       <summary>実際に送られる形を見る（宛名・署名つき）</summary>
       <div class="box" id="dPreview"></div>
     </details>
@@ -405,7 +405,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19d";
+const UI_BUILD = "ui-2026-08-19e";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -631,6 +631,7 @@ async function openDetail(rowNo) {
   $("dRaw").textContent     = "読み込んでいます…";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
   $("dPreview").textContent = "";
+  $("dPrevBox").open        = false;
   $("dOrder").value         = "";
   $("dOrderNote").textContent = "";
   $("dThread").className    = "thread empty-wrap";
@@ -704,6 +705,33 @@ function backToList() {
 }
 
 /* ============================================================
+ *  送信される形を作り直す
+ *
+ *  プレビューは「保存済みの本文」から作られます。
+ *  画面で書き換えた直後は古いままなので、開いたときに作り直します。
+ * ============================================================ */
+let prevSeq = 0;
+
+async function refreshPreview() {
+  if (!cur) return;
+  const text = $("dDraft").value.trim();
+  if (!text) { $("dPreview").textContent = "（本文が空です）"; return; }
+
+  const seq = ++prevSeq;
+  const rowNo = cur.rowNo;
+  $("dPreview").textContent = "作っています…";
+
+  try {
+    const r = await api({ mode: "preview", row: rowNo, text: text });
+    if (seq !== prevSeq) return;
+    $("dPreview").textContent = (r && r.ok) ? r.preview
+      : "作れませんでした：" + ((r && r.error) || "");
+  } catch (e) {
+    if (seq === prevSeq) $("dPreview").textContent = "作れませんでした：" + e.message;
+  }
+}
+
+/* ============================================================
  *  AIに書いてもらう
  *
  *  台帳には書きません。返ってきた文面を返信本文の欄に入れるだけです。
@@ -742,6 +770,7 @@ async function askAi() {
                   + "\nまだ保存していません。");
     $("dOrderNote").textContent = "保存するまで台帳は変わりません";
     disarm();
+    if ($("dPrevBox").open) refreshPreview();
   } catch (e) {
     if (seq === openSeq) setStatus("bad", "書けませんでした\n理由：" + e.message);
   } finally {
@@ -1037,6 +1066,9 @@ $("dFile").addEventListener("change", function (e) {
 $("back").addEventListener("click", backToList);
 $("bSave").addEventListener("click", function () { save(false); });
 $("bAi").addEventListener("click", askAi);
+$("dPrevBox").addEventListener("toggle", function () {
+  if ($("dPrevBox").open) refreshPreview();
+});
 $("bSkip").addEventListener("click", skip);
 $("bSend").addEventListener("click", send);
 
