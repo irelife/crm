@@ -408,7 +408,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19g";
+const UI_BUILD = "ui-2026-08-19h";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -1083,7 +1083,25 @@ $("bSkip").addEventListener("click", skip);
 $("bSend").addEventListener("click", send);
 
 
-loadList();
+/* ============================================================
+ *  起動
+ *
+ *  ★URLに ?row=27 が付いていたら、その案件を直接開きます。
+ *    LINEの通知から開いたとき、一覧に着地するとどれのことか分かりません。
+ *    通知には案件ごとのURLが入っているので、そのまま開けるようにします。
+ * ============================================================ */
+function bootRow_() {
+  try {
+    const m = String(location.search || "").match(/[?&]row=(\d+)/);
+    return m ? Number(m[1]) : 0;
+  } catch (e) { return 0; }
+}
+
+(function boot() {
+  const row = bootRow_();
+  loadList();                       // 一覧は裏で読み込んでおく（戻ったときのため）
+  if (row >= 2) openDetail(row);    // 指定があれば、その案件をすぐ開く
+})();
 </script>
 </body>
 </html>
