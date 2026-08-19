@@ -429,7 +429,7 @@ button.skip{background:var(--g1);border-color:var(--g2);color:var(--ink-2)}
 
     <div class="acts">
       <button class="act" id="bSave">下書きを保存</button>
-      <button class="act skip" id="bSkip">対応しない</button>
+      <button class="act skip" id="bSkip">完了にする</button>
       <button class="act send" id="bSend">送信する</button>
     </div>
     </div>
@@ -502,7 +502,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19l";
+const UI_BUILD = "ui-2026-08-19m";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -966,21 +966,24 @@ async function save(silent) {
   }
 }
 
-/* ---------- 対応しない ---------- */
+/* ---------- 完了にする（返信せずに片づける） ----------
+ *  ★台帳のステータスは「対応不要」のまま変えていません。
+ *    画面の言い方だけを「完了にする」に直しています。
+ *    送信した案件も、この案件も、一覧では同じ「完了」に入ります。 */
 async function skip() {
   if (!cur) return;
-  if (!confirm("この案件に返信しません。よろしいですか？")) return;
+  if (!confirm("返信せずに完了にします。よろしいですか？")) return;
 
   const b = $("bSkip");
   b.disabled = true;
   b.textContent = "記録しています…";
-  setStatus("work", "対応しないものとして記録しています…");
+  setStatus("work", "完了として記録しています…");
 
   try {
     const r = await api({ mode: "skip", row: cur.rowNo });
     if (!r.ok) {
       setStatus("bad", "記録できませんでした\n理由：" + (r.error || "（理由が返っていません）"));
-      b.disabled = false; b.textContent = "対応しない";
+      b.disabled = false; b.textContent = "完了にする";
       return;
     }
     setStatus("ok", "完了として記録しました。");
@@ -988,7 +991,7 @@ async function skip() {
     setTimeout(backToList, 1000);
   } catch (e) {
     setStatus("bad", "記録できませんでした\n理由：" + e.message);
-    b.disabled = false; b.textContent = "対応しない";
+    b.disabled = false; b.textContent = "完了にする";
   }
 }
 
