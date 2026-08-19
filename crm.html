@@ -291,6 +291,7 @@ button.skip{background:var(--g1)}
   padding:22px;
 }
 .veil[data-open="true"]{display:grid;place-items:center;animation:veilIn .16s ease-out}
+.veil{top:0;left:0;right:0;height:100%}
 @keyframes veilIn{from{opacity:0}to{opacity:1}}
 .zen{width:min(920px,96vw);max-height:94vh;display:flex;flex-direction:column;
   background:#fff;border:var(--bd);box-shadow:10px 10px 0 var(--ink);animation:zenIn .18s ease-out}
@@ -304,6 +305,18 @@ button.skip{background:var(--g1)}
 .zen-close:hover{background:#fff;color:var(--ink)}
 .zen-ask{padding:13px 16px;border-bottom:1px solid var(--g2);background:var(--paper);
   max-height:26vh;overflow:auto}
+
+/* キーボードが出ている間は、問い合わせ原文をたたんで入力欄を広く取ります。
+   「問い合わせ」ボタンでいつでも開けます。 */
+.zen.kb .zen-ask{max-height:3.6em;padding:9px 16px}
+.zen.kb .zen-ask .cap{display:none}
+.zen.kb .zen-ask .body{font-size:12.5px;line-height:1.6}
+.zen.ask-open .zen-ask{max-height:40vh}
+.zen-peek{display:none;border:2px solid #fff;background:transparent;color:#fff;
+  padding:6px 11px;font-size:11.5px;font-weight:900;cursor:pointer}
+.zen.kb .zen-peek{display:inline-block}
+.zen-peek:hover{background:#fff;color:var(--ink)}
+.zen.kb .zen-head .meta{display:none}
 .zen-ask .cap{font-size:10.5px;font-weight:900;letter-spacing:.08em;color:var(--ink-2);margin-bottom:6px}
 .zen-ask .body{font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;
   border-left:8px solid var(--ink);padding-left:12px}
@@ -418,6 +431,7 @@ button.skip{background:var(--g1)}
     <div class="zen-head">
       <h3 id="zenTitle">案件</h3>
       <p class="meta" id="zenMeta"></p>
+      <button class="zen-peek" id="zenPeek" type="button">問い合わせ</button>
       <button class="zen-close" id="zenClose" type="button">閉じる（Esc）</button>
     </div>
     <div class="zen-ask">
@@ -473,7 +487,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19i";
+const UI_BUILD = "ui-2026-08-19j";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -1194,7 +1208,9 @@ function bootRow_() {
     veil.setAttribute("data-open", "true");
     document.body.style.overflow = "hidden";
     tally();
+    fit();
     zen.focus();
+    setTimeout(fit, 300);      // キーボードが出きってから、もう一度合わせます
     try { zen.setSelectionRange(zen.value.length, zen.value.length); } catch (e) {}
   }
 
@@ -1202,9 +1218,39 @@ function bootRow_() {
   function close(keep) {
     main.value = keep ? zen.value : before;
     veil.removeAttribute("data-open");
+    veil.style.height = "";
+    veil.style.top = "";
+    box.classList.remove("kb", "ask-open");
     document.body.style.overflow = "";
     main.blur();
   }
+
+  /* ★スマホでキーボードが出ると、画面の見えている高さが縮みます。
+   *   iOSは position:fixed の高さが変わらないため、入力欄が数行に潰れ、
+   *   ボタンがキーボードの下に隠れていました。
+   *   visualViewport を見て、見えている範囲にぴったり合わせます。 */
+  const box = veil.querySelector(".zen");
+  function fit() {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    veil.style.height = vv.height + "px";
+    veil.style.top    = vv.offsetTop + "px";
+    const shrunk = (window.innerHeight - vv.height) > 120;   // キーボードが出ている
+    box.classList.toggle("kb", shrunk);
+    if (!shrunk) box.classList.remove("ask-open");
+  }
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener("resize", function () {
+      if (veil.getAttribute("data-open") === "true") fit();
+    });
+    window.visualViewport.addEventListener("scroll", function () {
+      if (veil.getAttribute("data-open") === "true") fit();
+    });
+  }
+
+  $("zenPeek").addEventListener("click", function () {
+    box.classList.toggle("ask-open");
+  });
 
   main.addEventListener("focus", open);
   main.addEventListener("click", open);
