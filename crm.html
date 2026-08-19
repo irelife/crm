@@ -157,6 +157,12 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 
 /* ---- やりとりの履歴 ---- */
 .th-note{font-weight:400;font-size:12px;color:var(--ink-2);margin-left:8px}
+.rawbox{margin-top:8px}
+.rawbox>summary{cursor:pointer;font-size:13px;color:#4b5563;padding:6px 2px;list-style:none}
+.rawbox>summary::-webkit-details-marker{display:none}
+.rawbox>summary::before{content:"▸ ";color:#9ca3af}
+.rawbox[open]>summary::before{content:"▾ "}
+.box.raw{max-height:340px;overflow-y:auto;font-size:13px;line-height:1.65;white-space:pre-wrap;margin-top:6px}
 textarea.order{min-height:76px;font-size:15px}
 .order-acts{display:flex;align-items:center;gap:12px;margin-top:8px;flex-wrap:wrap}
 .act.ai{background:#1f4d3d;color:#fff;border-color:#1f4d3d}
@@ -308,6 +314,10 @@ textarea.order{min-height:76px;font-size:15px}
     <div class="sec">
       <h2>今回の問い合わせ</h2>
       <div class="box quiet" id="dContent"></div>
+      <details class="rawbox">
+        <summary>通知メールの原文を見る</summary>
+        <div class="box quiet raw" id="dRaw"></div>
+      </details>
     </div>
 
     <div class="sec" id="dThreadSec">
@@ -395,7 +405,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19c";
+const UI_BUILD = "ui-2026-08-19d";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -618,6 +628,7 @@ async function openDetail(rowNo) {
     : "読み込んでいます…";
   $("dSubject").innerHTML   = "";
   $("dContent").textContent = "";
+  $("dRaw").textContent     = "読み込んでいます…";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
   $("dPreview").textContent = "";
   $("dOrder").value         = "";
@@ -649,6 +660,7 @@ async function openDetail(rowNo) {
                             + esc(d.kind) + "　" + esc(d.received);
     $("dSubject").innerHTML = "件名：" + esc(d.subject);
     $("dContent").textContent = d.content;
+    $("dRaw").textContent     = d.raw || "（原文がありません）";
     if (!$("dDraft").value) $("dDraft").value = d.draft;   // 入力中なら上書きしない
     $("dPreview").textContent = d.preview;
   } catch (e) {
