@@ -9,171 +9,179 @@
 <link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@500;700;900&display=swap" rel="stylesheet">
 <style>
 :root{
-  --ink:#0e0e10;
-  --paper:#f7f6f3;
+  --ink:#1a1a1c;
+  --ink-2:#6f6d68;
+  --paper:#f6f5f2;
   --card:#ffffff;
-  --g1:#e7e5e0;
-  --g2:#c9c6bf;
-  --g3:#8e8b85;
-  --ink-2:#6a6862;
-  --line:#c9c6bf;
-  --bd:2px solid var(--ink);
-  --pop:6px 6px 0 var(--ink);
-  --pop-sm:4px 4px 0 var(--ink);
-  --hatch:repeating-linear-gradient(45deg,var(--ink) 0 2px,transparent 2px 7px);
-  --radius:0;
+  --g1:#efedE8;
+  --g2:#dcd9d3;
+  --g3:#b4b0a8;
+  --line:#dcd9d3;
+  --bd:1px solid var(--g2);
+  --sh:0 1px 2px rgba(20,20,22,.05), 0 6px 14px rgba(20,20,22,.05);
+  --sh-lift:0 2px 4px rgba(20,20,22,.06), 0 12px 26px rgba(20,20,22,.08);
+  --r:10px;
+  --r-sm:7px;
+  --radius:10px;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;padding:0}
 body{
   background:var(--paper); color:var(--ink);
   font-family:"Zen Kaku Gothic New","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
-  font-size:15px; line-height:1.75; font-weight:500; letter-spacing:.005em;
+  font-size:15px; line-height:1.8; font-weight:500;
   padding-bottom:env(safe-area-inset-bottom);
-}
-body::before{
-  content:"";position:fixed;inset:0;z-index:-1;
-  background:repeating-linear-gradient(135deg,#00000008 0 1px,transparent 1px 9px);
+  -webkit-font-smoothing:antialiased;
 }
 button,input,textarea{font-family:inherit}
-:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .wrap{max-width:720px;margin:0 auto;padding:0 14px 60px}
 
 /* ---- 見出し ---- */
 header{
   position:sticky; top:0; z-index:10;
-  background:var(--ink); color:#fff; border-bottom:var(--bd);
-  padding:11px 14px 9px; margin:0 -14px 16px;
+  background:rgba(246,245,242,.92);
+  -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px);
+  border-bottom:var(--bd);
+  padding:13px 0 11px; margin-bottom:16px;
 }
 .hd{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-h1{font-size:16px;margin:0;letter-spacing:.06em;font-weight:900;flex:1}
+h1{font-size:16px;margin:0;letter-spacing:.02em;font-weight:700;flex:1}
 .badge{
-  font-size:11.5px;font-weight:900;padding:3px 11px;border-radius:0;
-  background:transparent;color:#fff;border:2px solid #fff;white-space:nowrap;
+  font-size:11.5px;font-weight:700;padding:3px 11px;border-radius:999px;
+  background:var(--g1);color:var(--ink-2);border:var(--bd);white-space:nowrap;
 }
-.badge.live{background:#fff;color:var(--ink);border-color:#fff}
-.count{font-size:12.5px;color:#fff;opacity:.85;font-weight:700}
-.buildtag{font-size:10.5px;color:#fff;opacity:.5;letter-spacing:.03em}
+.badge.live{background:var(--ink);color:#fff;border-color:var(--ink)}
+.count{font-size:12.5px;color:var(--ink-2)}
+.buildtag{font-size:10.5px;color:var(--g3);letter-spacing:.03em}
 
 /* ---- タブ ---- */
-.tabs{display:flex;gap:8px;margin-bottom:13px}
-.tab{flex:1;padding:9px 8px;border:var(--bd);border-radius:0;
-  background:#fff;font-size:13px;font-weight:900;color:var(--ink);
-  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;
-  box-shadow:var(--pop-sm);transition:transform .08s}
-.tab:active{transform:translate(3px,3px);box-shadow:1px 1px 0 var(--ink)}
-.tab.on{background:var(--ink);border-color:var(--ink);color:#fff}
-.tab-n{font-size:15px;font-weight:900;letter-spacing:-.03em}
+.tabs{display:flex;gap:6px;margin-bottom:14px;background:var(--g1);
+  padding:4px;border-radius:12px}
+.tab{flex:1;padding:8px 10px;border:0;border-radius:9px;
+  background:transparent;font-size:13px;font-weight:700;color:var(--ink-2);
+  cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;
+  transition:background .15s,color .15s}
+.tab:hover{color:var(--ink)}
+.tab.on{background:#fff;color:var(--ink);box-shadow:0 1px 2px rgba(20,20,22,.08)}
+.tab-n{font-size:12px;font-weight:700;padding:0 6px;border-radius:999px;
+  background:var(--g2);color:var(--ink-2)}
+.tab.on .tab-n{background:var(--ink);color:#fff}
 
 /* ---- 一覧 ---- */
 .card{
   position:relative;
-  background:var(--card); border:var(--bd); border-radius:0;
-  padding:12px 13px; margin-bottom:11px; cursor:pointer;
-  box-shadow:var(--pop-sm); transition:transform .08s,box-shadow .08s;
+  background:var(--card); border:var(--bd); border-radius:var(--r);
+  padding:13px 15px; margin-bottom:9px; cursor:pointer;
+  box-shadow:var(--sh); transition:box-shadow .16s,transform .16s,border-color .16s;
 }
-.card:hover,.card:focus-visible{transform:translate(-1px,-1px);box-shadow:var(--pop);outline:none}
-.card-top{display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap}
+.card:hover,.card:focus-visible{box-shadow:var(--sh-lift);transform:translateY(-1px);
+  border-color:var(--g3);outline:none}
+.card-top{display:flex;align-items:center;gap:7px;margin-bottom:5px;flex-wrap:wrap}
 .kind{
-  font-size:11px;font-weight:900;padding:1px 9px;border-radius:0;
-  background:#fff;border:1.5px solid var(--ink);color:var(--ink);white-space:nowrap;
+  font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;
+  background:var(--g1);color:var(--ink-2);white-space:nowrap;
 }
 .kind.soudan{background:var(--ink);color:#fff}
-.bldg{font-weight:900;font-size:15px;flex:1;min-width:0;letter-spacing:-.01em;
+/* 何の用件かを一言で。分類より、こちらのほうが見て分かります */
+.topic{
+  font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;
+  background:#fff;border:1px solid var(--ink);color:var(--ink);white-space:nowrap;
+}
+.bldg{font-weight:700;font-size:15px;flex:1;min-width:0;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.time{font-size:11px;color:var(--ink-2);white-space:nowrap;font-weight:700}
+.time{font-size:11.5px;color:var(--ink-2);white-space:nowrap}
 .snip{
   font-size:12.5px;color:var(--ink-2);margin:0;
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
-  overflow:hidden;line-height:1.6;
+  overflow:hidden;line-height:1.65;
 }
 
-/* 経過日数：塗りの濃さで急ぎを出します（0〜1日=白／2〜3日=斜線／4日以上=黒） */
-.days{font-size:12px;font-weight:900;padding:2px 10px;border:1.5px solid var(--ink);
-  border-radius:0;white-space:nowrap;background:#fff}
-.days.fresh{background:#fff}
-.days.warn{background-image:var(--hatch);background-color:var(--g1)}
+/* 経過日数：濃さで急ぎを表します */
+.days{font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:999px;
+  white-space:nowrap;background:var(--g1);color:var(--ink-2)}
+.days.fresh{background:var(--g1);color:var(--ink-2)}
+.days.warn{background:var(--g3);color:#fff}
 .days.late{background:var(--ink);color:#fff}
-.days.making{background:var(--g1);color:var(--ink-2);border-style:dashed}
+.days.making{background:#fff;color:var(--ink-2);border:1px dashed var(--g3)}
 
-.card.fresh{background:#fff}
-.card.warn{background:#fff}
-.card.late{background:var(--g1)}
-.card.late .bldg{color:var(--ink)}
-.card.making{opacity:.72}
+.card.late{border-color:var(--g3)}
+.card.making{opacity:.75}
 .card.making .snip{font-style:italic}
-.card.done{background:var(--paper);opacity:.75;box-shadow:none}
-.card.done .bldg{color:var(--ink-2);font-weight:700}
-.sent{font-size:11px;color:var(--ink-2);white-space:nowrap;font-weight:700;
-  background:var(--g1);padding:2px 9px;border:1.5px solid var(--g2)}
+.card.done{background:var(--paper);box-shadow:none;opacity:.8}
+.card.done .bldg{color:var(--ink-2);font-weight:600}
+.sent{font-size:11.5px;color:var(--ink-2);white-space:nowrap;
+  background:var(--g1);padding:2px 10px;border-radius:999px}
 
 /* ---- 詳細 ---- */
 .back{
-  background:#fff;border:var(--bd);padding:6px 13px;margin:0 0 12px;
-  color:var(--ink);font-size:13px;font-weight:900;cursor:pointer;box-shadow:var(--pop-sm);
+  background:#fff;border:var(--bd);border-radius:999px;padding:7px 15px;margin:0 0 14px;
+  color:var(--ink-2);font-size:13px;font-weight:700;cursor:pointer;box-shadow:var(--sh);
 }
-.back:active{transform:translate(3px,3px);box-shadow:none}
-.sec{margin-bottom:20px}
+.back:hover{color:var(--ink)}
+.sec{margin-bottom:22px}
 .sec>h2{
-  font-size:11.5px;font-weight:900;color:#fff;background:var(--ink);
-  display:inline-block;padding:3px 10px;margin:0 0 9px;letter-spacing:.06em;
+  font-size:11.5px;font-weight:700;color:var(--ink-2);
+  margin:0 0 8px;letter-spacing:.08em;
 }
 .box{
-  background:var(--card);border:var(--bd);border-radius:0;padding:12px 14px 12px 24px;
-  white-space:pre-wrap;word-break:break-word;font-size:14.5px;line-height:1.8;
-  position:relative;
+  background:var(--card);border:var(--bd);border-radius:var(--r);padding:14px 16px;
+  white-space:pre-wrap;word-break:break-word;font-size:14.5px;line-height:1.85;
+  box-shadow:var(--sh);
 }
-.box::before{content:"";position:absolute;left:0;top:0;bottom:0;width:9px;background:var(--ink)}
-.box.quiet{background:#fff;color:var(--ink-2);font-size:13px}
-.box.quiet::before{background:var(--g2)}
-.meta{font-size:12.5px;color:var(--ink-2);margin:0 0 2px;font-weight:700}
-.meta b{color:var(--ink);font-weight:900}
+.box.quiet{background:#fff;color:var(--ink-2);font-size:13.5px}
+.meta{font-size:13px;color:var(--ink-2);margin:0 0 2px}
+.meta b{color:var(--ink);font-weight:700;font-size:17px}
 
 textarea{
-  width:100%;min-height:250px;padding:15px 17px;
-  background:#fff;border:var(--bd);border-radius:0;
+  width:100%;min-height:250px;padding:16px 18px;
+  background:#fff;border:var(--bd);border-radius:var(--r);
   font-size:16px;line-height:1.95;color:var(--ink);font-weight:500;resize:vertical;
+  box-shadow:var(--sh);transition:box-shadow .16s,border-color .16s;
 }
-textarea:focus{outline:none;box-shadow:var(--pop)}
+textarea:focus{outline:none;border-color:var(--ink);box-shadow:var(--sh-lift)}
 textarea.order{min-height:74px;font-size:14px;line-height:1.7}
 
 /* ---- ボタン ---- */
 .acts{display:flex;gap:9px;flex-wrap:wrap;margin-top:18px}
 button.act{
-  font-size:14.5px;font-weight:900;padding:12px 20px;border-radius:0;border:var(--bd);
-  background:#fff;color:var(--ink);cursor:pointer;box-shadow:var(--pop-sm);transition:transform .08s;
+  font-size:14.5px;font-weight:700;padding:12px 20px;border-radius:999px;border:var(--bd);
+  background:#fff;color:var(--ink);cursor:pointer;box-shadow:var(--sh);
+  transition:box-shadow .16s,transform .16s;
 }
-button.act:active{transform:translate(3px,3px);box-shadow:none}
-button.act:disabled{opacity:.4;cursor:default;box-shadow:none}
-button.send{background:var(--ink);border-color:var(--ink);color:#fff;flex:1;min-width:160px;box-shadow:var(--pop)}
-button.send.armed{background:#fff;color:var(--ink);border-style:dashed}
-button.skip{background:var(--g1)}
-.act.ai{background:var(--ink);color:#fff}
+button.act:hover{box-shadow:var(--sh-lift);transform:translateY(-1px)}
+button.act:active{transform:translateY(0)}
+button.act:disabled{opacity:.4;cursor:default;box-shadow:none;transform:none}
+button.send{background:var(--ink);border-color:var(--ink);color:#fff;flex:1;min-width:160px}
+button.send.armed{background:#fff;color:var(--ink);border:1px dashed var(--ink)}
+button.skip{background:var(--g1);border-color:var(--g2);color:var(--ink-2)}
+.act.ai{background:var(--ink);color:#fff;border-color:var(--ink)}
 .order-acts{display:flex;align-items:center;gap:12px;margin-top:9px;flex-wrap:wrap}
-.order-note{font-size:12.5px;color:var(--ink-2);font-weight:700}
+.order-note{font-size:12.5px;color:var(--ink-2)}
 
 /* ---- 通知 ---- */
 .toast{
   position:fixed;left:50%;top:calc(12px + env(safe-area-inset-top));transform:translateX(-50%);
-  background:var(--ink);color:#fff;font-size:13.5px;font-weight:900;
-  padding:11px 22px;border:var(--bd);border-radius:0;z-index:80;box-shadow:var(--pop);
+  background:var(--ink);color:#fff;font-size:13.5px;font-weight:700;
+  padding:11px 22px;border-radius:999px;z-index:80;box-shadow:var(--sh-lift);
   max-width:90vw;text-align:center;opacity:0;pointer-events:none;transition:opacity .18s;
 }
 .toast.on{opacity:1}
-.toast.bad{background:#fff;color:var(--ink);border-style:dashed}
+.toast.bad{background:#fff;color:var(--ink);border:1px solid var(--ink)}
 
 /* ---- 結果表示 ---- */
 .status{
-  margin-top:15px;padding:11px 14px;border-radius:0;
-  font-size:13.5px;line-height:1.7;border:var(--bd);font-weight:700;
-  white-space:pre-wrap;word-break:break-word;background:#fff;
+  margin-top:15px;padding:12px 15px;border-radius:var(--r);
+  font-size:13.5px;line-height:1.75;border:var(--bd);background:#fff;
+  white-space:pre-wrap;word-break:break-word;box-shadow:var(--sh);
 }
-.status .stamp{display:block;font-size:11.5px;opacity:.65;margin-top:3px;font-weight:500}
-.status.ok{background:var(--ink);color:#fff}
-.status.bad{background:#fff;border-style:dashed}
+.status .stamp{display:block;font-size:11.5px;color:var(--ink-2);margin-top:3px}
+.status.ok{background:var(--ink);color:#fff;border-color:var(--ink)}
+.status.ok .stamp{color:#ffffffb0}
+.status.bad{background:#fff;border:1px solid var(--ink)}
 .status.work{background:var(--g1)}
 
-.empty{text-align:center;color:var(--ink-2);padding:50px 20px;font-size:13.5px;font-weight:700}
+.empty{text-align:center;color:var(--ink-2);padding:50px 20px;font-size:13.5px}
 .hide{display:none}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
@@ -181,156 +189,161 @@ button.skip{background:var(--g1)}
 .att-note{font-weight:500;font-size:11.5px;color:var(--ink-2);margin-left:8px}
 .att{display:flex;flex-direction:column;gap:10px}
 .att-pick{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;
-  padding:9px 16px;border:var(--bd);border-radius:0;box-shadow:var(--pop-sm);
-  background:#fff;font-size:13px;font-weight:900;cursor:pointer;user-select:none}
-.att-pick:active{transform:translate(3px,3px);box-shadow:none}
+  padding:9px 16px;border:var(--bd);border-radius:999px;box-shadow:var(--sh);
+  background:#fff;font-size:13px;font-weight:700;cursor:pointer;user-select:none}
+.att-pick:hover{box-shadow:var(--sh-lift)}
 .att-pick::before{content:"＋";font-size:15px;line-height:1}
 .att-pick.busy{opacity:.5;pointer-events:none}
 .att-list{display:flex;flex-direction:column;gap:7px}
-.att-row{display:flex;align-items:center;gap:10px;padding:9px 12px;
-  border:1.5px solid var(--ink);border-radius:0;background:#fff;font-size:12.5px}
+.att-row{display:flex;align-items:center;gap:10px;padding:10px 13px;
+  border:var(--bd);border-radius:var(--r-sm);background:#fff;font-size:12.5px}
 .att-row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:700}
 .att-row .sz{color:var(--ink-2);font-size:11.5px;flex:none}
-.att-row .rm{flex:none;border:none;background:transparent;color:var(--ink);
-  font-size:12.5px;font-weight:900;cursor:pointer;padding:2px 4px;text-decoration:underline}
-.att-empty{color:var(--ink-2);font-size:12.5px;font-weight:700}
+.att-row .rm{flex:none;border:none;background:transparent;color:var(--ink-2);
+  font-size:12.5px;cursor:pointer;padding:2px 4px;text-decoration:underline}
+.att-row .rm:hover{color:var(--ink)}
+.att-empty{color:var(--ink-2);font-size:12.5px}
 
 /* ---- 原文 ---- */
 .rawbox{margin-top:9px}
-.rawbox>summary{cursor:pointer;font-size:12.5px;color:var(--ink-2);padding:6px 2px;
-  list-style:none;font-weight:700}
+.rawbox>summary{cursor:pointer;font-size:12.5px;color:var(--ink-2);padding:6px 2px;list-style:none}
 .rawbox>summary::-webkit-details-marker{display:none}
-.rawbox>summary::before{content:"▸ "}
+.rawbox>summary::before{content:"▸ ";color:var(--g3)}
 .rawbox[open]>summary::before{content:"▾ "}
-.box.raw{max-height:340px;overflow-y:auto;font-size:12.5px;line-height:1.7;
+.box.raw{max-height:340px;overflow-y:auto;font-size:12.5px;line-height:1.75;
   white-space:pre-wrap;margin-top:7px}
 
 /* ---- やりとりの履歴 ---- */
 .th-note{font-weight:500;font-size:11.5px;color:var(--ink-2);margin-left:8px}
 .thread{display:flex;flex-direction:column;gap:10px;max-height:420px;overflow-y:auto;
-  padding:13px;border:var(--bd);border-radius:0;background:var(--paper)}
+  padding:14px;border:var(--bd);border-radius:var(--r);background:var(--paper)}
 .thread.empty-wrap{padding:14px;background:#fff}
 .th-row{display:flex;flex-direction:column;max-width:82%}
 .th-row.in{align-self:flex-start;align-items:flex-start}
 .th-row.out,.th-row.draft{align-self:flex-end;align-items:flex-end}
-.th-who{font-size:10.5px;color:var(--ink-2);margin:0 3px 3px;font-weight:900}
-.th-bub{padding:9px 12px;border-radius:0;font-size:13px;line-height:1.75;
-  border:1.5px solid var(--ink);white-space:pre-wrap;word-break:break-word;background:#fff}
-.th-row.out .th-bub{background:var(--ink);color:#fff}
-.th-row.draft .th-bub{background:#fff;border-style:dashed}
-.th-row.cur .th-bub{box-shadow:var(--pop-sm)}
+.th-who{font-size:10.5px;color:var(--ink-2);margin:0 4px 3px}
+.th-bub{padding:10px 14px;border-radius:14px;font-size:13px;line-height:1.8;
+  white-space:pre-wrap;word-break:break-word;background:#fff;border:var(--bd)}
+.th-row.in .th-bub{border-bottom-left-radius:4px}
+.th-row.out .th-bub{background:var(--ink);color:#fff;border-color:var(--ink);
+  border-bottom-right-radius:4px}
+.th-row.draft .th-bub{background:#fff;border:1px dashed var(--ink);border-bottom-right-radius:4px}
+.th-row.cur .th-bub{box-shadow:var(--sh-lift)}
 .th-more{border:none;background:transparent;color:var(--ink-2);font-size:11.5px;
-  cursor:pointer;padding:2px 4px;align-self:flex-start;margin-top:2px;
-  font-weight:700;text-decoration:underline}
-.th-empty{color:var(--ink-2);font-size:12.5px;font-weight:700}
+  cursor:pointer;padding:2px 4px;align-self:flex-start;margin-top:2px;text-decoration:underline}
+.th-empty{color:var(--ink-2);font-size:12.5px}
 
 /* ---- 送信前プレビュー ---- */
-.prev summary{font-size:13px;font-weight:900;cursor:pointer;color:var(--ink);
-  padding:9px 13px;border:var(--bd);border-radius:0;background:#fff;list-style:none}
+.prev summary{font-size:13px;font-weight:700;cursor:pointer;color:var(--ink-2);
+  padding:10px 14px;border:var(--bd);border-radius:var(--r);background:#fff;list-style:none}
 .prev summary::-webkit-details-marker{display:none}
-.prev summary::before{content:"▸ "}
+.prev summary::before{content:"▸ ";color:var(--g3)}
 .prev[open] summary::before{content:"▾ "}
 .prev[open] summary{margin-bottom:9px}
 
 /* ---- 営業タブ ---- */
-.card.eigyou{background:var(--paper);box-shadow:none;border-style:dashed}
-.card.eigyou .bldg{color:var(--ink-2);font-weight:700}
-.flag{font-size:11px;font-weight:900;padding:2px 9px;border:1.5px solid var(--ink);
+.card.eigyou{background:var(--paper);box-shadow:none}
+.card.eigyou .bldg{color:var(--ink-2);font-weight:600}
+.flag{font-size:11px;font-weight:700;padding:2px 10px;border-radius:999px;
   background:var(--ink);color:#fff;white-space:nowrap}
-.flag.doubt{background:#fff;color:var(--ink);border-style:dashed}
-.reason{font-size:11px;color:var(--ink-2);margin:7px 0 0;line-height:1.6}
-.unbtn{margin-top:10px;padding:7px 13px;border:1.5px solid var(--ink);
-  border-radius:0;background:#fff;font-size:12px;font-weight:900;
+.flag.doubt{background:#fff;color:var(--ink);border:1px dashed var(--ink)}
+.reason{font-size:11px;color:var(--ink-2);margin:7px 0 0;line-height:1.65}
+.unbtn{margin-top:10px;padding:7px 14px;border:var(--bd);
+  border-radius:999px;background:#fff;font-size:12px;font-weight:700;
   color:var(--ink);cursor:pointer}
-.unbtn:hover{background:var(--ink);color:#fff}
-.eigyou-note{font-size:12.5px;color:var(--ink-2);line-height:1.7;font-weight:700;
-  padding:11px 13px;border:1.5px dashed var(--ink);border-radius:0;
+.unbtn:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+.eigyou-note{font-size:12.5px;color:var(--ink-2);line-height:1.75;
+  padding:12px 14px;border:var(--bd);border-radius:var(--r);
   background:#fff;margin-bottom:13px}
 
 /* ============================================================
  *  横に並べる（パソコンのとき）
  * ============================================================ */
 @media (min-width: 1000px) {
-  .wrap{max-width:1360px}
-  header{margin-left:-14px;margin-right:-14px}
-  .split{display:flex;gap:20px;align-items:flex-start}
-  #listView{width:392px;flex:none;position:sticky;top:70px;
-    max-height:calc(100vh - 92px);overflow-y:auto;padding:3px 5px 20px 3px}
-  #detailView{flex:1;min-width:0;background:#fff;border:var(--bd);
-    box-shadow:var(--pop);padding:20px 22px}
-  #detailView.hide{display:block}
-  #detailView.hide .sec,
-  #detailView.hide .acts,
-  #detailView.hide .status,
-  #detailView.hide .back{display:none}
-  #detailView.hide::before{
-    content:"左の一覧から案件を選んでください";
-    display:flex;align-items:center;justify-content:center;
-    height:340px;color:var(--ink-2);font-size:13.5px;font-weight:700;
-    border:2px dashed var(--g2);background:var(--paper);
-  }
-  .back{display:none}
-  .card.on{background:var(--g1);box-shadow:var(--pop)}
-  .card.on::after{content:"";position:absolute;left:-2px;top:-2px;bottom:-2px;
-    width:8px;background:var(--ink)}
-  #listView .card{padding:11px 12px;margin-bottom:9px}
-  #listView .snip{-webkit-line-clamp:1}
+  .wrap{max-width:900px}
+  #listView{width:auto}
 }
 
 /* ============================================================
- *  集中編集（返信本文をクリックすると開きます）
+ *  1件を開くと、まん中に大きく出します
  *
- *  背景をぼかして、いま書いている1件だけが見えるようにします。
- *  上部に問い合わせの原文を置くので、見ながら書けます。
+ *  左右に並べる形はやめました。並べると、一覧も詳細も幅が足りず、
+ *  どちらも読みにくくなっていたためです。
+ *  いまは背景をぼかして、開いた1件だけに集中できるようにしています。
+ * ============================================================ */
+#detailView{
+  position:fixed;inset:0;z-index:55;overflow-y:auto;
+  padding:26px 20px 40px;
+  background:rgba(26,26,28,.38);
+  -webkit-backdrop-filter:blur(9px) grayscale(1);
+  backdrop-filter:blur(9px) grayscale(1);
+  animation:veilIn .16s ease-out;
+}
+#detailView.hide{display:none}
+.dcard{
+  max-width:860px;margin:0 auto;background:#fff;border-radius:18px;
+  padding:24px 26px 28px;box-shadow:0 24px 60px rgba(20,20,22,.28);
+  animation:zenIn .2s ease-out;
+}
+@media (max-width:640px){
+  #detailView{padding:0;background:#fff;-webkit-backdrop-filter:none;backdrop-filter:none}
+  .dcard{border-radius:0;box-shadow:none;padding:16px 14px 30px;min-height:100%}
+}
+/* 閉じるボタンは、開いている間ずっと右上に置いておきます */
+.back{
+  position:sticky;top:0;float:right;margin:0 0 4px 12px;z-index:2;
+  background:#fff;border:var(--bd);border-radius:999px;padding:7px 16px;
+  color:var(--ink);font-size:13px;font-weight:700;cursor:pointer;box-shadow:var(--sh);
+}
+.back:hover{background:var(--ink);color:#fff;border-color:var(--ink)}
+
+/* ============================================================
+ *  集中編集
  * ============================================================ */
 .veil{
   position:fixed;inset:0;z-index:60;display:none;
-  background:rgba(14,14,16,.42);
-  -webkit-backdrop-filter:blur(7px) grayscale(1);
-  backdrop-filter:blur(7px) grayscale(1);
-  padding:22px;
+  background:rgba(26,26,28,.38);
+  -webkit-backdrop-filter:blur(9px) grayscale(1);
+  backdrop-filter:blur(9px) grayscale(1);
+  padding:22px;top:0;left:0;right:0;height:100%;
 }
 .veil[data-open="true"]{display:grid;place-items:center;animation:veilIn .16s ease-out}
-.veil{top:0;left:0;right:0;height:100%}
 @keyframes veilIn{from{opacity:0}to{opacity:1}}
 .zen{width:min(920px,96vw);max-height:94vh;display:flex;flex-direction:column;
-  background:#fff;border:var(--bd);box-shadow:10px 10px 0 var(--ink);animation:zenIn .18s ease-out}
-@keyframes zenIn{from{transform:translateY(10px)}to{transform:none}}
+  background:#fff;border-radius:18px;overflow:hidden;
+  box-shadow:0 24px 60px rgba(20,20,22,.3);animation:zenIn .2s ease-out}
+@keyframes zenIn{from{transform:translateY(12px);opacity:.6}to{transform:none;opacity:1}}
 .zen-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;
-  padding:12px 16px;border-bottom:var(--bd);background:var(--ink);color:#fff}
-.zen-head h3{margin:0;font-size:17px;font-weight:900;letter-spacing:-.01em}
-.zen-head .meta{font-size:11.5px;font-weight:700;color:#fff;opacity:.75;margin:0}
-.zen-close{margin-left:auto;border:2px solid #fff;background:transparent;color:#fff;
-  padding:6px 13px;font-size:12px;font-weight:900;cursor:pointer}
-.zen-close:hover{background:#fff;color:var(--ink)}
-.zen-ask{padding:13px 16px;border-bottom:1px solid var(--g2);background:var(--paper);
+  padding:14px 18px;background:var(--ink);color:#fff}
+.zen-head h3{margin:0;font-size:17px;font-weight:700}
+.zen-head .meta{font-size:11.5px;color:#ffffffa8;margin:0}
+.zen-close,.zen-peek{border:1px solid #ffffff66;background:transparent;color:#fff;
+  padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;border-radius:999px}
+.zen-close{margin-left:auto}
+.zen-peek{display:none}
+.zen.kb .zen-peek{display:inline-block}
+.zen-close:hover,.zen-peek:hover{background:#fff;color:var(--ink)}
+.zen-ask{padding:14px 18px;border-bottom:var(--bd);background:var(--paper);
   max-height:26vh;overflow:auto}
-
-/* キーボードが出ている間は、問い合わせ原文をたたんで入力欄を広く取ります。
-   「問い合わせ」ボタンでいつでも開けます。 */
-.zen.kb .zen-ask{max-height:3.6em;padding:9px 16px}
+.zen-ask .cap{font-size:10.5px;font-weight:700;letter-spacing:.08em;color:var(--ink-2);margin-bottom:6px}
+.zen-ask .body{font-size:14px;line-height:1.85;white-space:pre-wrap;word-break:break-word;
+  border-left:3px solid var(--ink);padding-left:13px}
+.zen.kb .zen-ask{max-height:3.6em;padding:10px 18px}
 .zen.kb .zen-ask .cap{display:none}
 .zen.kb .zen-ask .body{font-size:12.5px;line-height:1.6}
-.zen.ask-open .zen-ask{max-height:40vh}
-.zen-peek{display:none;border:2px solid #fff;background:transparent;color:#fff;
-  padding:6px 11px;font-size:11.5px;font-weight:900;cursor:pointer}
-.zen.kb .zen-peek{display:inline-block}
-.zen-peek:hover{background:#fff;color:var(--ink)}
 .zen.kb .zen-head .meta{display:none}
-.zen-ask .cap{font-size:10.5px;font-weight:900;letter-spacing:.08em;color:var(--ink-2);margin-bottom:6px}
-.zen-ask .body{font-size:14px;line-height:1.8;white-space:pre-wrap;word-break:break-word;
-  border-left:8px solid var(--ink);padding-left:12px}
+.zen.ask-open .zen-ask{max-height:40vh}
 .zen-edit{flex:1;min-height:0;display:flex}
-.zen-edit textarea{flex:1;border:0;box-shadow:none;min-height:0;height:100%;
+.zen-edit textarea{flex:1;border:0;box-shadow:none;border-radius:0;min-height:0;height:100%;
   font-size:17px;line-height:2.05;padding:20px 22px;resize:none}
-.zen-edit textarea:focus{box-shadow:none;outline:none}
+.zen-edit textarea:focus{box-shadow:none;outline:none;border:0}
 .zen-foot{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
-  padding:11px 16px;border-top:var(--bd);background:var(--g1)}
-.zen-foot .n{font-size:12px;font-weight:900}
+  padding:12px 18px;border-top:var(--bd);background:var(--g1)}
+.zen-foot .n{font-size:12px;font-weight:700;color:var(--ink-2)}
 .zen-foot .r{margin-left:auto;display:flex;gap:9px}
 @media(max-width:640px){
   .veil{padding:0}
-  .zen{width:100vw;max-height:100vh;height:100vh;box-shadow:none;border:0}
+  .zen{width:100vw;max-height:100vh;height:100vh;border-radius:0;box-shadow:none}
   .zen-foot .r{width:100%;margin-left:0}
   .zen-foot .r .act{flex:1}
 }
@@ -361,6 +374,7 @@ button.skip{background:var(--g1)}
 
   <!-- 詳細 -->
   <section id="detailView" class="hide">
+    <div class="dcard">
     <button class="back" id="back">← 一覧にもどる</button>
 
     <div class="sec">
@@ -417,6 +431,7 @@ button.skip{background:var(--g1)}
       <button class="act" id="bSave">下書きを保存</button>
       <button class="act skip" id="bSkip">対応しない</button>
       <button class="act send" id="bSend">送信する</button>
+    </div>
     </div>
   </section>
   </div>
@@ -487,7 +502,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19j";
+const UI_BUILD = "ui-2026-08-19l";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -537,6 +552,51 @@ function daysClass(d) {
   return "fresh";
 }
 
+
+/* ============================================================
+ *  用件を一言にする
+ *
+ *  一覧に並ぶのは返信案の書き出しですが、それだと
+ *  「お問い合わせいただきありがとうございます」ばかりが並び、
+ *  何の件なのかが分かりません。返信案から用件を拾って、
+ *  「名義変更」「保管場所使用承諾書」のように短く出します。
+ *
+ *  ★上から順に見て、最初に当たったものを使います。
+ *    駐車場より先に保管場所を見るなど、順番に意味があります。
+ * ============================================================ */
+const TOPICS = [
+  ["保管場所使用承諾書", ["保管場所", "車庫証明", "使用承諾"]],
+  ["名義変更",           ["名義変更", "契約者様の変更", "契約者変更"]],
+  ["車両変更",           ["お車のご変更", "車両変更", "車両のご変更"]],
+  ["無断駐車",           ["無断駐車", "迷惑駐車"]],
+  ["駐車場",             ["駐車場", "区画", "満車"]],
+  ["ペット",             ["ペット", "小型犬", "飼育"]],
+  ["エアコン",           ["エアコン"]],
+  ["インターネット",     ["インターネット", "Wi-Fi", "ｗｉ-ｆｉ", "回線"]],
+  ["ゴミ",               ["ゴミ", "ごみ", "分別"]],
+  ["騒音",               ["騒音"]],
+  ["領収書",             ["領収書", "領収証"]],
+  ["解約・退去",         ["ご解約", "解約日", "退去"]],
+  ["修繕",               ["修繕", "不具合", "水漏れ", "故障", "業者を手配"]],
+  ["鍵",                 ["鍵の開錠", "鍵を紛失", "キーボックス"]],
+  ["内見",               ["内見", "ご案内", "見学"]],
+  ["空室確認",           ["募集中", "満室", "空室"]],
+  ["更新",               ["更新料", "契約更新"]],
+  ["火災保険",           ["火災保険"]],
+];
+
+function topicOf(text) {
+  const t = String(text || "");
+  if (!t) return "";
+  for (let i = 0; i < TOPICS.length; i++) {
+    const keys = TOPICS[i][1];
+    for (let k = 0; k < keys.length; k++) {
+      if (t.indexOf(keys[k]) >= 0) return TOPICS[i][0];
+    }
+  }
+  return "";
+}
+
 function cardHtml(x, done) {
   const soudan = x.kind === "入居者相談" ? " soudan" : "";
   /* 返信案がまだ無い行（未処理）は、作成中と分かるようにします。
@@ -545,6 +605,7 @@ function cardHtml(x, done) {
     ? "返信案を作っています…（10分ほどで並びます）"
     : (x.draft || "").replace(/\s+/g, " ").slice(0, 90);
   const cls    = (done ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
+  const topic  = x.making ? "" : topicOf(x.draft);
   const right  = done
     ? '<span class="sent">' + esc(x.status) + (x.sentAt ? "　" + esc(x.sentAt) : "") + '</span>'
     : (x.making
@@ -554,6 +615,7 @@ function cardHtml(x, done) {
   return '<div class="card ' + cls + '" tabindex="0" data-row="' + x.rowNo + '">'
        +   '<div class="card-top">'
        +     '<span class="kind' + soudan + '">' + esc(x.kind || "未分類") + '</span>'
+       +     (topic ? '<span class="topic">' + esc(topic) + '</span>' : '')
        +     '<span class="bldg">' + esc(x.building || "物件名なし") + '</span>'
        +     right
        +   '</div>'
@@ -732,7 +794,8 @@ async function openDetail(rowNo) {
   disarm();
   if (!isWide()) $("listView").classList.add("hide");
   $("detailView").classList.remove("hide");
-  if (!isWide()) window.scrollTo(0, 0);
+  document.body.style.overflow = "hidden";
+  $("detailView").scrollTop = 0;
 
   /* ② 問い合わせは1回だけ。
    *    以前は detail・thread・attachList を別々に投げていましたが、
@@ -767,7 +830,9 @@ async function openDetail(rowNo) {
   }
 }
 
-function isWide() { return window.matchMedia("(min-width: 1000px)").matches; }
+/* ★以前は1000px以上で左右に並べていました。いまは1件をまん中に開くので、
+ *   一覧は隠さず、背景に置いたままにします（640px以下だけ切り替えます）。 */
+function isWide() { return window.matchMedia("(min-width: 641px)").matches; }
 
 /* 処理が終わった案件を、通信せずに画面から片づける */
 function finishRow(rowNo, toDone) {
@@ -788,6 +853,7 @@ function finishRow(rowNo, toDone) {
 
 function backToList() {
   $("detailView").classList.add("hide");
+  document.body.style.overflow = "";
   $("listView").classList.remove("hide");
   cur = null;
   if (!isWide()) loadList();
@@ -1153,6 +1219,17 @@ $("dFile").addEventListener("change", function (e) {
   if (f) pickAttach(f);
 });
 $("back").addEventListener("click", backToList);
+
+/* 背景をクリック、または Esc で閉じます。
+ * ★集中編集が開いているときは、そちらが先に閉じます（二重で閉じません）。 */
+$("detailView").addEventListener("mousedown", function (e) {
+  if (e.target === $("detailView")) backToList();
+});
+document.addEventListener("keydown", function (e) {
+  if (e.key !== "Escape") return;
+  if ($("veil").getAttribute("data-open") === "true") return;
+  if (!$("detailView").classList.contains("hide")) backToList();
+});
 $("bSave").addEventListener("click", function () { save(false); });
 $("bAi").addEventListener("click", askAi);
 $("dPrevBox").addEventListener("toggle", function () {
