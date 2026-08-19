@@ -157,6 +157,9 @@ button.skip{color:var(--stop);border-color:#e8cabe;background:var(--stop-2)}
 
 /* ---- やりとりの履歴 ---- */
 .th-note{font-weight:400;font-size:12px;color:var(--ink-2);margin-left:8px}
+.card.making{opacity:.72}
+.card.making .snip{font-style:italic;color:#6b7280}
+.days.making{background:#e5e7eb;color:#4b5563}
 .rawbox{margin-top:8px}
 .rawbox>summary{cursor:pointer;font-size:13px;color:#4b5563;padding:6px 2px;list-style:none}
 .rawbox>summary::-webkit-details-marker{display:none}
@@ -405,7 +408,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-19e";
+const UI_BUILD = "ui-2026-08-19f";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -457,11 +460,17 @@ function daysClass(d) {
 
 function cardHtml(x, done) {
   const soudan = x.kind === "入居者相談" ? " soudan" : "";
-  const snip   = (x.draft || "").replace(/\s+/g, " ").slice(0, 90);
-  const cls    = done ? "done" : daysClass(x.days);
+  /* 返信案がまだ無い行（未処理）は、作成中と分かるようにします。
+   * F列を消して作り直すとき、案件が消えたように見えないためです。 */
+  const snip   = x.making
+    ? "返信案を作っています…（10分ほどで並びます）"
+    : (x.draft || "").replace(/\s+/g, " ").slice(0, 90);
+  const cls    = (done ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
   const right  = done
     ? '<span class="sent">' + esc(x.status) + (x.sentAt ? "　" + esc(x.sentAt) : "") + '</span>'
-    : '<span class="days ' + daysClass(x.days) + '">' + esc(daysLabel(x.days)) + '</span>';
+    : (x.making
+        ? '<span class="days making">作成中</span>'
+        : '<span class="days ' + daysClass(x.days) + '">' + esc(daysLabel(x.days)) + '</span>');
 
   return '<div class="card ' + cls + '" tabindex="0" data-row="' + x.rowNo + '">'
        +   '<div class="card-top">'
