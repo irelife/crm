@@ -68,6 +68,19 @@ h1{font-size:16px;margin:0;letter-spacing:.02em;font-weight:700;flex:1}
   background:var(--g2);color:var(--ink-2)}
 .tab.on .tab-n{background:var(--ink);color:#fff}
 
+/* ---- 用件でしぼる ---- */
+.filters{display:flex;gap:6px;overflow-x:auto;margin:-6px 0 13px;padding:2px 0 4px;
+  -webkit-overflow-scrolling:touch;scrollbar-width:none}
+.filters::-webkit-scrollbar{display:none}
+.filters:empty{display:none}
+.fchip{flex:none;border:var(--bd);background:#fff;border-radius:999px;
+  padding:5px 13px;font-size:12px;font-weight:700;color:var(--ink-2);
+  cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:6px;
+  transition:background .15s,color .15s,border-color .15s}
+.fchip:hover{color:var(--ink);border-color:var(--g3)}
+.fchip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+.fchip .fn{font-size:11px;font-weight:700;opacity:.7}
+
 /* ---- 一覧 ---- */
 .card{
   position:relative;
@@ -369,6 +382,7 @@ button.skip{background:var(--g1);border-color:var(--g2);color:var(--ink-2)}
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
     </div>
+    <div class="filters" id="filters"></div>
     <div id="list"></div>
   </section>
 
@@ -502,7 +516,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-20c";
+const UI_BUILD = "ui-2026-08-20d";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -605,7 +619,7 @@ function cardHtml(x, done) {
    * F列を消して作り直すとき、案件が消えたように見えないためです。 */
   const snip   = x.making
     ? "返信案を作っています…（10分ほどで並びます）"
-    : (x.draft || "").replace(/\s+/g, " ").slice(0, 90);
+    : (x.content || x.draft || "").replace(/\s+/g, " ").slice(0, 90);
   const cls    = (done ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
   const topic  = topicOf(x.content);
   const right  = done
@@ -695,19 +709,68 @@ async function drawEigyou() {
   });
 }
 
-function drawList() {
-  if (listTab === "eigyou") { drawEigyou(); return; }
+/* ============================================================
+ *  用件でしぼる
+ *
+ *  20分類を全部並べても選べません。いま実際に来ている用件だけを、
+ *  件数の多い順に出します。0件の用件は出しません。
+ * ============================================================ */
+let topicFilter = "";
 
-  const rows = (listTab === "open") ? listOpen : listDone;
+function drawFilters(rows) {
+  const box = $("filters");
+  const n = {};
+  rows.forEach(function (x) {
+    const t = topicOf(x.content);
+    if (!t) return;
+    n[t] = (n[t] || 0) + 1;
+  });
+
+  const keys = Object.keys(n).sort(function (a, b) {
+    if (n[b] !== n[a]) return n[b] - n[a];
+    return a.localeCompare(b, "ja");
+  });
+
+  if (!keys.length) { box.innerHTML = ""; topicFilter = ""; return; }
+  if (topicFilter && keys.indexOf(topicFilter) < 0) topicFilter = "";
+
+  box.innerHTML = '<button class="fchip' + (topicFilter ? "" : " on")
+      + '" type="button" data-t="">すべて<span class="fn">' + rows.length + '</span></button>'
+    + keys.map(function (k) {
+        return '<button class="fchip' + (topicFilter === k ? " on" : "")
+             + '" type="button" data-t="' + esc(k) + '">' + esc(k)
+             + '<span class="fn">' + n[k] + '</span></button>';
+      }).join("");
+
+  Array.prototype.forEach.call(box.querySelectorAll(".fchip"), function (b) {
+    b.addEventListener("click", function () {
+      topicFilter = b.dataset.t || "";
+      drawList();
+    });
+  });
+}
+
+function drawList() {
+  if (listTab === "eigyou") { $("filters").innerHTML = ""; drawEigyou(); return; }
+
+  const all  = (listTab === "open") ? listOpen : listDone;
   const done = (listTab === "done");
 
   $("tabOpen").className   = "tab" + (done ? "" : " on");
   $("tabDone").className   = "tab" + (done ? " on" : "");
   $("tabEigyou").className = "tab";
 
+  drawFilters(all);
+
+  const rows = topicFilter
+    ? all.filter(function (x) { return topicOf(x.content) === topicFilter; })
+    : all;
+
   if (!rows.length) {
     $("list").innerHTML = '<div class="empty">'
-      + (done ? "完了した案件はまだありません" : "未返信の案件はありません")
+      + (topicFilter
+          ? "「" + esc(topicFilter) + "」の案件はありません"
+          : (done ? "完了した案件はまだありません" : "未返信の案件はありません"))
       + '</div>';
     return;
   }
@@ -1216,9 +1279,9 @@ async function dropAttach(id) {
 }
 
 /* ---------- 起動 ---------- */
-$("tabOpen").addEventListener("click", function () { listTab = "open"; drawList(); });
-$("tabDone").addEventListener("click", function () { listTab = "done"; drawList(); });
-$("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; drawList(); });
+$("tabOpen").addEventListener("click", function () { listTab = "open"; topicFilter = ""; drawList(); });
+$("tabDone").addEventListener("click", function () { listTab = "done"; topicFilter = ""; drawList(); });
+$("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; topicFilter = ""; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
   if (f) pickAttach(f);
