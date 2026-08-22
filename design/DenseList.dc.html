@@ -1,0 +1,165 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=BIZ+UDPGothic:wght@400;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+  <style>
+    body{margin:0;background:#fbfbfc;
+      font-family:"BIZ UDPGothic","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+      color:#16181d;-webkit-font-smoothing:antialiased;}
+    a{color:#3350c9;text-decoration:none;} a:hover{color:#263a9c;}
+  </style>
+</helmet>
+
+<div style="min-height:100%; background:#fbfbfc;">
+
+  <!-- バー -->
+  <div style="display:flex; align-items:center; gap:9px; height:46px; padding:0 14px; background:#ffffff; border-bottom:1px solid #e3e6ea;">
+    <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">返信の承認</span>
+    <span style="font-size:10px; font-weight:700; letter-spacing:0.04em; color:#a8690c; border:1px solid #e6d3ad; background:#fdf7ea; border-radius:3px; padding:2px 6px;">テスト送信中</span>
+    <svg width="19" height="19" viewBox="0 0 19 19" fill="none" style="margin-left:auto;"><circle cx="8.5" cy="8.5" r="5.6" stroke="#5f6570" stroke-width="1.5"/><path d="m12.7 12.7 3.4 3.4" stroke="#5f6570" stroke-width="1.5" stroke-linecap="round"/></svg>
+  </div>
+
+  <!-- 指標 -->
+  <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); background:#ffffff; border-bottom:1px solid #e3e6ea;">
+    <div style="display:flex; flex-direction:column; gap:2px; padding:11px 14px; border-right:1px solid #eef0f3;">
+      <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:23px; font-weight:500; line-height:1; letter-spacing:-0.02em;">12</span>
+      <span style="font-size:11px; color:#5f6570;">未返信</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:2px; padding:11px 14px; border-right:1px solid #eef0f3;">
+      <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:23px; font-weight:500; line-height:1; letter-spacing:-0.02em; color:#c2352a;">2</span>
+      <span style="font-size:11px; color:#5f6570;">4日以上</span>
+    </div>
+    <div style="display:flex; flex-direction:column; gap:2px; padding:11px 14px;">
+      <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:23px; font-weight:500; line-height:1; letter-spacing:-0.02em; color:#5f6570;">48</span>
+      <span style="font-size:11px; color:#5f6570;">完了</span>
+    </div>
+  </div>
+
+  <!-- タブ -->
+  <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #e3e6ea;">
+    <div style="display:flex; align-items:center; gap:5px; height:44px; padding:0 16px; box-shadow:inset 0 -2px 0 #3350c9; font-size:13px; font-weight:700; color:#16181d;">未返信<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#3350c9;">12</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:44px; padding:0 16px; font-size:13px; color:#5f6570;">完了<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px;">48</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:44px; padding:0 16px; font-size:13px; color:#5f6570;">営業<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px;">5</span></div>
+  </div>
+
+  <!-- 用件しぼり -->
+  <div style="display:flex; gap:6px; padding:10px 14px; background:#f4f5f7; border-bottom:1px solid #e3e6ea; overflow:hidden;">
+    <div style="display:flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:4px; background:#16181d; color:#ffffff; font-size:11px; font-weight:700; white-space:nowrap;">すべて<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; opacity:.65;">12</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:4px; background:#ffffff; border:1px solid #dfe2e7; font-size:11px; white-space:nowrap;">保管場所使用承諾書<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; color:#8b909a;">3</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:4px; background:#ffffff; border:1px solid #dfe2e7; font-size:11px; white-space:nowrap;">修繕<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; color:#8b909a;">3</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:26px; padding:0 9px; border-radius:4px; background:#ffffff; border:1px solid #dfe2e7; font-size:11px; white-space:nowrap;">駐車場<span style="font-family:'IBM Plex Mono',ui-monospace,monospace; color:#8b909a;">2</span></div>
+  </div>
+
+  <!-- 行 -->
+  <div style="display:flex; flex-direction:column;">
+
+    <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#c2352a;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">保管場所使用承諾書</span>
+          <span style="font-size:10px; font-weight:700; color:#ffffff; background:#16181d; border-radius:3px; padding:2px 5px;">入居者相談</span>
+          <span style="margin-left:auto; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; font-weight:500; color:#c2352a; white-space:nowrap;">4d</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#5f6570;">メゾン中央 203</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#8b909a;">08-18 09:12</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#4a4f58; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">車庫証明の申請に必要な保管場所使用承諾書を発行していただきたく…</p>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#c2352a;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">無断駐車</span>
+          <span style="font-size:10px; font-weight:700; color:#ffffff; background:#16181d; border-radius:3px; padding:2px 5px;">入居者相談</span>
+          <span style="margin-left:auto; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; font-weight:500; color:#c2352a; white-space:nowrap;">5d</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#5f6570;">パークハイツ 1102</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#8b909a;">08-17 20:41</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#4a4f58; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">来客用の区画に知らない車が停められていて困っています。対応を…</p>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#e0a33c;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">名義変更</span>
+          <span style="font-size:10px; font-weight:700; color:#4a4f58; background:#eef0f3; border-radius:3px; padding:2px 5px;">問い合わせ</span>
+          <span style="font-size:10px; font-weight:700; color:#a8690c; border:1px solid #e6d3ad; border-radius:3px; padding:2px 5px;">要手入力</span>
+          <span style="margin-left:auto; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; font-weight:500; color:#a8690c; white-space:nowrap;">2d</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#5f6570;">サンコーポ 305</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#8b909a;">08-20 11:30</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#4a4f58; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">結婚により姓が変わりました。契約者名の変更手続きについて…</p>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#c9ced6;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">修繕</span>
+          <span style="font-size:10px; font-weight:700; color:#ffffff; background:#16181d; border-radius:3px; padding:2px 5px;">入居者相談</span>
+          <span style="margin-left:auto; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; color:#8b909a; white-space:nowrap;">本日</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#5f6570;">メゾン中央 108</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#8b909a;">08-22 08:05</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#4a4f58; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">洗面台の下から水漏れしています。床が濡れてしまっていて…</p>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0; background:#f7f8fa; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#dfe2e7;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em; color:#8b909a;">内見</span>
+          <span style="margin-left:auto; font-size:11px; color:#8b909a; white-space:nowrap;">作成中</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#8b909a;">ロイヤルステージ</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#a4a9b2;">08-22 09:48</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#8b909a;">返信案を作っています…（10分ほどで並びます）</p>
+      </div>
+    </div>
+
+    <div style="display:flex; gap:0; background:#ffffff; border-bottom:1px solid #eef0f3;">
+      <div style="flex-shrink:0; width:3px; background:#c9ced6;"></div>
+      <div style="display:flex; flex-direction:column; gap:4px; flex-grow:1; min-width:0; padding:11px 14px;">
+        <div style="display:flex; align-items:center; gap:7px;">
+          <span style="font-size:14px; font-weight:700; letter-spacing:0.01em;">ペット</span>
+          <span style="font-size:10px; font-weight:700; color:#4a4f58; background:#eef0f3; border-radius:3px; padding:2px 5px;">問い合わせ</span>
+          <span style="margin-left:auto; font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:12px; color:#8b909a; white-space:nowrap;">1d</span>
+        </div>
+        <div style="display:flex; align-items:baseline; gap:7px;">
+          <span style="font-size:11px; color:#5f6570;">グリーンコート 402</span>
+          <span style="font-family:'IBM Plex Mono',ui-monospace,monospace; font-size:11px; color:#8b909a;">08-21 15:22</span>
+        </div>
+        <p style="margin:0; font-size:12px; line-height:1.5; color:#4a4f58; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">小型犬を飼いたいのですが、規約上どうなっているか教えてください…</p>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="margin:0; padding:12px 14px; font-size:10px; font-family:'IBM Plex Mono',ui-monospace,monospace; color:#a4a9b2;">ui-2026-08-20e / api v18 / list v7</p>
+
+</div>
+</x-dc>
+</body>
+</html>
