@@ -951,6 +951,100 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
   #dSubject{font-size:20px;}
 }
 </style>
+<style id="crm-read">
+/* ══════════════════════════════════════════════════════════════
+   読みやすさのための追加。この <style> ごと消せば前の見た目に戻ります。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ---- 用件アイコン：面に載せて、ひとまわり大きく ---- */
+.filters{gap:4px;padding:10px 10px 20px;}
+.ficon{width:136px;padding:14px 6px 16px;gap:9px;}
+.ficon:hover{background:transparent;}
+.ficon:active{background:transparent;}
+.ficon .ic{
+  width:68px;height:68px;border-radius:20px;background:var(--g1);
+  display:flex;align-items:center;justify-content:center;
+  transition:background .16s,box-shadow .16s;
+}
+.ficon svg{width:39px;height:39px;}
+.ficon:hover .ic{background:var(--g2);}
+.ficon .fl{font-size:14px;font-weight:500;color:var(--ink);min-height:2.6em;}
+.ficon .fn{font-size:24px;font-weight:600;}
+.ficon .fr{font-size:12.5px;}
+/* いま選んでいるもの。文字を白抜きにすると中が見えない絵があるため、
+   面を淡い青にして、輪郭で選択を示します */
+.ficon.on .ic{
+  background:var(--accent-soft);
+  box-shadow:inset 0 0 0 2px rgba(0,113,227,.45);
+}
+
+/* ---- 一覧：左に大きな用件アイコン、右に物件・お名前・要約 ---- */
+.card{padding:17px 20px 17px 24px;}
+.card::before{left:9px;top:30px;bottom:auto;width:8px;height:8px;border-radius:980px;}
+.crow{display:flex;align-items:flex-start;gap:16px;}
+.cico{flex:0 0 auto;width:78px;display:flex;flex-direction:column;
+  align-items:center;gap:6px;padding-top:2px;}
+.cico .ic{
+  width:62px;height:62px;border-radius:18px;background:var(--g1);color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.cico svg{width:35px;height:35px;display:block;}
+.cico .ct{
+  font-size:12.5px;font-weight:600;line-height:1.25;color:var(--ink-2);
+  text-align:center;letter-spacing:-.01em;
+}
+.cbody{flex:1 1 auto;min-width:0;}
+
+/* 見出し＝物件名＋号室 */
+.card .hl{font-size:17px;font-weight:600;color:var(--ink);letter-spacing:-.014em;}
+.card .hl .room{
+  margin-left:6px;font-size:15px;font-weight:600;color:var(--accent);
+  font-variant-numeric:tabular-nums;
+}
+/* お名前 */
+.card .nm{font-size:14px;font-weight:600;color:var(--ink);letter-spacing:-.01em;}
+.card-sub{gap:9px;margin-bottom:2px;}
+.card .time{font-size:12.5px;color:var(--ink-3);}
+.card .days{font-size:13.5px;}
+
+/* 本文の要約。薄すぎて読めなかったので、濃さと大きさを上げ、
+   1行で切らずに2行まで見せます */
+.card .snip{
+  font-size:14.5px;line-height:1.65;color:var(--ink);margin-top:5px;
+  white-space:normal;text-overflow:clip;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+}
+.card.making .snip{color:var(--ink-3);}
+.card.done .snip{color:var(--ink-2);}
+.card.done .hl{font-weight:600;color:var(--ink-2);}
+.card.done .cico .ic{background:var(--g1);color:var(--ink-3);}
+.card.done .cico .ct{color:var(--ink-3);}
+
+/* 営業メールの行はアイコンを持たないので、元の詰め方のままにします */
+.card.eigyou{padding:15px 20px;}
+.card.eigyou .snip{-webkit-line-clamp:3;}
+
+@media (max-width:640px){
+  .ficon{width:112px;padding:12px 3px 14px;gap:7px;}
+  .ficon .ic{width:58px;height:58px;border-radius:17px;}
+  .ficon svg{width:33px;height:33px;}
+  .ficon .fl{font-size:13px;}
+  .ficon .fn{font-size:21px;}
+  .ficon .fr{font-size:11.5px;}
+
+  .card{padding:15px 14px 15px 20px;}
+  .card::before{left:6px;top:26px;}
+  .crow{gap:12px;}
+  .cico{width:64px;}
+  .cico .ic{width:53px;height:53px;border-radius:15px;}
+  .cico svg{width:30px;height:30px;}
+  .cico .ct{font-size:11.5px;}
+  .card .hl{font-size:15.5px;}
+  .card .hl .room{font-size:14px;}
+  .card .nm{font-size:13.5px;}
+  .card .snip{font-size:13.5px;}
+}
+</style>
 </head>
 <body>
 <div class="wrap">
@@ -1236,13 +1330,85 @@ function topicOf(text) {
   return "";
 }
 
+
+/* ───────────────────────────────────────────────────────────────
+ * 一覧を、目を凝らさなくても読めるようにするための下ごしらえ。
+ * 問い合わせ本文はフォームから来るので、頭に決まった形が付きます。
+ *   ［個人 / 佐藤咲桜 / 07075674888］
+ *   内容：お世話になります。……
+ * ここから お名前 と 号室 を取り出し、本文はあいさつと名乗りを外して
+ * 用件だけを残します。クラウド側は一切変えていません。画面の中だけで
+ * 組み立てているので、表計算の列が増えたり減ったりはしません。
+ * ─────────────────────────────────────────────────────────────── */
+
+/* 物件名の末尾に付いている部屋番号を切り離します
+ * 例：「カルムコート東棟207」→ 名前「カルムコート東棟」／号室「207」 */
+function splitBldg(b) {
+  const t = String(b || "").trim();
+  if (!t) return { name: "", room: "" };
+  const m = t.match(/^(.*?[^0-9\uFF10-\uFF19\s])\s*([0-9\uFF10-\uFF19]{2,4})\s*(?:\u53F7\u5BA4?)?$/);
+  if (m) return { name: m[1].trim(), room: m[2] };
+  return { name: t, room: "" };
+}
+
+/* 物件名に部屋番号が入っていないときは、本文から拾います */
+function roomOf(text) {
+  const m = String(text || "").match(/([0-9\uFF10-\uFF19]{2,4})\s*\u53F7\u5BA4/);
+  return m ? m[1] : "";
+}
+
+/* お名前。まず ［個人 / 氏名 / 電話］ の真ん中、無ければ名乗りの文から */
+function nameOf(x) {
+  const t = String((x && x.content) || "");
+  let m = t.match(/\uFF3B[^\uFF3D]*?[\/\uFF0F]\s*([^\/\uFF0F\uFF3D]{2,20}?)\s*[\/\uFF0F]/);
+  if (m && !/^[0-9\-\s]+$/.test(m[1])) return m[1].trim();
+  m = t.match(/([\u4E00-\u9FFF\u30A0-\u30FF\u3040-\u309F]{2,10})\s*(?:\u3068\u7533\u3057\u307E\u3059|\u3068\u8A00\u3044\u307E\u3059|\u3067\u3059\u3002)/);
+  if (m) return m[1].trim();
+  return "";
+}
+
+/* あいさつ・名乗り・結びの決まり文句。要約からは外します */
+const FILLER = [
+  "\u304A\u4E16\u8A71\u306B\u306A\u308A\u307E\u3059",          /* お世話になります */
+  "\u304A\u4E16\u8A71\u306B\u306A\u3063\u3066\u304A\u308A\u307E\u3059",  /* お世話になっております */
+  "\u306F\u3058\u3081\u307E\u3057\u3066",                        /* はじめまして */
+  "\u5931\u793C\u3044\u305F\u3057\u307E\u3059",                 /* 失礼いたします */
+  "\u5B9C\u3057\u304F\u304A\u9858\u3044",                        /* 宜しくお願い */
+  "\u3088\u308D\u3057\u304F\u304A\u9858\u3044",                 /* よろしくお願い */
+  "\u3054\u9023\u7D61\u3042\u308A\u304C\u3068\u3046",          /* ご連絡ありがとう */
+  "\u3042\u308A\u304C\u3068\u3046\u3054\u3056\u3044\u307E\u3059" /* ありがとうございます */
+];
+
+/* 本文を、用件だけの短い一文にまとめます */
+function summarize(text, limit) {
+  let t = String(text || "")
+    .replace(/\uFF3B[^\uFF3D]*\uFF3D/g, " ")        /* ［個人 / 氏名 / 電話］ */
+    .replace(/^[\s\S]*?\u5185\u5BB9[:\uFF1A]/, "") /* 「内容：」より前を落とす */
+    .replace(/\r/g, "")
+    .replace(/[ \t\u3000]+/g, " ");
+  const parts = t.split(/[\u3002\n]+/).map(function (v) { return v.trim(); })
+                 .filter(function (v) { return v.length > 0; });
+  const body = parts.filter(function (v) {
+    if (v.length <= 3) return false;
+    for (let i = 0; i < FILLER.length; i++) {
+      if (v.indexOf(FILLER[i]) >= 0 && v.length < 34) return false;
+    }
+    /* 「◯◯に住んでいる△△です」といった名乗りは落とします */
+    if (/\u4F4F\u3093\u3067/.test(v) && /\u3067\u3059|\u307E\u3059/.test(v) && v.length < 46) return false;
+    return true;
+  });
+  const use = (body.length ? body : parts).join("\u3002");
+  const max = limit || 110;
+  return use.length > max ? use.slice(0, max) + "\u2026" : use;
+}
+
 function cardHtml(x, done, wait) {
   const soudan = x.kind === "入居者相談" ? " soudan" : "";
   /* 返信案がまだ無い行（未処理）は、作成中と分かるようにします。
    * F列を消して作り直すとき、案件が消えたように見えないためです。 */
   const snip   = x.making
     ? "返信案を作っています…（10分ほどで並びます）"
-    : (x.content || x.draft || "").replace(/\s+/g, " ").slice(0, 90);
+    : summarize(x.content || x.draft, 110);
   const cls    = (done || wait ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
   const topic  = topicOf(x.content);
   /* ★返事待ちは、経過日数ではなく残り日数を出します。
@@ -1255,26 +1421,41 @@ function cardHtml(x, done, wait) {
         ? '<span class="days making">作成中</span>'
         : '<span class="days ' + daysClass(x.days) + '">' + esc(daysLabel(x.days)) + '</span>');
 
-  const bldg = x.building || "物件名なし";
-  /* 行の先頭は用件です。用件を拾えなかったときだけ物件名を先頭に出します */
-  const head = topic || bldg;
+  /* ★行の左に、用件のアイコンと文字を大きく置きます。
+   *   見出しは「物件名＋号室」、その下に「お名前・分類・受信日時」、
+   *   いちばん下に本文の要約。ひと目で誰の何の話か分かる並びです。 */
+  const bp     = splitBldg(x.building);
+  const room   = bp.room || roomOf(x.content);
+  const person = nameOf(x);
+  /* 物件名が空のときに用件を出すと、左のアイコンと同じ言葉が二重に並ぶので出しません */
+  const head   = bp.name || (room ? "" : "\u7269\u4EF6\u540D\u306A\u3057");
 
   return '<div class="card ' + cls + '" tabindex="0" data-row="' + x.rowNo + '">'
-       +   '<div class="card-top">'
-       +     '<span class="hl">' + esc(head) + '</span>'
-       +     '<span class="kind' + soudan + '">' + esc(x.kind || "未分類") + '</span>'
-       +     (x.manual ? '<span class="topic manual">要手入力</span>' : '')
-       +     (x.tmplMark
-               ? '<span class="topic ' + (x.tmplMark === "要添付" ? "attach" : "edit") + '">'
-                 + esc(x.tmplMark) + '</span>'
-               : '')
-       +     right
+       +   '<div class="crow">'
+       +     '<div class="cico">'
+       +       '<span class="ic">' + topicIconSvg(topic) + '</span>'
+       +       '<span class="ct">' + esc(topic || "\u305D\u306E\u4ED6") + '</span>'
+       +     '</div>'
+       +     '<div class="cbody">'
+       +       '<div class="card-top">'
+       +         '<span class="hl">' + esc(head)
+       +           (room ? '<span class="room">' + esc(room) + '\u53F7\u5BA4</span>' : '')
+       +         '</span>'
+       +         (x.manual ? '<span class="topic manual">要手入力</span>' : '')
+       +         (x.tmplMark
+                   ? '<span class="topic ' + (x.tmplMark === "要添付" ? "attach" : "edit") + '">'
+                     + esc(x.tmplMark) + '</span>'
+                   : '')
+       +         right
+       +       '</div>'
+       +       '<div class="card-sub">'
+       +         (person ? '<span class="nm">' + esc(person) + ' \u69D8</span>' : '')
+       +         '<span class="kind' + soudan + '">' + esc(x.kind || "未分類") + '</span>'
+       +         '<span class="time">' + esc(x.received) + '</span>'
+       +       '</div>'
+       +       '<p class="snip">' + esc(snip) + '</p>'
+       +     '</div>'
        +   '</div>'
-       +   '<div class="card-sub">'
-       +     (topic ? '<span class="bldg">' + esc(bldg) + '</span>' : '')
-       +     '<span class="time">' + esc(x.received) + '</span>'
-       +   '</div>'
-       +   '<p class="snip">' + esc(snip) + '</p>'
        + '</div>';
 }
 
@@ -1431,7 +1612,7 @@ function drawFilters(rows) {
       : '';
     return '<button class="ficon' + (topicFilter === key ? " on" : "") + '"'
          + ' type="button" data-t="' + esc(key) + '">'
-         +   topicIconSvg(label)
+         +   '<span class="ic">' + topicIconSvg(label) + '</span>'
          +   '<span class="fl">' + esc(label) + '</span>'
          +   '<span class="fn">' + count + '</span>'
          +   rate
