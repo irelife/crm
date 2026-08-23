@@ -1345,6 +1345,34 @@ button.tl-card.go:active{background:#dbeafd;}
 button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--accent),0 0 0 4px rgba(0,113,227,.22);}
 /* 長い返信案でも、行が伸びすぎないように */
 .tl-item.now .tl-text{max-height:46vh;overflow:auto;}
+
+/* ---- 完了：行そのものを緑にします ----
+ * 数字と絵だけ緑にしても、行の面が白いままだと沈んで見えました。
+ * 3日以上を赤い枠で囲うのと同じ形で、完了は緑で囲います。
+ *   赤 ＝ 急いで手を付けるもの／緑 ＝ 片づいたもの */
+.card.done{
+  background:#f1faf5;
+  box-shadow:inset 0 0 0 2px rgba(26,127,75,.34);
+  border-bottom-color:rgba(26,127,75,.18);
+}
+.card.done:hover,.card.done:focus-visible{background:#e7f5ee;}
+.card.done:focus-visible{box-shadow:inset 0 0 0 2px var(--ok);}
+.card.done::before{display:none;}
+.card.done .cico .ic{background:#d8f0e2;color:#116039;}
+.card.done .cico .ct{color:#116039;}
+.card.done .hl{color:#0f5c37;font-weight:600;}
+.card.done .hl .room{color:#116039;}
+.card.done .nm{color:#0f5c37;}
+.card.done .snip{color:#17402c;}
+.card.done .sent{color:#116039;font-weight:700;}
+.card.done .time{color:#5b8d74;}
+.card.done .kind{background:#dff2e8;color:#116039;}
+
+/* 上の「完了」の枠も、はっきり緑に */
+#btnDone .v, #btnDone.on .v{color:#116039;}
+#btnDone .k{color:#116039;opacity:1;}
+#btnDone.on{background:#dff2e8;}
+#btnDone:hover{background:#eaf7f0;}
 </style>
 </head>
 <body>
@@ -1521,7 +1549,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23n";
+const UI_BUILD = "ui-2026-08-23p";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
