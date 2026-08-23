@@ -1020,9 +1020,11 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 .card.done .cico .ic{background:var(--g1);color:var(--ink-3);}
 .card.done .cico .ct{color:var(--ink-3);}
 
-/* 営業メールの行はアイコンを持たないので、元の詰め方のままにします */
-.card.eigyou{padding:15px 20px;}
+/* 営業の行も、左にアイコンを置いた並びにそろえます */
+.card.eigyou{padding:16px 20px 16px 24px;}
 .card.eigyou .snip{-webkit-line-clamp:3;}
+.card.eigyou .bldg{font-size:15.5px;font-weight:600;color:var(--ink);letter-spacing:-.012em;}
+.card.eigyou .unbtn{margin-top:10px;}
 
 @media (max-width:640px){
   .ficon{width:112px;padding:12px 3px 14px;gap:7px;}
@@ -1461,16 +1463,26 @@ function cardHtml(x, done, wait) {
 
 function eigyouCard(x) {
   const cls = x.flag === "疑い" ? "doubt" : "";
+  /* ★ここも一覧と同じ並びにします。左に「営業」の絵と文字を置き、
+   *   目を通さなくても、返信せずに完了へ送るものだと分かるようにします */
   return '<div class="card eigyou" data-row="' + x.rowNo + '">'
-       +   '<div class="card-top">'
-       +     '<span class="flag ' + cls + '">' + esc(x.flag) + '</span>'
-       +     '<span class="bldg">' + esc(x.subject || "（件名なし）") + '</span>'
+       +   '<div class="crow">'
+       +     '<div class="cico">'
+       +       '<span class="ic">' + topicIconSvg("営業") + '</span>'
+       +       '<span class="ct">営業</span>'
+       +     '</div>'
+       +     '<div class="cbody">'
+       +       '<div class="card-top">'
+       +         '<span class="flag ' + cls + '">' + esc(x.flag) + '</span>'
+       +         '<span class="bldg">' + esc(x.subject || "（件名なし）") + '</span>'
+       +       '</div>'
+       +       '<div class="card-top"><span class="time">' + esc(x.received) + '　'
+       +         esc(x.from) + '</span></div>'
+       +       '<p class="snip">' + esc(x.content) + '</p>'
+       +       (x.reason ? '<p class="reason">判定の根拠：' + esc(x.reason) + '</p>' : "")
+       +       '<button class="unbtn" type="button">営業ではない（承認待ちに戻す）</button>'
+       +     '</div>'
        +   '</div>'
-       +   '<div class="card-top"><span class="time">' + esc(x.received) + '　'
-       +     esc(x.from) + '</span></div>'
-       +   '<p class="snip">' + esc(x.content) + '</p>'
-       +   (x.reason ? '<p class="reason">判定の根拠：' + esc(x.reason) + '</p>' : "")
-       +   '<button class="unbtn" type="button">営業ではない（承認待ちに戻す）</button>'
        + '</div>';
 }
 
@@ -1568,7 +1580,9 @@ const TOPIC_ICONS = {
   "火災保険":          '<path d="M12 5.1 3.1 13.4l1.5 1.6L12 8.2l7.4 6.8 1.5-1.6z" fill="currentColor" stroke="none"/><path d="M5.9 15.4V21h4.3v-4.6h3.6V21h4.3v-5.6L12 9.7z" fill="currentColor" stroke="none"/><path d="M17.3 2.2c.9.7 1.1 1.9.5 2.7-.4.6-.2 1.3.4 1.5.7.3 1.4-.3 1.4-1.2 1 1.4 1.1 3.1.2 4.3-.7 1-1.9 1.5-3 1.3l-2.3-2.2c.6-.7.8-1.7.5-2.6-.5-1.5.5-3.2 2.3-3.8z" fill="currentColor" stroke="none"/>',
   "解約・退去":        '<path d="M13.4 3H7A1.6 1.6 0 0 0 5.4 4.6v14.8A1.6 1.6 0 0 0 7 21h6.4"/><path d="M17.2 8.4 20.8 12l-3.6 3.6M20.8 12H10.4"/>',
   "更新":              '<path d="M20.4 12a8.4 8.4 0 1 1-2.6-6.1"/><path d="M20.6 4.2v4.7h-4.7"/>',
-  "口座変更":          '<path d="M3.4 9.6 12 4.4l8.6 5.2"/><path d="M5.6 9.6v8.8M9.9 9.6v8.8M14.1 9.6v8.8M18.4 9.6v8.8"/><path d="M3.4 18.4h17.2"/>'
+  "口座変更":          '<path d="M3.4 9.6 12 4.4l8.6 5.2"/><path d="M5.6 9.6v8.8M9.9 9.6v8.8M14.1 9.6v8.8M18.4 9.6v8.8"/><path d="M3.4 18.4h17.2"/>',
+  /* 営業メール。返信しないで完了へ送るもの */
+  "営業":              '<g fill="currentColor" stroke="none"><circle cx="7" cy="4.6" r="3"/><path d="M3 11.2V10c0-2.2 1.8-3.6 4-3.6s4 1.4 4 3.6v1.2z"/><path d="M.9 11.8h22.2l-1.9 6.6H2.8z"/></g><path d="M5.9 16.3 7.4 12.4l5.2 1.4-1.5 3.9z" fill="#fff" stroke="none"/><g fill="currentColor" stroke="#fff" stroke-width="2.1" stroke-linejoin="round" paint-order="stroke"><circle cx="16.6" cy="7" r="3.4"/><path d="M11.4 22v-3.3a5.2 5.2 0 0 1 5.2-5.2 5.2 5.2 0 0 1 5.2 5.2V22z"/></g>'
 };
 function topicIconSvg(name) {
   const d = TOPIC_ICONS[name] || TOPIC_ICONS["_"];
