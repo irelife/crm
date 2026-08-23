@@ -1375,6 +1375,93 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
 #btnDone .k{color:#86868b;opacity:1;}
 #btnDone.on{background:rgba(0,0,0,.09);}
 #btnDone:hover{background:rgba(0,0,0,.04);}
+
+/* ══════════════════════════════════════════════════════════════
+   仕上げ：面と線を減らし、文字で読ませる
+   ────────────────────────────────────────────────────────────
+   ★灰色の角丸タイルに絵を載せる形は、画面のあちこちに四角が並んで
+     しまい、古い管理画面のように見えていました。タイルをやめて絵だけ
+     置き、色は「急ぎ＝赤」「片づいた＝灰」の2つに絞ります。
+     この <style> ごと消せば前に戻ります。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ---- 用件のならび：下地の四角をやめる ---- */
+.ficon .ic{background:transparent;width:auto;height:auto;border-radius:0;}
+.ficon{width:118px;padding:12px 6px 14px;gap:7px;border-radius:16px;}
+.ficon svg{width:32px;height:32px;color:var(--ink-2);}
+.ficon:hover{background:rgba(0,0,0,.035);}
+.ficon:hover .ic{background:transparent;}
+.ficon .fl{font-size:13px;font-weight:400;color:var(--ink-2);min-height:2.5em;}
+.ficon .fn{font-size:21px;font-weight:600;letter-spacing:-.03em;color:var(--ink);}
+.ficon .fr{font-size:11.5px;color:var(--ink-3);}
+/* 選んでいるものは、面ではなく色と太さで示します */
+.ficon.on{background:transparent;}
+.ficon.on .ic{background:transparent;box-shadow:none;}
+.ficon.on svg{color:var(--accent);}
+.ficon.on .fl{color:var(--accent);font-weight:600;}
+.ficon.on .fn{color:var(--accent);}
+
+/* ---- 一覧 ---- */
+#list{box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 34px rgba(0,0,0,.05);}
+.card{padding:19px 24px 19px 24px;}
+.card::before{display:none;}
+.crow{gap:18px;}
+.cico{width:74px;gap:7px;padding-top:3px;}
+.cico .ic{background:transparent;width:auto;height:auto;border-radius:0;}
+.cico svg{width:29px;height:29px;color:var(--ink-2);}
+.cico .ct{font-size:11.5px;font-weight:500;color:var(--ink-3);letter-spacing:0;}
+
+.card .hl{font-size:17px;font-weight:600;letter-spacing:-.021em;color:var(--ink);}
+.card .hl .room{color:var(--ink-2);font-weight:500;margin-left:7px;font-size:15px;}
+.card .nm{font-size:13.5px;font-weight:500;color:var(--ink-2);}
+.card-sub{gap:10px;}
+.card .kind{
+  background:transparent;border:1px solid var(--line);color:var(--ink-3);
+  font-weight:400;font-size:11px;padding:1px 8px;
+}
+.card .kind.soudan{background:transparent;border-color:var(--g3);color:var(--ink-2);}
+.card .time{font-size:12px;color:var(--ink-3);}
+.card .snip{font-size:14px;line-height:1.7;color:var(--ink-2);margin-top:6px;}
+.card .days{font-size:12.5px;font-weight:500;color:var(--ink-3);letter-spacing:0;}
+
+/* 急ぎ＝赤。枠は細く、面はごく淡く。強いのは文字と絵の色です */
+.card.late{
+  background:#fff8f7;
+  box-shadow:inset 3px 0 0 var(--late),inset 0 0 0 1px rgba(215,0,21,.16);
+}
+.card.late:hover,.card.late:focus-visible{background:#fff2f0;}
+.card.late .cico svg{color:var(--late);}
+.card.late .cico .ct{color:var(--late);}
+.card.late .hl{color:var(--ink);}
+.card.late .hl .room{color:var(--ink-2);}
+.card.late .snip{color:var(--ink-2);}
+.card.late .time{color:#a1737a;}
+.card.late .days{color:var(--late);font-weight:600;}
+
+/* 片づいた＝灰。読まなくてよいので、いちばん静かにします */
+.card.done{
+  background:#ececed;
+  box-shadow:inset 3px 0 0 rgba(0,0,0,.20),inset 0 0 0 1px rgba(0,0,0,.07);
+}
+.card.done:hover,.card.done:focus-visible{background:#e5e5e7;}
+.card.done .cico svg{color:#8b8b90;}
+.card.done .hl{color:#6e6e73;}
+.card.done .hl .room{color:#8b8b90;}
+.card.done .kind{border-color:#cfcfd4;color:#8b8b90;background:transparent;}
+
+/* ---- 上の件数 ---- */
+.stat .v{font-size:32px;font-weight:600;letter-spacing:-.035em;}
+.stat .k{font-size:12px;color:var(--ink-3);}
+#btnDone.on{background:rgba(0,0,0,.055);}
+
+@media (max-width:640px){
+  .ficon{width:104px;}
+  .ficon svg{width:29px;height:29px;}
+  .cico{width:62px;}
+  .cico svg{width:26px;height:26px;}
+  .card{padding:16px 15px;}
+  .crow{gap:13px;}
+}
 </style>
 </head>
 <body>
@@ -1551,7 +1638,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23r";
+const UI_BUILD = "ui-2026-08-23s";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2999,6 +3086,19 @@ function drawThread(r) {
   const rowNo = cur ? cur.rowNo : null;
   const hint  = (listOpen.concat(listWait, listDone))
     .filter(function (x) { return x.rowNo === rowNo; })[0];
+
+  /* ★上の「今回の問い合わせ」と同じ文が、履歴の1段目にも出ていました。
+   *   同じものを二度読ませないよう、一致する段は外します。
+   *   空白と改行のちがいは無視して見比べます。 */
+  const flat = function (t) { return String(t || "").replace(/\s+/g, ""); };
+  const me   = flat(cur && cur.content);
+  if (me) {
+    let dropped = false;
+    items = items.filter(function (x) {
+      if (!dropped && x.side === "in" && flat(x.text) === me) { dropped = true; return false; }
+      return true;
+    });
+  }
 
   /* まだ1件も返ってきていないときは、いま開いている問い合わせを
      最初の一段として使います。時系列の形は崩しません */
