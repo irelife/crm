@@ -1480,6 +1480,115 @@ h1{letter-spacing:-.03em;}
   .tab{height:44px;padding:0 18px;font-size:16px;}
   .tab-n{font-size:13.5px;margin-left:6px;}
 }
+
+/* ══════════════════════════════════════════════════════════════
+   一覧を、横並びの正方形カードにする
+   ────────────────────────────────────────────────────────────
+   1件＝1行の横長だと、広い画面では右側がまるごと余っていました。
+   幅に応じて2列・3列・4列と自動で並べ、1枚を正方形にします。
+   （狭い画面では1列にし、正方形はやめて中身ぶんの高さにします）
+   ══════════════════════════════════════════════════════════════ */
+#list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:16px;
+  background:transparent;box-shadow:none;overflow:visible;border-radius:0;
+}
+#list > .empty,#list > .eigyou-note{grid-column:1 / -1;}
+
+.card{
+  aspect-ratio:1 / 1;
+  display:flex;flex-direction:column;
+  background:var(--card);border:0;border-bottom:0;
+  border-radius:18px;padding:22px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 26px rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card:hover,.card:focus-visible{
+  background:var(--card);
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 14px 40px rgba(0,0,0,.09);
+  transform:translateY(-1px);
+}
+.card:focus-visible{box-shadow:0 0 0 3px var(--accent);}
+.card.on{box-shadow:0 0 0 2px var(--accent),0 10px 30px rgba(0,113,227,.16);}
+
+/* 中身を、上から下へ流します */
+.crow{flex:1;min-height:0;gap:16px;}
+.cbody{display:flex;flex-direction:column;min-height:0;}
+.card .snip{
+  flex:1;min-height:0;-webkit-line-clamp:6;margin-top:8px;
+}
+.card-top{flex-wrap:wrap;}
+
+/* 急ぎ＝赤 */
+.card.late{
+  background:#fff8f7;
+  box-shadow:inset 4px 0 0 var(--late),0 1px 2px rgba(215,0,21,.08),
+             0 8px 26px rgba(215,0,21,.10);
+}
+.card.late:hover,.card.late:focus-visible{
+  background:#fff2f0;
+  box-shadow:inset 4px 0 0 var(--late),0 2px 8px rgba(215,0,21,.12),
+             0 16px 42px rgba(215,0,21,.16);
+}
+/* 片づいた＝灰 */
+.card.done{
+  background:#ececed;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.05);
+}
+.card.done:hover,.card.done:focus-visible{
+  background:#e5e5e7;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 10px 30px rgba(0,0,0,.09);
+}
+
+/* 営業の行は文章が長いので、正方形にはしません */
+.card.eigyou{aspect-ratio:auto;padding:20px;}
+.card.eigyou .snip{-webkit-line-clamp:4;}
+
+@media (max-width:900px){
+  #list{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:13px;}
+}
+@media (max-width:640px){
+  /* 1列のときに正方形にすると、間延びして送りが増えるだけなので
+     中身ぶんの高さに戻します */
+  #list{grid-template-columns:1fr;gap:11px;margin:0 12px;}
+  .card{aspect-ratio:auto;padding:16px;border-radius:16px;}
+  .card .snip{-webkit-line-clamp:3;}
+}
+
+/* ---- 正方形カードの中身の組み方 ----
+ * 絵を左の柱にしたままだと、右下がまるごと空いて間延びしていました。
+ * 上から「用件の絵 → 物件名 → お名前と日時 → 本文」と流し、
+ * 経過日数だけを右下に置いて、四隅が締まるようにします。 */
+.crow{flex-direction:column;gap:13px;}
+.cico{
+  flex-direction:row;align-items:center;gap:9px;width:auto;padding-top:0;
+}
+.cico svg{width:26px;height:26px;}
+.cico .ct{
+  font-size:12.5px;font-weight:600;text-align:left;letter-spacing:-.01em;
+  color:var(--ink-2);
+}
+.card.late .cico .ct{color:var(--late);}
+
+.cbody{flex:1;min-height:0;padding-bottom:22px;}
+.card .hl{font-size:18px;line-height:1.35;white-space:normal;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card .hl .room{margin-left:6px;}
+.card-sub{margin-top:5px;}
+.card .snip{-webkit-line-clamp:5;margin-top:9px;}
+
+/* 経過日数・送信済みは右下へ */
+.card .days,.card .sent{
+  position:absolute;right:22px;bottom:18px;margin-left:0;
+}
+.card.eigyou .days,.card.eigyou .sent{position:static;margin-left:auto;}
+
+@media (max-width:640px){
+  .cbody{padding-bottom:0;}
+  .card .days,.card .sent{position:static;margin-left:auto;}
+  .card .hl{-webkit-line-clamp:2;font-size:16px;}
+}
 </style>
 </head>
 <body>
@@ -1656,7 +1765,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23t";
+const UI_BUILD = "ui-2026-08-23u";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
