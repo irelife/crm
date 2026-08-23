@@ -1352,27 +1352,28 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
  *   落ち着いた灰色にして、赤（急ぎ）から目線を奪わないようにします。
  *   枠の形だけは3日以上の赤とそろえています。 */
 .card.done{
-  background:#f4f4f6;
-  box-shadow:inset 0 0 0 2px rgba(0,0,0,.09);
-  border-bottom-color:rgba(0,0,0,.06);
+  /* ★#f4f4f6 は白に近すぎて「白いまま」に見えていました。もう一段落とします */
+  background:#e8e8ed;
+  box-shadow:inset 0 0 0 2px rgba(0,0,0,.14);
+  border-bottom-color:rgba(0,0,0,.10);
 }
-.card.done:hover,.card.done:focus-visible{background:#eeeef1;}
+.card.done:hover,.card.done:focus-visible{background:#e0e0e6;}
 .card.done:focus-visible{box-shadow:inset 0 0 0 2px var(--accent);}
 .card.done::before{display:none;}
-.card.done .cico .ic{background:#e6e6e9;color:#8b8b90;}
-.card.done .cico .ct{color:#8b8b90;}
+.card.done .cico .ic{background:#d6d6dc;color:#7c7c82;}
+.card.done .cico .ct{color:#7c7c82;}
 .card.done .hl{color:#6e6e73;font-weight:600;}
 .card.done .hl .room{color:#8b8b90;}
 .card.done .nm{color:#6e6e73;}
-.card.done .snip{color:#86868b;}
-.card.done .sent{color:#86868b;font-weight:600;}
-.card.done .time{color:#a1a1a6;}
-.card.done .kind{background:#e6e6e9;color:#8b8b90;}
+.card.done .snip{color:#6e6e73;}
+.card.done .sent{color:#6e6e73;font-weight:600;}
+.card.done .time{color:#8b8b90;}
+.card.done .kind{background:#d6d6dc;color:#6e6e73;}
 
 /* 上の「完了」の枠も、同じく灰色にそろえます */
 #btnDone .v, #btnDone.on .v{color:#86868b;}
 #btnDone .k{color:#86868b;opacity:1;}
-#btnDone.on{background:rgba(0,0,0,.06);}
+#btnDone.on{background:rgba(0,0,0,.09);}
 #btnDone:hover{background:rgba(0,0,0,.04);}
 </style>
 </head>
@@ -1550,7 +1551,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23q";
+const UI_BUILD = "ui-2026-08-23r";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
