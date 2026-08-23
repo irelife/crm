@@ -1214,6 +1214,20 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(0,113,227
   .draft-open{padding:16px;font-size:15px;}
   .draft-open .do-n{width:100%;margin-left:0;order:3;}
 }
+
+/* ---- 削除：押し間違えないよう、赤で他と分けます ---- */
+button.act.danger{
+  color:var(--late);border-color:#f0c4c1;background:#fff;
+  margin-right:6px;
+}
+button.act.danger:hover{
+  background:var(--late);border-color:var(--late);color:#fff;
+}
+button.act.danger:active{background:#a8231a;border-color:#a8231a;}
+button.act.danger:disabled{opacity:.55;}
+@media (max-width:640px){
+  button.act.danger{margin-right:0;}
+}
 </style>
 </head>
 <body>
@@ -1328,6 +1342,8 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(0,113,227
     <div class="acts">
       <button class="act" id="bSave">下書きを保存</button>
       <button class="act skip" id="bSkip">完了にする</button>
+      <!-- ★削除は元に戻せないので、押す前に必ず確認を出します -->
+      <button class="act danger" id="bDel" type="button">削除する</button>
       <button class="act send wait" id="bSendWait">送信して返事待ち</button>
       <button class="act send" id="bSend">送信して完了</button>
     </div>
@@ -1401,7 +1417,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23g";
+const UI_BUILD = "ui-2026-08-23h";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2483,6 +2499,55 @@ async function skip() {
   }
 }
 
+/* ---------- 削除する ----------
+ *  ★台帳から消す処理はクラウド側（crmApi.gs）にあります。
+ *    この画面は mode:"delete" を投げるだけです。クラウド側にまだ
+ *    受け口が無いときは、その旨をそのまま画面に出します。
+ *  ★元に戻せないので、押す前に必ず確認を出します。 */
+function removeRow(rowNo) {
+  [listOpen, listWait, listDone].forEach(function (arr) {
+    const i = arr.map(function (x) { return x.rowNo; }).indexOf(rowNo);
+    if (i >= 0) arr.splice(i, 1);
+  });
+  $("nOpen").textContent = listOpen.length;
+  $("nWait").textContent = listWait.length;
+  $("nDone").textContent = listDone.length;
+  $("sOpen").textContent = listOpen.length;
+  $("sDone").textContent = listDone.length;
+  const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
+  $("sLate").textContent = late;
+  $("sLate").className = late ? "v late" : "v muted";
+}
+
+async function delRow() {
+  if (!cur) return;
+
+  const who = ($("dMeta").textContent || "").trim().slice(0, 40);
+  if (!confirm("この問い合わせを削除します。\n\n" + who
+             + "\n\n削除すると元に戻せません。よろしいですか？")) return;
+
+  const b = $("bDel");
+  b.disabled = true;
+  b.textContent = "削除しています…";
+  setStatus("work", "削除しています…");
+
+  try {
+    const r = await api({ mode: "delete", row: cur.rowNo });
+    if (!r.ok) {
+      setStatus("bad", "削除できませんでした\n理由：" + (r.error || "（理由が返っていません）")
+        + "\n※クラウド側に delete の受け口が無いときも、この表示になります。");
+      b.disabled = false; b.textContent = "削除する";
+      return;
+    }
+    setStatus("ok", "削除しました。");
+    removeRow(cur.rowNo);
+    setTimeout(backToList, 800);
+  } catch (e) {
+    setStatus("bad", "削除できませんでした\n理由：" + e.message);
+    b.disabled = false; b.textContent = "削除する";
+  }
+}
+
 /* ---------- 送信 ----------
  *  以前は「2回押す」方式でしたが、通信に1〜2秒かかるため
  *  1回目の保存中にもう一度押すと、送信段階に進めませんでした。
@@ -2865,6 +2930,7 @@ $("dPrevBox").addEventListener("toggle", function () {
   if ($("dPrevBox").open) refreshPreview();
 });
 $("bSkip").addEventListener("click", skip);
+$("bDel").addEventListener("click", delRow);
 $("bSend").addEventListener("click", function () { send(false); });
 $("bSendWait").addEventListener("click", function () { send(true); });
 
