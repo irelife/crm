@@ -1228,6 +1228,94 @@ button.act.danger:disabled{opacity:.55;}
 @media (max-width:640px){
   button.act.danger{margin-right:0;}
 }
+
+/* ---- 画面から隠しているものの帯 ---- */
+.hidden-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:0 22px 12px;padding:13px 18px;border-radius:14px;
+  background:#fff8ec;border:1px solid #f3ddb6;
+  font-size:13.5px;line-height:1.6;color:var(--warn);
+}
+.hidden-bar.hide{display:none;}
+.hidden-bar button{
+  margin-left:auto;height:34px;padding:0 16px;border-radius:980px;
+  border:1px solid #e4c691;background:#fff;color:var(--warn);
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+}
+.hidden-bar button:hover{background:var(--warn);border-color:var(--warn);color:#fff;}
+@media (max-width:640px){
+  .hidden-bar{margin:0 12px 10px;padding:12px 14px;font-size:13px;}
+  .hidden-bar button{margin-left:0;width:100%;}
+}
+
+/* ---- 書く画面：中の高さを取りこぼさないようにする ----
+ * ★textarea に height:100% を掛けていましたが、親の高さが
+ *   flex で決まる形だと 100% が効かず、文章ぶんの高さ（数行）に
+ *   縮んでいました。余白があるのに縦スクロールが出ていた原因です。
+ *   親を基準にして、textarea を四辺に貼り付けます。 */
+.zen{
+  width:min(1120px,96vw);
+  height:min(94vh,1040px);
+  max-height:94vh;
+}
+/* 問い合わせの控えは場所を取りすぎないように。中だけで送れます */
+.zen-ask{max-height:13vh;overflow:auto;}
+.zen.ask-open .zen-ask{max-height:44vh;}
+.zen-edit{
+  flex:1 1 auto;min-height:0;display:block;position:relative;
+}
+.zen-edit textarea{
+  position:absolute;inset:0;width:100%;height:100%;
+  box-sizing:border-box;resize:none;border:0;border-radius:0;
+  background:#fff;font-size:17px;line-height:1.95;padding:24px 26px;
+}
+@media (max-width:640px){
+  .zen{width:100vw;height:100vh;max-height:100vh;}
+  .zen-ask{max-height:15vh;}
+  .zen-edit textarea{font-size:16px;padding:18px 18px;}
+}
+
+/* ---- 「いま ここ」は薄い緑に ----
+ * 返信案（青）と同じ色だと、どちらがどちらか分かりませんでした。
+ * いる場所＝緑、書く中身＝青、と色で役割を分けます。 */
+.tl-item.now .tl-dot{
+  background:var(--ok);color:#fff;
+  box-shadow:0 0 0 4px var(--card),0 0 0 7px var(--ok-soft);
+}
+.tl-item.now .tl-card{
+  background:var(--ok-soft);border:1px solid var(--ok-line);box-shadow:none;
+}
+.tl-item.now .tl-who{color:var(--ok);}
+.tl-item.now .tl-at{color:var(--ok);opacity:.75;}
+.tl-item.now .tl-text{color:#123f2a;}
+.tl-go{color:var(--ok);}
+button.tl-card.go:hover{background:#dcf0e5;}
+button.tl-card.go:active{background:#cfe9da;}
+button.tl-card.go:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(26,127,75,.25);}
+/* 外した欄の名残り */
+.draft-open{display:none!important;}
+
+/* ---- 書く画面の上下に出す、宛名と署名 ----
+ * ここはクラウドが送信の直前に付ける部分なので、直せません。
+ * 直せないことが分かるよう、面を落として文字も控えめにします。 */
+.zen-band{
+  flex:none;background:var(--g1);color:var(--ink-2);
+  padding:11px 26px;font-size:13.5px;line-height:1.7;
+  white-space:pre-wrap;word-break:break-word;
+  /* 本文の場所を食わないよう、3行ぶんまで。続きは中でスクロールします */
+  max-height:5.6em;overflow:auto;
+  display:flex;flex-direction:column;gap:3px;
+}
+.zen-band.hide{display:none;}
+#zenTo{border-bottom:1px solid var(--line-2);}
+#zenSign{border-top:1px solid var(--line-2);}
+.zen-band .zb-cap{
+  font-size:11px;font-weight:600;color:var(--ink-3);letter-spacing:0;
+}
+.zen-band .zb-t{color:var(--ink-2);}
+@media (max-width:640px){
+  .zen-band{padding:9px 18px;font-size:12.5px;max-height:4.6em;}
+}
 </style>
 </head>
 <body>
@@ -1263,6 +1351,7 @@ button.act.danger:disabled{opacity:.55;}
       <div class="filters" id="filters"></div>
       <button class="fscroll next" id="fNext" type="button" aria-label="次へ">›</button>
     </div>
+    <div class="hidden-bar hide" id="hiddenBar"></div>
     <div id="list"></div>
     <div class="buildtag" id="buildtag"></div>
   </section>
@@ -1294,24 +1383,10 @@ button.act.danger:disabled{opacity:.55;}
       <div class="thread" id="dThread"></div>
     </div>
 
-    <div class="sec">
-      <h2>返信の本文</h2>
-      <!-- ★書く場所を1か所にまとめました。押すと大きな画面が開きます。
-           #dDraft は残してあります（保存・送信・AI指示はこの値を読むため）。
-           display:none でも .click() は届くので、開く合図に使っています。 -->
-      <button class="draft-open" id="bDraftOpen" type="button">
-        <span class="do-ic" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
-               stroke-linecap="round" stroke-linejoin="round">
-            <path d="M4 20.4l.9-4.2L16.3 4.8a2 2 0 0 1 2.8 0l1.1 1.1a2 2 0 0 1 0 2.8L8.8 20.1z"/>
-            <path d="M14.6 6.5l2.9 2.9"/>
-          </svg>
-        </span>
-        <span class="do-t">返信を書く・直す</span>
-        <span class="do-n" id="dDraftLen"></span>
-      </button>
-      <textarea id="dDraft" spellcheck="false"></textarea>
-    </div>
+    <!-- ★返信は「いま ここ」から開きます。ここには欄を置きません。
+         #dDraft だけは残してあります。保存・送信・AI指示がこの値を
+         読むためで、display:none でも .click() は届きます。 -->
+    <textarea id="dDraft" spellcheck="false"></textarea>
 
     <div class="sec">
       <h2>AIに書いてもらう<span class="att-note">どう返すかを一言で。文面はAIが整えます</span></h2>
@@ -1332,10 +1407,8 @@ button.act.danger:disabled{opacity:.55;}
       </div>
     </div>
 
-    <details class="sec prev" id="dPrevBox">
-      <summary>実際に送られる形を見る（宛名・署名つき）</summary>
-      <div class="box" id="dPreview"></div>
-    </details>
+    <!-- ★「実際に送られる形を見る」は外しました。
+         書く画面のうえ／したに、宛名と署名をそのまま出しています。 -->
 
     <div class="status hide" id="status"></div>
 
@@ -1368,7 +1441,9 @@ button.act.danger:disabled{opacity:.55;}
       <div class="cap">今回の問い合わせ</div>
       <div class="body" id="zenAsk"></div>
     </div>
+    <div class="zen-band hide" id="zenTo"></div>
     <div class="zen-edit"><textarea id="zenText" spellcheck="false"></textarea></div>
+    <div class="zen-band hide" id="zenSign"></div>
     <div class="zen-foot">
       <span class="n" id="zenCount">0 文字</span>
       <div class="r">
@@ -1417,7 +1492,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23h";
+const UI_BUILD = "ui-2026-08-23m";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2136,6 +2211,63 @@ function drawList() {
   });
 }
 
+/* ───────────────────────────────────────────────────────────────
+ * 画面から隠す
+ *
+ * ★台帳から本当に消すのはクラウド側（crmApi.gs）の仕事です。
+ *   向こうに delete の受け口が無いあいだの逃げ道として、
+ *   「この端末の画面からだけ隠す」を用意しています。
+ *   隠した行番号はこの端末の localStorage に残るので、
+ *   他の人の画面や台帳には影響しません。いつでも戻せます。
+ * ─────────────────────────────────────────────────────────────── */
+const HIDE_KEY = "crm.hiddenRows.v1";
+
+function hiddenRows() {
+  try {
+    const v = JSON.parse(localStorage.getItem(HIDE_KEY) || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch (e) { return []; }
+}
+
+function saveHidden(list) {
+  try { localStorage.setItem(HIDE_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+function hideRow(rowNo) {
+  const list = hiddenRows();
+  if (list.indexOf(rowNo) < 0) list.push(rowNo);
+  saveHidden(list);
+}
+
+function unhideAll() {
+  saveHidden([]);
+  loadList();
+}
+
+/* 隠しているものを一覧から外します */
+function applyHidden() {
+  const h = hiddenRows();
+  if (!h.length) { drawHiddenBar(0); return; }
+  let n = 0;
+  [listOpen, listWait, listDone].forEach(function (arr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (h.indexOf(arr[i].rowNo) >= 0) { arr.splice(i, 1); n++; }
+    }
+  });
+  drawHiddenBar(n);
+}
+
+function drawHiddenBar(n) {
+  const bar = $("hiddenBar");
+  if (!bar) return;
+  if (!n) { bar.className = "hidden-bar hide"; bar.innerHTML = ""; return; }
+  bar.className = "hidden-bar";
+  bar.innerHTML = '<span>この端末の画面から隠している問い合わせが ' + n + ' 件あります'
+                + '（台帳には残っています）</span>'
+                + '<button type="button" id="bUnhide">ぜんぶ表示に戻す</button>';
+  $("bUnhide").addEventListener("click", unhideAll);
+}
+
 async function loadList() {
   $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
   try {
@@ -2145,6 +2277,7 @@ async function loadList() {
     listOpen = r.open || [];
     listWait = r.waiting || [];
     listDone = r.done || [];
+    applyHidden();          /* 隠しているものを、数える前に外します */
     isTest   = !!r.test;
 
     $("mode").textContent = isTest ? "テスト送信中" : "本番送信";
@@ -2266,8 +2399,7 @@ async function openDetail(rowNo) {
   $("dRaw").textContent     = "読み込んでいます…";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
   syncDraftBtn();
-  $("dPreview").textContent = "";
-  $("dPrevBox").open        = false;
+  wrapCache = null;         /* 宛名・署名の控えを捨てます */
   $("dOrder").value         = "";
   $("dOrderNote").textContent = "";
   $("dThread").className    = "thread empty-wrap";
@@ -2303,7 +2435,7 @@ async function openDetail(rowNo) {
     $("dContent").textContent = d.content;
     $("dRaw").textContent     = d.raw || "（原文がありません。crmFillRaw を実行してください）";
     if (!$("dDraft").value) $("dDraft").value = d.draft;   // 入力中なら上書きしない
-    $("dPreview").textContent = d.preview;
+
 
     drawThread(d.thread || null);
 
@@ -2370,22 +2502,62 @@ function backToList() {
  * ============================================================ */
 let prevSeq = 0;
 
-async function refreshPreview() {
-  if (!cur) return;
-  const text = $("dDraft").value.trim();
-  if (!text) { $("dPreview").textContent = "（本文が空です）"; return; }
+/* ───────────────────────────────────────────────────────────────
+ * 宛名と署名
+ *
+ * ★宛名と署名を付けるのはクラウド側（crmApi.gs）です。送信の直前に
+ *   本文の前後へ足しています。台帳に入っているのは本文だけです。
+ *   そのため、この画面から宛名・署名そのものを書き換えることは
+ *   できません（できるようにするには、向こうに受け口が要ります）。
+ *   代わりに、mode:"preview" で組み上がった形をもらい、本文の前と
+ *   後ろを切り出して、書く画面の上下にそのまま出しています。
+ *   ＝いま何が送られるのかが、書きながら分かります。
+ * ─────────────────────────────────────────────────────────────── */
+let wrapCache = null;      /* { row, head, foot } */
+
+async function loadWrap() {
+  if (!cur) return null;
+  const rowNo = cur.rowNo;
+  if (wrapCache && wrapCache.row === rowNo) return wrapCache;
+
+  const body = ($("dDraft").value || "").trim();
+  if (!body) return null;
 
   const seq = ++prevSeq;
-  const rowNo = cur.rowNo;
-  $("dPreview").textContent = "作っています…";
-
   try {
-    const r = await api({ mode: "preview", row: rowNo, text: text });
-    if (seq !== prevSeq) return;
-    $("dPreview").textContent = (r && r.ok) ? r.preview
-      : "作れませんでした：" + ((r && r.error) || "");
-  } catch (e) {
-    if (seq === prevSeq) $("dPreview").textContent = "作れませんでした：" + e.message;
+    const r = await api({ mode: "preview", row: rowNo, text: body });
+    if (seq !== prevSeq) return null;
+    if (!r || !r.ok || !r.preview) return null;
+
+    const i = r.preview.indexOf(body);
+    if (i < 0) return null;                       /* 本文が見つからなければ出しません */
+    wrapCache = {
+      row:  rowNo,
+      head: r.preview.slice(0, i).replace(/\s+$/, ""),
+      foot: r.preview.slice(i + body.length).replace(/^\s+/, ""),
+    };
+    return wrapCache;
+  } catch (e) { return null; }
+}
+
+/* 書く画面の上下に、宛名と署名を出します */
+async function drawWrap() {
+  const top = $("zenTo"), bot = $("zenSign");
+  if (!top || !bot) return;
+  top.className = "zen-band hide";
+  bot.className = "zen-band hide";
+
+  const w = await loadWrap();
+  if (!w) return;
+  if (w.head) {
+    top.className = "zen-band";
+    top.innerHTML = '<span class="zb-cap">ここは自動で付きます</span>'
+                  + '<span class="zb-t">' + esc(w.head) + '</span>';
+  }
+  if (w.foot) {
+    bot.className = "zen-band";
+    bot.innerHTML = '<span class="zb-cap">ここは自動で付きます</span>'
+                  + '<span class="zb-t">' + esc(w.foot) + '</span>';
   }
 }
 
@@ -2429,7 +2601,6 @@ async function askAi() {
                   + "\nまだ保存していません。");
     $("dOrderNote").textContent = "保存するまで台帳は変わりません";
     disarm();
-    if ($("dPrevBox").open) refreshPreview();
   } catch (e) {
     if (seq === openSeq) setStatus("bad", "書けませんでした\n理由：" + e.message);
   } finally {
@@ -2533,18 +2704,30 @@ async function delRow() {
 
   try {
     const r = await api({ mode: "delete", row: cur.rowNo });
-    if (!r.ok) {
-      setStatus("bad", "削除できませんでした\n理由：" + (r.error || "（理由が返っていません）")
-        + "\n※クラウド側に delete の受け口が無いときも、この表示になります。");
-      b.disabled = false; b.textContent = "削除する";
-      return;
-    }
-    setStatus("ok", "削除しました。");
+    if (!r.ok) { fallbackHide(r.error || "（理由が返っていません）"); return; }
+    setStatus("ok", "台帳から削除しました。");
     removeRow(cur.rowNo);
     setTimeout(backToList, 800);
   } catch (e) {
-    setStatus("bad", "削除できませんでした\n理由：" + e.message);
-    b.disabled = false; b.textContent = "削除する";
+    fallbackHide(e.message);
+  }
+
+  /* 台帳から消せなかったとき。せめて画面から外せるようにします */
+  function fallbackHide(why) {
+    const b2 = $("bDel");
+    if (confirm("台帳からは削除できませんでした。\n理由：" + why
+              + "\n\n（クラウド側にまだ削除の受け口がありません）\n\n"
+              + "代わりに、この端末の画面からだけ隠しますか？\n"
+              + "台帳には残ります。あとで「ぜんぶ表示に戻す」で戻せます。")) {
+      hideRow(cur.rowNo);
+      removeRow(cur.rowNo);
+      drawHiddenBar(hiddenRows().length);
+      setStatus("ok", "この端末の画面から隠しました。台帳には残っています。");
+      setTimeout(backToList, 800);
+      return;
+    }
+    setStatus("bad", "削除できませんでした\n理由：" + why);
+    b2.disabled = false; b2.textContent = "削除する";
   }
 }
 
@@ -2705,12 +2888,13 @@ function timelineHtml(items, rowNo, hint) {
          + '</div>';
   }).join("");
 
-  /* 承認まちのときは、ここを押すとそのまま返信を書けるようにします */
-  const canWrite = (now === 2);
+  /* ★返信を書く入口はここだけにしました。どの段でも押せます。
+   *   （承認まち以外でも、下書きを直したいことがあるためです） */
+  const canWrite = true;
   const inner = '<div class="tl-who"><span>いま ここ</span>'
               +   '<span class="tl-at">' + esc(FLOW_STEPS[now] || "") + '</span></div>'
               + (next ? '<div class="tl-text">' + esc(next) + '</div>' : "")
-              + (canWrite ? '<div class="tl-go">ここを押すと、返信を書く画面が開きます</div>' : "");
+              + '<div class="tl-go">ここを押すと、返信を書く画面が開きます</div>';
 
   return '<div class="tl">' + rows
        +   '<div class="tl-item now" style="--i:' + Math.min(items.length, 7) + '">'
@@ -2767,14 +2951,9 @@ function drawThread(r) {
    保存・送信・AI指示の流れは今までと同じです */
 function openWriter() { $("dDraft").click(); }
 
-/* 押すボタンに、いま何文字あるかを出します */
-function syncDraftBtn() {
-  const n = $("dDraftLen");
-  if (!n) return;
-  const len = ($("dDraft").value || "").trim().length;
-  n.textContent = len ? len.toLocaleString() + " 文字" : "まだ書かれていません";
-  $("bDraftOpen").classList.toggle("empty", !len);
-}
+/* 文字数の出し先（返信の本文の欄）は外しました。
+   呼び出し元は複数あるので、関数は残しています */
+function syncDraftBtn() {}
 
 async function loadThread() {
   if (!cur) return;
@@ -2926,9 +3105,7 @@ document.addEventListener("keydown", function (e) {
 });
 $("bSave").addEventListener("click", function () { save(false); });
 $("bAi").addEventListener("click", askAi);
-$("dPrevBox").addEventListener("toggle", function () {
-  if ($("dPrevBox").open) refreshPreview();
-});
+
 $("bSkip").addEventListener("click", skip);
 $("bDel").addEventListener("click", delRow);
 $("bSend").addEventListener("click", function () { send(false); });
@@ -2979,12 +3156,17 @@ function bootRow_() {
     $("zenMeta").textContent  = $("dMeta").textContent.replace(bold ? bold.textContent : "", "").trim();
     $("zenAsk").textContent   = ($("dContent") ? $("dContent").textContent : "");
     veil.setAttribute("data-open", "true");
+    drawWrap();                      /* 宛名と署名を、上下に出します */
     document.body.style.overflow = "hidden";
     tally();
     fit();
     zen.focus();
     setTimeout(fit, 300);      // キーボードが出きってから、もう一度合わせます
-    try { zen.setSelectionRange(zen.value.length, zen.value.length); } catch (e) {}
+    /* ★以前は文の末尾にカーソルを置いていたため、開いた瞬間に
+     *   いちばん下までスクロールしてしまい、頭が見えませんでした。
+     *   先頭に合わせて、上から読めるようにします。 */
+    try { zen.setSelectionRange(0, 0); } catch (e) {}
+    zen.scrollTop = 0;
   }
 
   /* keep=true … 書いた内容を残す／false … 開く前に戻す */
