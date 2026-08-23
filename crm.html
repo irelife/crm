@@ -208,6 +208,12 @@ button.send{background:var(--ink);border-color:var(--ink);color:#fff;font-weight
 button.send:hover{background:#000;border-color:#000;color:#fff}
 button.send.armed{background:#fff;color:var(--late);border:1px dashed var(--late)}
 button.skip{background:#fff;border-color:var(--g2);color:var(--ink-2)}
+/* ★送信して返事待ち。完了と見分けが付くよう、白抜きにしています */
+button.send.wait{background:#fff;border-color:var(--ink);color:var(--ink)}
+button.send.wait:hover{background:var(--g1);border-color:#000;color:#000}
+/* ★返事待ちの残り日数 */
+.days.wleft{color:var(--ink-2)}
+.days.wsoon{color:var(--late);font-weight:700}
 .act.ai{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:700}
 .act.ai:hover{background:var(--accent-d);border-color:var(--accent-d);color:#fff}
 .order-acts{display:flex;align-items:center;gap:11px;margin-top:9px;flex-wrap:wrap}
@@ -433,6 +439,7 @@ button.skip{background:#fff;border-color:var(--g2);color:var(--ink-2)}
   <section id="listView">
     <div class="tabs">
       <button class="tab on" id="tabOpen" type="button">未返信<span class="tab-n" id="nOpen"></span></button>
+      <button class="tab" id="tabWait" type="button">返事待ち<span class="tab-n" id="nWait"></span></button>
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
     </div>
@@ -499,7 +506,8 @@ button.skip{background:#fff;border-color:var(--g2);color:var(--ink-2)}
     <div class="acts">
       <button class="act" id="bSave">下書きを保存</button>
       <button class="act skip" id="bSkip">完了にする</button>
-      <button class="act send" id="bSend">送信する</button>
+      <button class="act send wait" id="bSendWait">送信して返事待ち</button>
+      <button class="act send" id="bSend">送信して完了</button>
     </div>
     </div>
   </section>
@@ -571,7 +579,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-20e";
+const UI_BUILD = "ui-2026-08-23a";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -606,8 +614,24 @@ function esc(s) {
 
 /* ---------- 一覧 ---------- */
 let listOpen = [];
+let listWait = [];
 let listDone = [];
 let listTab  = "open";
+
+/* ★返事待ちの残り日数
+ *
+ *   waitLeft は crmList.gs が入れます。
+ *     2 … あと2日　0 … 今日が期限　null … 返事待ちではない
+ *   期限を過ぎた行は完了タブへ回るので、ここに負の数は来ません。 */
+function waitLabel(d) {
+  if (d === null || d === undefined) return "";
+  if (d === 0) return "本日期限";
+  return "あと" + d + "日";
+}
+function waitClass(d) {
+  if (d === null || d === undefined) return "wleft";
+  return (d <= 4) ? "wsoon" : "wleft";
+}
 
 function daysLabel(d) {
   if (d === null || d === undefined) return "";
@@ -668,16 +692,20 @@ function topicOf(text) {
   return "";
 }
 
-function cardHtml(x, done) {
+function cardHtml(x, done, wait) {
   const soudan = x.kind === "入居者相談" ? " soudan" : "";
   /* 返信案がまだ無い行（未処理）は、作成中と分かるようにします。
    * F列を消して作り直すとき、案件が消えたように見えないためです。 */
   const snip   = x.making
     ? "返信案を作っています…（10分ほどで並びます）"
     : (x.content || x.draft || "").replace(/\s+/g, " ").slice(0, 90);
-  const cls    = (done ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
+  const cls    = (done || wait ? "done" : daysClass(x.days)) + (x.making ? " making" : "");
   const topic  = topicOf(x.content);
-  const right  = done
+  /* ★返事待ちは、経過日数ではなく残り日数を出します。
+   *   こちらの作業は終わっていて、待っているのは相手の返事だからです。 */
+  const right  = wait
+    ? '<span class="days ' + waitClass(x.waitLeft) + '">' + esc(waitLabel(x.waitLeft)) + '</span>'
+    : done
     ? '<span class="sent">' + esc(x.status) + (x.sentAt ? "　" + esc(x.sentAt) : "") + '</span>'
     : (x.making
         ? '<span class="days making">作成中</span>'
@@ -815,10 +843,12 @@ function drawFilters(rows) {
 function drawList() {
   if (listTab === "eigyou") { $("filters").innerHTML = ""; drawEigyou(); return; }
 
-  const all  = (listTab === "open") ? listOpen : listDone;
+  const wait = (listTab === "wait");
   const done = (listTab === "done");
+  const all  = wait ? listWait : (done ? listDone : listOpen);
 
-  $("tabOpen").className   = "tab" + (done ? "" : " on");
+  $("tabOpen").className   = "tab" + (!wait && !done ? " on" : "");
+  $("tabWait").className   = "tab" + (wait ? " on" : "");
   $("tabDone").className   = "tab" + (done ? " on" : "");
   $("tabEigyou").className = "tab";
 
@@ -832,12 +862,13 @@ function drawList() {
     $("list").innerHTML = '<div class="empty">'
       + (topicFilter
           ? "「" + esc(topicFilter) + "」の案件はありません"
-          : (done ? "完了した案件はまだありません" : "未返信の案件はありません"))
+          : (wait ? "返事を待っている案件はありません"
+                  : (done ? "完了した案件はまだありません" : "未返信の案件はありません")))
       + '</div>';
     return;
   }
 
-  $("list").innerHTML = rows.map(function (x) { return cardHtml(x, done); }).join("");
+  $("list").innerHTML = rows.map(function (x) { return cardHtml(x, done, wait); }).join("");
   if (cur) {
     const on = $("list").querySelector('.card[data-row="' + cur.rowNo + '"]');
     if (on) on.classList.add("on");
@@ -859,6 +890,7 @@ async function loadList() {
     if (!r.ok) throw new Error(r.error || "読み込めませんでした");
 
     listOpen = r.open || [];
+    listWait = r.waiting || [];
     listDone = r.done || [];
     isTest   = !!r.test;
 
@@ -869,6 +901,7 @@ async function loadList() {
       + " ／ 一覧 " + (r.listBuild || "?");
 
     $("nOpen").textContent = listOpen.length;
+    $("nWait").textContent = listWait.length;
     $("nDone").textContent = listDone.length;
     $("nEigyou").textContent = (r.nEigyou != null) ? r.nEigyou : "";
 
@@ -969,13 +1002,27 @@ async function openDetail(rowNo) {
 function isWide() { return window.matchMedia("(min-width: 641px)").matches; }
 
 /* 処理が終わった案件を、通信せずに画面から片づける */
-function finishRow(rowNo, toDone) {
+function finishRow(rowNo, toDone, toWait) {
   const i = listOpen.map(function (x) { return x.rowNo; }).indexOf(rowNo);
   if (i >= 0) {
     const x = listOpen.splice(i, 1)[0];
-    if (toDone) { x.status = toDone; listDone.unshift(x); }
+    if (toDone) {
+      x.status = toDone;
+      /* ★返事待ちで送ったときは、完了ではなく返事待ちタブへ移します。
+       *   期限は crmApi.gs が送信日＋WAIT_DAYS で入れています。
+       *   ここでは画面をすぐ動かすための仮の値を置くだけで、
+       *   次に一覧を読み直せば台帳の値に入れ替わります。 */
+      if (toWait) {
+        x.waitLeft = (typeof WAIT_DAYS_UI === "number") ? WAIT_DAYS_UI : 7;
+        listWait.push(x);
+        listWait.sort(function (a, b) { return a.waitLeft - b.waitLeft; });
+      } else {
+        listDone.unshift(x);
+      }
+    }
   }
   $("nOpen").textContent = listOpen.length;
+  $("nWait").textContent = listWait.length;
   $("nDone").textContent = listDone.length;
   const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
   $("count").textContent = listOpen.length
@@ -1134,17 +1181,38 @@ async function skip() {
  *  1回目の保存中にもう一度押すと、送信段階に進めませんでした。
  *  確認ダイアログ方式に変更し、押した瞬間にボタンを止めます。
  */
+/* 画面表示用の日数。crmApi.gs の WAIT_DAYS と合わせてください。
+ * ★ここがずれても台帳は正しいままです。次に一覧を読み直せば直ります。 */
+const WAIT_DAYS_UI = 7;
+
 function disarm() {                     // 残っている呼び出し先（何もしません）
-  const b = $("bSend");
-  if (b) { b.disabled = false; b.textContent = "送信する"; b.classList.remove("armed"); }
+  sendButtons().forEach(function (b) {
+    b.disabled = false;
+    b.classList.remove("armed");
+  });
+  restoreSendLabels();
 }
 
-async function send() {
-  if (!cur) return;
-  const b = $("bSend");
-  if (b.disabled) return;               // 連打を無視します
+function sendButtons() {
+  return [$("bSend"), $("bSendWait")].filter(Boolean);
+}
+function restoreSendLabels() {
+  if ($("bSend"))     $("bSend").textContent     = "送信して完了";
+  if ($("bSendWait")) $("bSendWait").textContent = "送信して返事待ち";
+}
 
-  b.disabled = true;
+/* ★wait が true なら、送信後に返事待ちタブへ入ります（R列に期限が入ります）。
+ *   false なら完了タブへ。どちらもメールの中身は同じです。
+ *
+ *   ★お客様から返信が来たときは、crmReply.gs が新しい行として台帳に足します。
+ *     その行は未返信タブに並ぶので、返事待ちで送っていなくても必ず目に入ります。 */
+async function send(wait) {
+  if (!cur) return;
+  const b   = wait ? $("bSendWait") : $("bSend");
+  const all = sendButtons();
+  if (!b || b.disabled) return;         // 連打を無視します
+
+  all.forEach(function (x) { x.disabled = true; });
   b.textContent = "準備しています…";
 
   try {
@@ -1155,9 +1223,13 @@ async function send() {
       ? "\n添付：" + attFiles.map(function (f) { return f.name; }).join("、") + "\n"
       : "\n添付：なし\n";
 
+    const after = wait
+      ? "送信後：返事待ち（" + WAIT_DAYS_UI + "日）\n"
+      : "送信後：完了\n";
+
     const q = isTest
-      ? "テスト送信します。\n\n宛先はテスト用アドレスです。\nお客様には届きません。\n" + att + "\nよろしいですか？"
-      : "★本番送信します。\n\n" + cur.from + " に実際に届きます。\n" + att + "\nよろしいですか？";
+      ? "テスト送信します。\n\n宛先はテスト用アドレスです。\nお客様には届きません。\n" + att + after + "\nよろしいですか？"
+      : "★本番送信します。\n\n" + cur.from + " に実際に届きます。\n" + att + after + "\nよろしいですか？";
 
     if (!confirm(q)) {
       setStatus("work", "送信を取りやめました。まだ送っていません。");
@@ -1168,7 +1240,7 @@ async function send() {
     b.classList.add("armed");
     setStatus("work", "送信しています…（1〜2秒かかります）");
 
-    const r = await api({ mode: "send", row: cur.rowNo });
+    const r = await api({ mode: "send", row: cur.rowNo, wait: wait ? "1" : "" });
 
     if (!r || !r.ok) {
       setStatus("bad", "送信できませんでした\n理由：" +
@@ -1179,16 +1251,18 @@ async function send() {
     setStatus("ok", r.test
       ? "テスト送信しました。\n宛先：" + r.to +
         "\n（お客様には届いていません。台帳も更新していません）"
-      : "送信しました。\n宛先：" + r.to + "\n台帳を「送信済」に更新しました。");
-    if (!r.test) finishRow(cur.rowNo, "送信済");
+      : "送信しました。\n宛先：" + r.to +
+        (wait
+          ? "\n返事待ちに入れました（あと" + WAIT_DAYS_UI + "日）。"
+          : "\n台帳を「送信済」に更新しました。"));
+    if (!r.test) finishRow(cur.rowNo, "送信済", wait);
     setTimeout(backToList, 2000);
 
   } catch (e) {
     setStatus("bad", "送信できませんでした\n理由：" + e.message);
   } finally {
-    b.disabled = false;
-    b.textContent = "送信する";
-    b.classList.remove("armed");
+    all.forEach(function (x) { x.disabled = false; x.classList.remove("armed"); });
+    restoreSendLabels();
   }
 }
 
@@ -1349,6 +1423,7 @@ async function dropAttach(id) {
 
 /* ---------- 起動 ---------- */
 $("tabOpen").addEventListener("click", function () { listTab = "open"; topicFilter = ""; drawList(); });
+$("tabWait").addEventListener("click", function () { listTab = "wait"; topicFilter = ""; drawList(); });
 $("tabDone").addEventListener("click", function () { listTab = "done"; topicFilter = ""; drawList(); });
 $("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; topicFilter = ""; drawList(); });
 $("dFile").addEventListener("change", function (e) {
@@ -1373,7 +1448,8 @@ $("dPrevBox").addEventListener("toggle", function () {
   if ($("dPrevBox").open) refreshPreview();
 });
 $("bSkip").addEventListener("click", skip);
-$("bSend").addEventListener("click", send);
+$("bSend").addEventListener("click", function () { send(false); });
+$("bSendWait").addEventListener("click", function () { send(true); });
 
 
 /* ============================================================
