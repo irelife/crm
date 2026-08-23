@@ -98,6 +98,13 @@ h1{font-size:14px;margin:0;letter-spacing:.02em;font-weight:700;flex:1}
   -webkit-overflow-scrolling:touch;scrollbar-width:none}
 .filters::-webkit-scrollbar{display:none}
 .filters:empty{display:none}
+/* ★2026-08-23：PCではフィルターを折り返します。
+ *   横スクロールにしていましたが、スクロールバーを隠しているため
+ *   マウスでは動かせず、右端の分類が見えなくなっていました。
+ *   指で払えるスマホ（640px以下）は、これまでどおり横スクロールです。 */
+@media (min-width: 641px) {
+  .filters{flex-wrap:wrap;overflow-x:visible}
+}
 .fchip{flex:none;border:var(--bd);background:#fff;border-radius:var(--r-sm);
   padding:0 9px;height:26px;font-size:11px;font-weight:400;color:var(--ink-2);
   cursor:pointer;white-space:nowrap;display:inline-flex;align-items:center;gap:5px;
@@ -579,7 +586,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23a";
+const UI_BUILD = "ui-2026-08-23b";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
