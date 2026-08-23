@@ -1462,6 +1462,24 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
   .card{padding:16px 15px;}
   .crow{gap:13px;}
 }
+
+/* ---- 用件のならびは一覧に出しません（分析には残しています） ---- */
+#filters,.fscroll{display:none!important;}
+
+/* ---- 上のタブを大きく ---- */
+.tabs{padding:18px 22px 10px;gap:10px;}
+.tab{height:50px;padding:0 24px;font-size:18px;font-weight:500;letter-spacing:-.02em;}
+.tab.on{font-weight:600;}
+.tab-n{font-size:15px;margin-left:8px;}
+
+/* 見出し */
+h1{letter-spacing:-.03em;}
+
+@media (max-width:640px){
+  .tabs{padding:14px 12px 8px;gap:6px;}
+  .tab{height:44px;padding:0 18px;font-size:16px;}
+  .tab-n{font-size:13.5px;margin-left:6px;}
+}
 </style>
 </head>
 <body>
@@ -1469,7 +1487,7 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
 
   <header>
     <div class="hd">
-      <h1>CRM 返信の承認</h1>
+      <h1>CRM</h1>
       <span class="badge" id="mode">確認中</span>
     </div>
     <!-- いま何件たまっているか。開いてすぐ目に入る場所に置きます -->
@@ -1638,7 +1656,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23s";
+const UI_BUILD = "ui-2026-08-23t";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2069,6 +2087,15 @@ function syncFilterArrows() {
 }
 
 function drawFilters(rows) {
+  /* ★用件の絵のならびは、一覧からは外しました。
+   *   ここで選り分けても使いどころが無く、場所だけ取っていたためです。
+   *   ただし用件そのものは topicOf() で今までどおり見分けており、
+   *   一覧の行の左の絵と、分析タブの集計には、そのまま効いています。
+   *   （元に戻したいときは、この return を消してください） */
+  $("filters").innerHTML = "";
+  topicFilter = "";
+  return;
+
   const box = $("filters");
   const n = {};
   rows.forEach(function (x) {
