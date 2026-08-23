@@ -478,7 +478,7 @@ body{
   font-family:inherit;font-variant-numeric:tabular-nums;
 }
 
-.wrap{max-width:980px;padding:0 0 80px;}
+.wrap{max-width:1200px;padding:0 0 80px;}
 
 /* ---- 上の帯：すりガラス ---- */
 header{
@@ -500,8 +500,17 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
   grid-template-columns:repeat(3,minmax(0,1fr));
   border-top:0;background:transparent;
 }
-/* 縦の罫線で区切らず、余白で離します */
-.stat{padding:6px 22px 14px;border-right:0;}
+/* 縦の罫線で区切らず、余白で離します。押すとその並びに切り替わります */
+.stat{
+  padding:10px 22px 12px;border:0;border-radius:14px;
+  background:transparent;cursor:pointer;text-align:left;
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  font-family:inherit;transition:background .16s;
+}
+.stat:hover{background:rgba(0,0,0,.04);}
+.stat.on{background:rgba(0,0,0,.06);}
+.stat.on .v{color:var(--ink);}
+.stat.on .v.late{color:var(--late);}
 .stat:last-child{border-right:0;}
 .stat .v{font-size:34px;font-weight:600;letter-spacing:-.025em;line-height:1.05;}
 .stat .v.late{color:var(--late);}
@@ -545,36 +554,65 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
    角丸の枠に文字を詰める形をやめ、線画のアイコンの下に
    ラベルと件数を置いています。枠線は使いません。 */
 .filters{
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
-  gap:4px;overflow:visible;padding:8px 10px 24px;
-  background:transparent;border-bottom:0;
+  display:flex;flex-wrap:nowrap;overflow-x:auto;gap:2px;
+  padding:8px 10px 18px;background:transparent;border-bottom:0;
+  scrollbar-width:none;-webkit-overflow-scrolling:touch;scroll-behavior:smooth;
 }
+.filters::-webkit-scrollbar{display:none;}
+.fwrap{position:relative;}
+/* 送りボタン。指で払える端末では出しません */
+.fscroll{
+  position:absolute;top:calc(50% - 5px);transform:translateY(-50%);
+  width:34px;height:34px;border-radius:980px;border:0;z-index:2;
+  background:rgba(255,255,255,.92);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  box-shadow:0 2px 10px rgba(0,0,0,.14);
+  color:var(--ink-2);font-size:18px;line-height:1;cursor:pointer;
+  display:none;align-items:center;justify-content:center;
+  font-family:inherit;padding:0 0 2px;
+}
+.fscroll.show{display:flex;}
+.fscroll.prev{left:2px;}
+.fscroll.next{right:2px;}
+.fscroll:hover{color:var(--ink);background:#fff;}
+@media (hover:none){ .fscroll{display:none!important;} }
 .ficon{
-  display:flex;flex-direction:column;align-items:center;gap:7px;
-  padding:14px 6px 14px;border:0;background:transparent;border-radius:14px;
+  flex:0 0 auto;width:118px;
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  padding:15px 6px 15px;border:0;background:transparent;border-radius:14px;
   cursor:pointer;color:var(--ink);font-family:inherit;
   transition:background .16s,color .16s;
 }
 .ficon:hover{background:rgba(0,0,0,.04);}
 .ficon:active{background:rgba(0,0,0,.07);}
-.ficon svg{width:27px;height:27px;flex:none;display:block;}
+.ficon svg{width:34px;height:34px;flex:none;display:block;}
 .ficon .fl{
-  font-size:12.5px;line-height:1.35;font-weight:400;text-align:center;
+  font-size:13.5px;line-height:1.35;font-weight:400;text-align:center;
   color:var(--ink);letter-spacing:-.005em;
+  /* 2行ぶんを確保し、下の件数の高さをそろえます */
+  min-height:2.7em;display:flex;align-items:flex-start;justify-content:center;
 }
 .ficon .fn{
-  font-size:12px;color:var(--ink-3);font-weight:400;
+  font-size:19px;color:var(--ink);font-weight:600;line-height:1.1;
+  letter-spacing:-.02em;font-variant-numeric:tabular-nums;
+}
+/* 問い合わせ率 */
+.ficon .fr{
+  font-size:11.5px;color:var(--ink-3);font-weight:400;line-height:1.2;
   font-variant-numeric:tabular-nums;
 }
 /* いま選んでいるもの */
 .ficon.on{color:var(--accent);}
 .ficon.on .fl{color:var(--accent);font-weight:600;}
-.ficon.on .fn{color:var(--accent);opacity:.65;}
+.ficon.on .fn{color:var(--accent);}
+.ficon.on .fr{color:var(--accent);opacity:.7;}
 @media (max-width:640px){
-  .filters{grid-template-columns:repeat(auto-fit,minmax(86px,1fr));padding:6px 6px 18px;gap:2px;}
-  .ficon{padding:11px 3px 10px;gap:6px;}
-  .ficon svg{width:24px;height:24px;}
-  .ficon .fl{font-size:11.5px;}
+  .filters{padding:6px 6px 14px;gap:0;}
+  .ficon{width:98px;padding:12px 3px 12px;gap:5px;}
+  .ficon svg{width:30px;height:30px;}
+  .ficon .fl{font-size:12.5px;}
+  .ficon .fn{font-size:17px;}
+  .ficon .fr{font-size:11px;}
 }
 
 /* ---- 一覧：白い面を余白に浮かせる ---- */
@@ -752,7 +790,7 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 @media (min-width:780px){
   /* 白い1枚にせず、面の上に白いカードを浮かせます */
   .wrap{background:transparent;min-height:auto;border-left:0;border-right:0;}
-  .stats{grid-template-columns:repeat(3,minmax(0,150px));}
+  .stats{grid-template-columns:repeat(3,minmax(0,1fr));}
 }
 @media (max-width:640px){
   .wrap{max-width:100%;}
@@ -776,9 +814,9 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
     </div>
     <!-- いま何件たまっているか。開いてすぐ目に入る場所に置きます -->
     <div class="stats">
-      <div class="stat"><span class="v" id="sOpen">–</span><span class="k">未返信</span></div>
-      <div class="stat"><span class="v muted" id="sLate">–</span><span class="k">4日以上</span></div>
-      <div class="stat"><span class="v muted" id="sDone">–</span><span class="k">完了</span></div>
+      <button class="stat" id="btnOpen" type="button"><span class="v" id="sOpen">–</span><span class="k">未返信</span></button>
+      <button class="stat" id="btnLate" type="button"><span class="v muted" id="sLate">–</span><span class="k">4日以上</span></button>
+      <button class="stat" id="btnDone" type="button"><span class="v muted" id="sDone">–</span><span class="k">完了</span></button>
     </div>
     <div class="count" id="count"></div>
   </header>
@@ -792,7 +830,12 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
     </div>
-    <div class="filters" id="filters"></div>
+    <!-- 用件でしぼる。横1列に流し、マウス用に送りボタンを添えます -->
+    <div class="fwrap">
+      <button class="fscroll prev" id="fPrev" type="button" aria-label="前へ">‹</button>
+      <div class="filters" id="filters"></div>
+      <button class="fscroll next" id="fNext" type="button" aria-label="次へ">›</button>
+    </div>
     <div id="list"></div>
     <div class="buildtag" id="buildtag"></div>
   </section>
@@ -1159,6 +1202,8 @@ async function drawEigyou() {
  *  件数の多い順に出します。0件の用件は出しません。
  * ============================================================ */
 let topicFilter = "";
+/* 上の「4日以上」を押したときだけ true。未返信のうち4日以上だけを出します */
+let lateOnly = false;
 
 
 /* ============================================================
@@ -1197,6 +1242,17 @@ function topicIconSvg(name) {
        + ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
 }
 
+/* 用件の並びは横1列です。端まで来たら、その側の送りボタンを隠します */
+function syncFilterArrows() {
+  const box = $("filters"), pv = $("fPrev"), nx = $("fNext");
+  if (!box || !pv || !nx) return;
+  const over = box.scrollWidth - box.clientWidth;
+  const canPrev = over > 8 && box.scrollLeft > 4;
+  const canNext = over > 8 && box.scrollLeft < over - 4;
+  pv.className = "fscroll prev" + (canPrev ? " show" : "");
+  nx.className = "fscroll next" + (canNext ? " show" : "");
+}
+
 function drawFilters(rows) {
   const box = $("filters");
   const n = {};
@@ -1211,20 +1267,28 @@ function drawFilters(rows) {
     return a.localeCompare(b, "ja");
   });
 
-  if (!keys.length) { box.innerHTML = ""; topicFilter = ""; return; }
+  if (!keys.length) { box.innerHTML = ""; topicFilter = ""; syncFilterArrows(); return; }
   if (topicFilter && keys.indexOf(topicFilter) < 0) topicFilter = "";
 
+  /* 問い合わせ率＝いま並んでいる件数に占める割合。「すべて」には出しません */
+  const total = rows.length;
   function cell(key, label, count) {
+    const rate = (key && total)
+      ? '<span class="fr">' + (count / total * 100).toFixed(1) + '%</span>'
+      : '';
     return '<button class="ficon' + (topicFilter === key ? " on" : "") + '"'
          + ' type="button" data-t="' + esc(key) + '">'
          +   topicIconSvg(label)
          +   '<span class="fl">' + esc(label) + '</span>'
          +   '<span class="fn">' + count + '</span>'
+         +   rate
          + '</button>';
   }
 
   box.innerHTML = cell("", "すべて", rows.length)
     + keys.map(function (k) { return cell(k, k, n[k]); }).join("");
+
+  syncFilterArrows();
 
   Array.prototype.forEach.call(box.querySelectorAll(".ficon"), function (b) {
     b.addEventListener("click", function () {
@@ -1239,7 +1303,16 @@ function drawList() {
 
   const wait = (listTab === "wait");
   const done = (listTab === "done");
-  const all  = wait ? listWait : (done ? listDone : listOpen);
+  /* 4日以上でしぼるのは未返信のときだけです */
+  if (wait || done) lateOnly = false;
+  const base = wait ? listWait : (done ? listDone : listOpen);
+  const all  = lateOnly
+    ? base.filter(function (x) { return x.days >= 4; })
+    : base;
+
+  $("btnOpen").className = "stat" + (!wait && !done && !lateOnly ? " on" : "");
+  $("btnLate").className = "stat" + (lateOnly ? " on" : "");
+  $("btnDone").className = "stat" + (done ? " on" : "");
 
   $("tabOpen").className   = "tab" + (!wait && !done ? " on" : "");
   $("tabWait").className   = "tab" + (wait ? " on" : "");
@@ -1256,8 +1329,9 @@ function drawList() {
     $("list").innerHTML = '<div class="empty">'
       + (topicFilter
           ? "「" + esc(topicFilter) + "」の案件はありません"
-          : (wait ? "返事を待っている案件はありません"
-                  : (done ? "完了した案件はまだありません" : "未返信の案件はありません")))
+          : (lateOnly ? "4日以上たっている案件はありません"
+              : (wait ? "返事を待っている案件はありません"
+                  : (done ? "完了した案件はまだありません" : "未返信の案件はありません"))))
       + '</div>';
     return;
   }
@@ -1825,10 +1899,31 @@ async function dropAttach(id) {
 }
 
 /* ---------- 起動 ---------- */
-$("tabOpen").addEventListener("click", function () { listTab = "open"; topicFilter = ""; drawList(); });
-$("tabWait").addEventListener("click", function () { listTab = "wait"; topicFilter = ""; drawList(); });
-$("tabDone").addEventListener("click", function () { listTab = "done"; topicFilter = ""; drawList(); });
-$("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; topicFilter = ""; drawList(); });
+/* 上の数字を押すと、その並びに切り替わります */
+$("btnOpen").addEventListener("click", function () {
+  listTab = "open"; lateOnly = false; topicFilter = ""; drawList();
+});
+$("btnLate").addEventListener("click", function () {
+  listTab = "open"; lateOnly = !lateOnly; topicFilter = ""; drawList();
+});
+$("btnDone").addEventListener("click", function () {
+  listTab = "done"; lateOnly = false; topicFilter = ""; drawList();
+});
+
+/* 用件の並びを左右に送る */
+$("fPrev").addEventListener("click", function () {
+  const b = $("filters"); b.scrollLeft -= Math.round(b.clientWidth * 0.8);
+});
+$("fNext").addEventListener("click", function () {
+  const b = $("filters"); b.scrollLeft += Math.round(b.clientWidth * 0.8);
+});
+$("filters").addEventListener("scroll", syncFilterArrows);
+window.addEventListener("resize", syncFilterArrows);
+
+$("tabOpen").addEventListener("click", function () { listTab = "open"; lateOnly = false; topicFilter = ""; drawList(); });
+$("tabWait").addEventListener("click", function () { listTab = "wait"; lateOnly = false; topicFilter = ""; drawList(); });
+$("tabDone").addEventListener("click", function () { listTab = "done"; lateOnly = false; topicFilter = ""; drawList(); });
+$("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; lateOnly = false; topicFilter = ""; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
   if (f) pickAttach(f);
