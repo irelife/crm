@@ -1084,6 +1084,72 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
   .tab{height:38px;padding:0 16px;font-size:15px;}
   .tab-n{font-size:13px;}
 }
+
+/* ---- やりとりの時系列 ----
+ * 一本の線に沿って、古いものから順に並べます。最後が「いま ここ」。
+ * 一段ずつ浮かび上がりますが、文字は最初から入っているので、
+ * 読み始めるのを待たされることはありません。 */
+.thread.tlwrap{
+  display:block;background:transparent;border:0;padding:2px 0 0;
+  max-height:none;overflow:visible;
+}
+.tl{position:relative;padding:2px 0 0 36px;}
+.tl::before{
+  content:"";position:absolute;left:13px;top:10px;bottom:16px;width:2px;
+  background:var(--line);border-radius:2px;
+}
+.tl-item{
+  position:relative;margin-bottom:14px;
+  opacity:0;transform:translateY(10px);
+  animation:tlIn .42s cubic-bezier(.22,.61,.36,1) forwards;
+  animation-delay:calc(var(--i,0) * 90ms);
+}
+.tl-item:last-child{margin-bottom:2px;}
+@keyframes tlIn{ to{ opacity:1;transform:none; } }
+.tl-dot{
+  position:absolute;left:-36px;top:1px;width:28px;height:28px;border-radius:980px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;
+  background:var(--g2);color:var(--ink);box-shadow:0 0 0 4px var(--card);
+}
+.tl-item.out .tl-dot{background:var(--ink);color:#fff;}
+.tl-item.draft .tl-dot{background:var(--accent);color:#fff;}
+.tl-item.now .tl-dot{
+  background:var(--accent);color:#fff;
+  box-shadow:0 0 0 4px var(--card),0 0 0 7px var(--accent-soft);
+}
+.tl-card{
+  background:#fbfbfd;border:1px solid var(--line-2);border-radius:14px;
+  padding:11px 15px 12px;box-shadow:inset 3px 0 0 var(--g3);
+}
+.tl-item.out .tl-card{box-shadow:inset 3px 0 0 var(--ink);}
+.tl-item.draft .tl-card{box-shadow:inset 3px 0 0 var(--accent);}
+.tl-item.now .tl-card{
+  background:var(--accent-soft);border-color:#bcdcfa;box-shadow:none;
+}
+.tl-who{
+  display:flex;align-items:center;gap:7px;flex-wrap:wrap;
+  font-size:12.5px;font-weight:600;color:var(--ink-2);margin-bottom:6px;
+}
+.tl-item.now .tl-who{color:var(--accent);}
+.tl-who .th-av{width:16px;height:16px;flex:none;opacity:.8;}
+.tl-at{font-weight:400;color:var(--ink-3);font-variant-numeric:tabular-nums;}
+.tl-item.now .tl-at{color:var(--accent);opacity:.75;}
+.tl-text{
+  font-size:14px;line-height:1.8;color:var(--ink);
+  white-space:pre-wrap;word-break:break-word;
+}
+.tl-card .th-more{margin-top:6px;}
+/* 動きを控える設定の端末では、動かさずにすぐ出します */
+@media (prefers-reduced-motion:reduce){
+  .tl-item{animation:none;opacity:1;transform:none;}
+}
+@media (max-width:640px){
+  .tl{padding-left:32px;}
+  .tl-dot{left:-32px;width:25px;height:25px;font-size:11px;}
+  .tl::before{left:11.5px;}
+  .tl-text{font-size:13.5px;}
+}
 </style>
 </head>
 <body>
@@ -1257,7 +1323,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23e";
+const UI_BUILD = "ui-2026-08-23f";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2466,26 +2532,72 @@ function threadBubble(x) {
        + '</div>';
 }
 
+/* ★やりとりを、上から古い順の一本道にして出します。
+ *   問い合わせ → 返信 → お客様の返事 … と一段ずつ浮かび上がり、
+ *   いちばん下に「いま ここ」と、次にやることを置きます。
+ *   文章は最初から入っていて、見え方だけが遅れて付いてきます。
+ *   （動きを嫌う設定の端末では、動かさずにすぐ出します） */
+function timelineHtml(items, rowNo, hint) {
+  const now  = flowIndexOf(rowNo);
+  const next = flowNextText(now, hint);
+
+  const rows = items.map(function (x, i) {
+    const kind = x.side === "in" ? "in" : (x.side === "out" ? "out" : "draft");
+    const who  = x.side === "in" ? "お客様からの問い合わせ"
+               : (x.side === "out" ? "弊社から返信" : "弊社（この案件の返信案）");
+    const long = x.text.length > 220;
+    const head = long ? x.text.slice(0, 220) + "…" : x.text;
+    /* 何段あっても待たされないよう、遅れは7段目で頭打ちにします */
+    return '<div class="tl-item ' + kind + '" style="--i:' + Math.min(i, 6) + '">'
+         +   '<span class="tl-dot">' + (i + 1) + '</span>'
+         +   '<div class="tl-card">'
+         +     '<div class="tl-who">' + whoIcon(x.side) + '<span>' + esc(who) + '</span>'
+         +       (x.at ? '<span class="tl-at">' + esc(x.at) + '</span>' : "")
+         +     '</div>'
+         +     '<div class="tl-text" data-full="' + esc(x.text) + '">' + esc(head) + '</div>'
+         +     (long ? '<button class="th-more" type="button">全文を見る</button>' : "")
+         +   '</div>'
+         + '</div>';
+  }).join("");
+
+  return '<div class="tl">' + rows
+       +   '<div class="tl-item now" style="--i:' + Math.min(items.length, 7) + '">'
+       +     '<span class="tl-dot">今</span>'
+       +     '<div class="tl-card">'
+       +       '<div class="tl-who"><span>いま ここ</span>'
+       +         '<span class="tl-at">' + esc(FLOW_STEPS[now] || "") + '</span></div>'
+       +       (next ? '<div class="tl-text">' + esc(next) + '</div>' : "")
+       +     '</div>'
+       +   '</div>'
+       + '</div>';
+}
+
 function drawThread(r) {
   const box  = $("dThread");
   const note = $("dThreadNote");
-  const items = (r && r.items) || [];
+  let items  = (r && r.items) || [];
 
   if (!r || !r.ok) {
     box.className = "thread empty-wrap";
     box.innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
     return;
   }
-  if (items.length <= 1) {
-    box.className = "thread empty-wrap";
-    box.innerHTML = '<div class="th-empty">この方とのやりとりは、今回がはじめてです</div>';
-    note.textContent = "";
-    return;
+
+  const rowNo = cur ? cur.rowNo : null;
+  const hint  = (listOpen.concat(listWait, listDone))
+    .filter(function (x) { return x.rowNo === rowNo; })[0];
+
+  /* まだ1件も返ってきていないときは、いま開いている問い合わせを
+     最初の一段として使います。時系列の形は崩しません */
+  if (!items.length && cur && cur.content) {
+    items = [{ side: "in", at: cur.received || "", text: String(cur.content) }];
   }
 
-  box.className = "thread";
-  note.textContent = (r.mail || "") + "　" + items.length + "件";
-  box.innerHTML = items.map(threadBubble).join("");
+  box.className = "thread tlwrap";
+  note.textContent = items.length > 1
+    ? (r.mail || "") + "　" + items.length + "件"
+    : (r.mail || "");
+  box.innerHTML = timelineHtml(items, rowNo, hint);
 
   Array.prototype.forEach.call(box.querySelectorAll(".th-more"), function (b) {
     b.addEventListener("click", function () {
@@ -2494,8 +2606,6 @@ function drawThread(r) {
       b.remove();
     });
   });
-
-  box.scrollTop = box.scrollHeight;
 }
 
 async function loadThread() {
