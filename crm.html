@@ -498,9 +498,10 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
 /* ---- 数字：Apple の見出しのように大きく、字間を詰めて ---- */
 .stats{
   grid-template-columns:repeat(3,minmax(0,1fr));
-  border-top:1px solid var(--line-2);background:transparent;
+  border-top:0;background:transparent;
 }
-.stat{padding:14px 22px 16px;border-right:1px solid var(--line-2);}
+/* 縦の罫線で区切らず、余白で離します */
+.stat{padding:6px 22px 14px;border-right:0;}
 .stat:last-child{border-right:0;}
 .stat .v{font-size:34px;font-weight:600;letter-spacing:-.025em;line-height:1.05;}
 .stat .v.late{color:var(--late);}
@@ -513,9 +514,12 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
 .tabs{
   gap:6px;background:transparent;border-bottom:0;
   padding:16px 22px 4px;
+  /* 4つ以上あると狭い画面で文字が割れるので、横に流します */
+  flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
 }
+.tabs::-webkit-scrollbar{display:none;}
 .tab{
-  height:34px;padding:0 15px;border-radius:980px;
+  height:34px;padding:0 15px;border-radius:980px;flex:none;white-space:nowrap;
   font-size:14px;font-weight:500;color:var(--ink-2);
   background:transparent;box-shadow:none;
 }
@@ -536,6 +540,42 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
 .fchip.on{background:var(--ink);border-color:var(--ink);color:#fff;font-weight:500;}
 .fchip .fn{font-size:12px;color:var(--ink-3);}
 .fchip.on .fn{color:rgba(255,255,255,.66);}
+
+/* ---- 用件でしぼる：アイコンとラベル ----
+   角丸の枠に文字を詰める形をやめ、線画のアイコンの下に
+   ラベルと件数を置いています。枠線は使いません。 */
+.filters{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(118px,1fr));
+  gap:4px;overflow:visible;padding:8px 10px 24px;
+  background:transparent;border-bottom:0;
+}
+.ficon{
+  display:flex;flex-direction:column;align-items:center;gap:7px;
+  padding:14px 6px 14px;border:0;background:transparent;border-radius:14px;
+  cursor:pointer;color:var(--ink);font-family:inherit;
+  transition:background .16s,color .16s;
+}
+.ficon:hover{background:rgba(0,0,0,.04);}
+.ficon:active{background:rgba(0,0,0,.07);}
+.ficon svg{width:27px;height:27px;flex:none;display:block;}
+.ficon .fl{
+  font-size:12.5px;line-height:1.35;font-weight:400;text-align:center;
+  color:var(--ink);letter-spacing:-.005em;
+}
+.ficon .fn{
+  font-size:12px;color:var(--ink-3);font-weight:400;
+  font-variant-numeric:tabular-nums;
+}
+/* いま選んでいるもの */
+.ficon.on{color:var(--accent);}
+.ficon.on .fl{color:var(--accent);font-weight:600;}
+.ficon.on .fn{color:var(--accent);opacity:.65;}
+@media (max-width:640px){
+  .filters{grid-template-columns:repeat(auto-fit,minmax(86px,1fr));padding:6px 6px 18px;gap:2px;}
+  .ficon{padding:11px 3px 10px;gap:6px;}
+  .ficon svg{width:24px;height:24px;}
+  .ficon .fl{font-size:11.5px;}
+}
 
 /* ---- 一覧：白い面を余白に浮かせる ---- */
 #list{
@@ -712,14 +752,15 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 @media (min-width:780px){
   /* 白い1枚にせず、面の上に白いカードを浮かせます */
   .wrap{background:transparent;min-height:auto;border-left:0;border-right:0;}
-  .stats{grid-template-columns:repeat(3,minmax(0,180px));}
+  .stats{grid-template-columns:repeat(3,minmax(0,150px));}
 }
 @media (max-width:640px){
   .wrap{max-width:100%;}
   #list,.eigyou-note{margin-left:12px;margin-right:12px;border-radius:16px;}
   .hd,.count,.buildtag{padding-left:16px;padding-right:16px;}
   .stat{padding-left:16px;padding-right:16px;}
-  .tabs,.filters{padding-left:16px;padding-right:16px;}
+  .tabs{padding-left:14px;padding-right:14px;}
+  .tab{padding:0 12px;font-size:13.5px;}
   .stat .v{font-size:28px;}
   #dSubject{font-size:20px;}
 }
@@ -1119,6 +1160,43 @@ async function drawEigyou() {
  * ============================================================ */
 let topicFilter = "";
 
+
+/* ============================================================
+ *  用件のアイコン（モノクロの線画）
+ *
+ *  角丸の枠に文字を詰めるのをやめ、アイコンの下にラベルと件数を
+ *  置く形にしています。24px四方・線の太さ1.5で統一しています。
+ * ============================================================ */
+const TOPIC_ICONS = {
+  "_":                 '<path d="M20.5 12.9 12.9 20.5a1.5 1.5 0 0 1-2.1 0L3.5 13.2V3.5h9.7l7.3 7.3a1.5 1.5 0 0 1 0 2.1z"/><circle cx="7.6" cy="7.6" r="1.2"/>',
+  "すべて":            '<rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.8"/>',
+  "駐車場":            '<rect x="3.5" y="3.5" width="17" height="17" rx="4.2"/><path d="M9.6 17V7.6h3.1a2.9 2.9 0 0 1 0 5.8H9.6"/>',
+  "無断駐車":          '<rect x="3.5" y="3.5" width="17" height="17" rx="4.2"/><path d="M9.6 16.4V8.2h2.8a2.6 2.6 0 0 1 0 5.2H9.6"/><path d="M4.6 19.4 19.4 4.6"/>',
+  "車両変更":          '<path d="M3.4 15.6v-3.2l2-4.6a1.5 1.5 0 0 1 1.4-.9h10.4a1.5 1.5 0 0 1 1.4.9l2 4.6v3.2z"/><path d="M3.4 15.6h17.2"/><path d="M6.2 15.6v2a.8.8 0 0 1-.8.8h-.9a.8.8 0 0 1-.8-.8v-2M20.3 15.6v2a.8.8 0 0 1-.8.8h-.9a.8.8 0 0 1-.8-.8v-2"/><circle cx="7.4" cy="12.9" r=".8" fill="currentColor" stroke="none"/><circle cx="16.6" cy="12.9" r=".8" fill="currentColor" stroke="none"/>',
+  "ペット":            '<path d="M4.9 8.5V4.8l3.1 2.1M19.1 8.5V4.8L16 6.9"/><path d="M4.9 8.5c0 5.7 3.2 10.4 7.1 10.4s7.1-4.7 7.1-10.4"/><circle cx="9.7" cy="11.3" r=".75" fill="currentColor" stroke="none"/><circle cx="14.3" cy="11.3" r=".75" fill="currentColor" stroke="none"/><path d="M12 13.7c-.9 0-1.5.5-1.5 1.1s.7 1.1 1.5 1.1 1.5-.5 1.5-1.1-.6-1.1-1.5-1.1z"/>',
+  "空室確認":          '<rect x="5.6" y="3" width="12.8" height="18" rx="1.8"/><circle cx="14.9" cy="12" r=".9" fill="currentColor" stroke="none"/>',
+  "内見":              '<path d="M2.5 12S6.1 5.6 12 5.6 21.5 12 21.5 12 17.9 18.4 12 18.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="2.9"/>',
+  "保管場所使用承諾書": '<path d="M13.6 3H7.6A1.6 1.6 0 0 0 6 4.6v14.8A1.6 1.6 0 0 0 7.6 21h8.8a1.6 1.6 0 0 0 1.6-1.6V7.4z"/><path d="M13.6 3v4.4H18"/><path d="M9 12.4h6M9 15.8h4"/>',
+  "名義変更":          '<path d="M13.6 3H7.6A1.6 1.6 0 0 0 6 4.6v14.8A1.6 1.6 0 0 0 7.6 21h8.8a1.6 1.6 0 0 0 1.6-1.6V7.4z"/><path d="M13.6 3v4.4H18"/><path d="M9.2 15.4h5.6m0 0-1.9-1.9m1.9 1.9-1.9 1.9"/>',
+  "領収書":            '<path d="M6.2 3h11.6v18l-2.3-1.5-2.3 1.5-2.3-1.5-2.3 1.5L6.2 21z"/><path d="M9.2 8.4h5.6M9.2 12.2h5.6"/>',
+  "鍵":                '<circle cx="8.3" cy="8.3" r="4.3"/><path d="M11.4 11.4 20.4 20.4M17.5 17.5l-2 2M19.2 15.7l-1.7 1.7"/>',
+  "インターネット":    '<path d="M2.9 9.3a13.4 13.4 0 0 1 18.2 0"/><path d="M6.1 12.5a9 9 0 0 1 11.8 0"/><path d="M9.3 15.7a4.5 4.5 0 0 1 5.4 0"/><circle cx="12" cy="18.9" r=".95" fill="currentColor" stroke="none"/>',
+  "ポスト・宅配BOX":   '<path d="M20.5 8.4 12 3.6 3.5 8.4v7.2L12 20.4l8.5-4.8z"/><path d="M3.5 8.4 12 13.2l8.5-4.8M12 13.2v7.2"/>',
+  "ゴミ":              '<path d="M4.6 6.5h14.8M9.6 6.5V4.9a1.3 1.3 0 0 1 1.3-1.3h2.2a1.3 1.3 0 0 1 1.3 1.3v1.6"/><path d="M6.6 6.5l.9 13.2a1.4 1.4 0 0 0 1.4 1.3h6.2a1.4 1.4 0 0 0 1.4-1.3l.9-13.2"/><path d="M10.5 10.4v6.5M13.5 10.4v6.5"/>',
+  "騒音":              '<path d="M4 9.4h3l4.2-3.5v12.2L7 14.6H4z"/><path d="M15.2 9.3a4 4 0 0 1 0 5.4M18.1 6.5a8 8 0 0 1 0 11"/>',
+  "修繕":              '<path d="M15.3 4.7a5.1 5.1 0 0 0-6.4 6.4l-4.9 4.9a1.6 1.6 0 0 0 0 2.3l1.7 1.7a1.6 1.6 0 0 0 2.3 0l4.9-4.9a5.1 5.1 0 0 0 6.4-6.4l-3 3-2.6-.7-.7-2.6z"/>',
+  "エアコン":          '<rect x="3" y="4.8" width="18" height="7.2" rx="2.2"/><path d="M6.4 8.8h11.2"/><path d="M7.6 15.4c0 1.3-1 2-1 3.4M12 15.4c0 1.3-1 2-1 3.4M16.4 15.4c0 1.3-1 2-1 3.4"/>',
+  "火災保険":          '<path d="M12 3.4s5.7 4.4 5.7 9.4a5.7 5.7 0 0 1-11.4 0c0-2 1-3.8 1.9-4.9.3 1.2 1 2 1.9 2.3C10.9 8.2 12 6 12 3.4z"/>',
+  "解約・退去":        '<path d="M13.4 3H7A1.6 1.6 0 0 0 5.4 4.6v14.8A1.6 1.6 0 0 0 7 21h6.4"/><path d="M17.2 8.4 20.8 12l-3.6 3.6M20.8 12H10.4"/>',
+  "更新":              '<path d="M20.4 12a8.4 8.4 0 1 1-2.6-6.1"/><path d="M20.6 4.2v4.7h-4.7"/>',
+  "口座変更":          '<path d="M3.4 9.6 12 4.4l8.6 5.2"/><path d="M5.6 9.6v8.8M9.9 9.6v8.8M14.1 9.6v8.8M18.4 9.6v8.8"/><path d="M3.4 18.4h17.2"/>'
+};
+function topicIconSvg(name) {
+  const d = TOPIC_ICONS[name] || TOPIC_ICONS["_"];
+  return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"'
+       + ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+}
+
 function drawFilters(rows) {
   const box = $("filters");
   const n = {};
@@ -1136,15 +1214,19 @@ function drawFilters(rows) {
   if (!keys.length) { box.innerHTML = ""; topicFilter = ""; return; }
   if (topicFilter && keys.indexOf(topicFilter) < 0) topicFilter = "";
 
-  box.innerHTML = '<button class="fchip' + (topicFilter ? "" : " on")
-      + '" type="button" data-t="">すべて<span class="fn">' + rows.length + '</span></button>'
-    + keys.map(function (k) {
-        return '<button class="fchip' + (topicFilter === k ? " on" : "")
-             + '" type="button" data-t="' + esc(k) + '">' + esc(k)
-             + '<span class="fn">' + n[k] + '</span></button>';
-      }).join("");
+  function cell(key, label, count) {
+    return '<button class="ficon' + (topicFilter === key ? " on" : "") + '"'
+         + ' type="button" data-t="' + esc(key) + '">'
+         +   topicIconSvg(label)
+         +   '<span class="fl">' + esc(label) + '</span>'
+         +   '<span class="fn">' + count + '</span>'
+         + '</button>';
+  }
 
-  Array.prototype.forEach.call(box.querySelectorAll(".fchip"), function (b) {
+  box.innerHTML = cell("", "すべて", rows.length)
+    + keys.map(function (k) { return cell(k, k, n[k]); }).join("");
+
+  Array.prototype.forEach.call(box.querySelectorAll(".ficon"), function (b) {
     b.addEventListener("click", function () {
       topicFilter = b.dataset.t || "";
       drawList();
