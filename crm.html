@@ -968,7 +968,10 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 }
 .ficon svg{width:39px;height:39px;}
 .ficon:hover .ic{background:var(--g2);}
-.ficon .fl{font-size:14px;font-weight:500;color:var(--ink);min-height:2.6em;}
+.ficon .fl{
+  font-size:14px;font-weight:500;color:var(--ink);min-height:2.6em;
+  align-self:stretch;max-width:100%;overflow-wrap:anywhere;line-break:strict;
+}
 .ficon .fn{font-size:24px;font-weight:600;}
 .ficon .fr{font-size:12.5px;}
 /* いま選んでいるもの。文字を白抜きにすると中が見えない絵があるため、
@@ -982,7 +985,7 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 .card{padding:17px 20px 17px 24px;}
 .card::before{left:9px;top:30px;bottom:auto;width:8px;height:8px;border-radius:980px;}
 .crow{display:flex;align-items:flex-start;gap:16px;}
-.cico{flex:0 0 auto;width:78px;display:flex;flex-direction:column;
+.cico{flex:0 0 auto;width:92px;display:flex;flex-direction:column;
   align-items:center;gap:6px;padding-top:2px;}
 .cico .ic{
   width:62px;height:62px;border-radius:18px;background:var(--g1);color:var(--ink);
@@ -990,8 +993,12 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
 }
 .cico svg{width:35px;height:35px;display:block;}
 .cico .ct{
-  font-size:12.5px;font-weight:600;line-height:1.25;color:var(--ink-2);
-  text-align:center;letter-spacing:-.01em;
+  font-size:12px;font-weight:600;line-height:1.3;color:var(--ink-2);
+  text-align:center;letter-spacing:-.02em;
+  /* 長い用件名（インターネット・保管場所使用承諾書など）が
+     入れ物からはみ出して切れていたので、折り返すようにします */
+  align-self:stretch;max-width:100%;
+  overflow-wrap:anywhere;word-break:normal;line-break:strict;
 }
 .cbody{flex:1 1 auto;min-width:0;}
 
@@ -1037,7 +1044,7 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
   .card{padding:15px 14px 15px 20px;}
   .card::before{left:6px;top:26px;}
   .crow{gap:12px;}
-  .cico{width:64px;}
+  .cico{width:70px;}
   .cico .ic{width:53px;height:53px;border-radius:15px;}
   .cico svg{width:30px;height:30px;}
   .cico .ct{font-size:11.5px;}
@@ -1045,6 +1052,37 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
   .card .hl .room{font-size:14px;}
   .card .nm{font-size:13.5px;}
   .card .snip{font-size:13.5px;}
+}
+
+/* ---- 上のタブ：もうひとまわり大きく ---- */
+.tabs{padding:16px 22px 6px;gap:8px;}
+.tab{height:42px;padding:0 20px;font-size:16px;font-weight:500;letter-spacing:-.012em;}
+.tab-n{font-size:14px;margin-left:6px;font-variant-numeric:tabular-nums;}
+.tab.on{font-weight:600;}
+
+/* ---- 3日以上ほったらかしの案件は、赤で囲って中も薄く染めます ----
+ * ひと目で「これは今日中に手を付ける」と分かるようにするためです。
+ * 何日で赤くするかは LATE_DAYS（いまは3）で決めています。 */
+.card.late{
+  background:#fff5f4;
+  box-shadow:inset 0 0 0 2px rgba(215,0,21,.55);
+  border-bottom-color:rgba(215,0,21,.22);
+}
+.card.late:hover,.card.late:focus-visible{background:#ffecea;}
+.card.late:focus-visible{box-shadow:inset 0 0 0 2px var(--late);}
+.card.late .cico .ic{background:rgba(215,0,21,.10);color:var(--late);}
+.card.late .cico .ct{color:var(--late);}
+.card.late .hl{color:#8c0512;}
+.card.late .snip{color:#5c1218;}
+.card.late .days{color:var(--late);font-weight:700;}
+.card.late .time{color:#a3565c;}
+/* 赤い枠のなかでは、左の丸は要りません */
+.card.late::before{display:none;}
+
+@media (max-width:640px){
+  .tabs{padding:14px 12px 6px;gap:6px;}
+  .tab{height:38px;padding:0 16px;font-size:15px;}
+  .tab-n{font-size:13px;}
 }
 </style>
 </head>
@@ -1059,7 +1097,7 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
     <!-- いま何件たまっているか。開いてすぐ目に入る場所に置きます -->
     <div class="stats">
       <button class="stat" id="btnOpen" type="button"><span class="v" id="sOpen">–</span><span class="k">未返信</span></button>
-      <button class="stat" id="btnLate" type="button"><span class="v muted" id="sLate">–</span><span class="k">4日以上</span></button>
+      <button class="stat" id="btnLate" type="button"><span class="v muted" id="sLate">–</span><span class="k">3日以上</span></button>
       <button class="stat" id="btnDone" type="button"><span class="v muted" id="sDone">–</span><span class="k">完了</span></button>
     </div>
     <div class="count" id="count"></div>
@@ -1219,7 +1257,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23c";
+const UI_BUILD = "ui-2026-08-23e";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -1268,6 +1306,10 @@ function waitLabel(d) {
   if (d === 0) return "本日期限";
   return "あと" + d + "日";
 }
+/* ★何日で赤にするか。ここ1か所だけ直せば、行の色・上の件数・
+ *   しぼり込み・下の文章のすべてが同じ日数で動きます */
+const LATE_DAYS = 3;
+
 function waitClass(d) {
   if (d === null || d === undefined) return "wleft";
   return (d <= 4) ? "wsoon" : "wleft";
@@ -1280,8 +1322,8 @@ function daysLabel(d) {
 }
 function daysClass(d) {
   if (d === null || d === undefined) return "fresh";
-  if (d >= 4) return "late";
-  if (d >= 2) return "warn";
+  if (d >= LATE_DAYS) return "late";   /* 赤：3日以上ほったらかし */
+  if (d >= 2) return "warn";           /* 黄：2日 */
   return "fresh";
 }
 
@@ -1320,9 +1362,46 @@ const TOPICS = [
   ["口座変更",           ["口座", "引落", "引き落と", "通帳", "振込先"]],
 ];
 
+/* ★営業メールの見分け方
+ *   自動の振り分けをすり抜けて、通常の一覧に混ざって届くものがあります。
+ *   返信せずに完了へ送るものなので、ひと目で分かるようにします。
+ *   入居者様が書かない言い回しだけを並べ、2つ以上そろったら営業とします。
+ *   1つでも決まりのものは EIGYOU_SURE に分けています。 */
+const EIGYOU_SURE = [
+  "配信停止", "営業のご連絡", "無料トライアル", "ご担当者各位",
+  "一斉送信", "営業メール",
+];
+const EIGYOU_MARK = [
+  "ご担当者様", "ご担当者さま", "担当者様", "ご担当の方",
+  "突然のご連絡", "初めてご連絡", "はじめてご連絡", "突然のメール",
+  "お役に立て", "お役に立つ", "お力になれ",
+  "ご提案", "ご案内させて", "ご紹介させて", "ご紹介いたします",
+  "弊社について", "弊社は", "当社は", "私どもは", "私共は",
+  "商談", "お打ち合わせの機会", "打ち合わせの機会", "面談の機会",
+  "資料をお送り", "資料をご送付", "資料請求",
+  "無料で", "お試し", "キャンペーン",
+  "掲載のご案内", "コスト削減", "集客", "売上", "実績多数",
+  "創業", "施工業者", "代理店",
+];
+
+function isEigyouText(t) {
+  for (let i = 0; i < EIGYOU_SURE.length; i++) {
+    if (t.indexOf(EIGYOU_SURE[i]) >= 0) return true;
+  }
+  let n = 0;
+  for (let i = 0; i < EIGYOU_MARK.length; i++) {
+    if (t.indexOf(EIGYOU_MARK[i]) >= 0) n++;
+    if (n >= 2) return true;
+  }
+  return false;
+}
+
 function topicOf(text) {
   const t = String(text || "");
   if (!t) return "";
+  /* 用件のことばより先に見ます。「保険」「駐車場」などが本文に
+     入っていても、営業なら営業として出したいためです */
+  if (isEigyouText(t)) return "営業";
   for (let i = 0; i < TOPICS.length; i++) {
     const keys = TOPICS[i][1];
     for (let k = 0; k < keys.length; k++) {
@@ -1359,12 +1438,19 @@ function roomOf(text) {
   return m ? m[1] : "";
 }
 
-/* お名前。まず ［個人 / 氏名 / 電話］ の真ん中、無ければ名乗りの文から */
+/* お名前。
+ * ★はじめは「◯◯と申します」といった名乗りの文からも拾っていましたが、
+ *   「8月分の家賃領収書をメールで送っていただきたいです」を
+ *   「で送っていただきたい 様」と読み違えました。
+ *   文章から人の名前を当てるのは当てになりません。いまは
+ *   はっきり氏名だと分かる書き方だけを見て、無ければ出しません。 */
 function nameOf(x) {
   const t = String((x && x.content) || "");
-  let m = t.match(/\uFF3B[^\uFF3D]*?[\/\uFF0F]\s*([^\/\uFF0F\uFF3D]{2,20}?)\s*[\/\uFF0F]/);
+  /* ① ［個人 / 佐藤咲桜 / 07075674888］ の真ん中 */
+  let m = t.match(/\uFF3B[^\uFF3D]*?[\/\uFF0F]\s*([^\/\uFF0F\uFF3D]{2,24})\s*[\/\uFF0F]/);
   if (m && !/^[0-9\-\s]+$/.test(m[1])) return m[1].trim();
-  m = t.match(/([\u4E00-\u9FFF\u30A0-\u30FF\u3040-\u309F]{2,10})\s*(?:\u3068\u7533\u3057\u307E\u3059|\u3068\u8A00\u3044\u307E\u3059|\u3067\u3059\u3002)/);
+  /* ② 「氏名：◯◯」「お名前：◯◯」 */
+  m = t.match(/(?:\u304A\u540D\u524D|\u6C0F\u540D)\s*[:\uFF1A]\s*([^\n]{2,24})/);
   if (m) return m[1].trim();
   return "";
 }
@@ -1548,7 +1634,7 @@ async function drawEigyou() {
  *  件数の多い順に出します。0件の用件は出しません。
  * ============================================================ */
 let topicFilter = "";
-/* 上の「4日以上」を押したときだけ true。未返信のうち4日以上だけを出します */
+/* 上の「3日以上」を押したときだけ true。未返信のうち3日以上だけを出します */
 let lateOnly = false;
 
 
@@ -1841,11 +1927,11 @@ function drawList() {
 
   const wait = (listTab === "wait");
   const done = (listTab === "done");
-  /* 4日以上でしぼるのは未返信のときだけです */
+  /* 3日以上でしぼるのは未返信のときだけです */
   if (wait || done) lateOnly = false;
   const base = wait ? listWait : (done ? listDone : listOpen);
   const all  = lateOnly
-    ? base.filter(function (x) { return x.days >= 4; })
+    ? base.filter(function (x) { return x.days >= LATE_DAYS; })
     : base;
 
   $("btnOpen").className = "stat" + (!wait && !done && !lateOnly ? " on" : "");
@@ -1868,7 +1954,7 @@ function drawList() {
     $("list").innerHTML = '<div class="empty">'
       + (topicFilter
           ? "「" + esc(topicFilter) + "」の案件はありません"
-          : (lateOnly ? "4日以上たっている案件はありません"
+          : (lateOnly ? "3日以上たっている案件はありません"
               : (wait ? "返事を待っている案件はありません"
                   : (done ? "完了した案件はまだありません" : "未返信の案件はありません"))))
       + '</div>';
@@ -1913,7 +1999,7 @@ async function loadList() {
     $("nEigyou").textContent = (r.nEigyou != null) ? r.nEigyou : "";
 
     /* ヘッダーの数字。件数はここで見せるので、下の文章は0件のときだけにします */
-    const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
+    const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
     $("sOpen").textContent = listOpen.length;
     $("sLate").textContent = late;
     $("sDone").textContent = listDone.length;
@@ -2099,10 +2185,10 @@ function finishRow(rowNo, toDone, toWait) {
   $("nOpen").textContent = listOpen.length;
   $("nWait").textContent = listWait.length;
   $("nDone").textContent = listDone.length;
-  const late = listOpen.filter(function (x) { return x.days >= 4; }).length;
+  const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
   $("count").textContent = listOpen.length
     ? "返信を待っている案件が " + listOpen.length + " 件"
-      + (late ? "（うち4日以上たっているものが " + late + " 件）" : "")
+      + (late ? "（うち3日以上たっているものが " + late + " 件）" : "")
     : "返信を待っている案件はありません";
   drawList();
 }
