@@ -660,6 +660,99 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
 .card.making::before{background:var(--g2);}
 .empty{background:transparent;color:var(--ink-2);font-size:14px;padding:64px 20px;}
 
+/* ---- 分析タブ ----------------------------------------------------
+   要約・円グラフ・物件別の3枚。背景の線画は自分で描いたものです。 */
+.an-hero{
+  position:relative;overflow:hidden;
+  background:var(--card);border-radius:var(--r-panel);
+  box-shadow:var(--sh);margin:0 22px 16px;padding:26px 26px 22px;
+}
+/* 背景の絵。読みやすさを邪魔しない濃さに抑えています */
+.an-art{
+  position:absolute;right:-18px;bottom:-14px;width:min(58%,460px);height:auto;
+  color:var(--ink);opacity:.055;pointer-events:none;
+}
+.an-hero-in{position:relative;z-index:1;}
+.an-eyebrow{
+  margin:0 0 14px;font-size:12px;font-weight:600;letter-spacing:.02em;color:var(--accent);
+}
+.an-figs{display:flex;flex-wrap:wrap;gap:34px;}
+.an-fig{display:flex;flex-direction:column;gap:3px;}
+.an-fig .v{font-size:32px;font-weight:600;letter-spacing:-.025em;line-height:1.05;color:var(--ink);}
+.an-fig .v.bad{color:var(--late);}
+/* 文字を入れる欄は、数字より小さくします */
+.an-fig .v.txt{font-size:21px;letter-spacing:-.015em;}
+.an-fig .k{font-size:12.5px;color:var(--ink-2);}
+.an-note{margin:18px 0 0;font-size:12px;color:var(--ink-3);}
+
+.an-card{
+  background:var(--card);border-radius:var(--r-panel);
+  box-shadow:var(--sh);margin:0 22px 16px;padding:22px 26px 24px;
+}
+.an-h{
+  margin:0 0 18px;font-size:17px;font-weight:600;letter-spacing:-.015em;color:var(--ink);
+  display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;
+}
+.an-h .an-sub{font-size:12px;font-weight:400;color:var(--ink-3);letter-spacing:0;}
+
+/* 円グラフ */
+.an-pie{display:flex;align-items:center;gap:34px;flex-wrap:wrap;}
+.an-donut{width:170px;height:170px;flex:none;}
+.an-donut .an-dn{font-size:30px;font-weight:600;letter-spacing:-.03em;fill:var(--ink);}
+.an-donut .an-dl{font-size:12px;fill:var(--ink-3);}
+.an-legend{display:flex;flex-direction:column;gap:2px;flex:1;min-width:250px;}
+.an-lg{
+  display:flex;align-items:center;gap:11px;padding:7px 0;
+  border-bottom:1px solid var(--line-2);
+}
+.an-lg:last-child{border-bottom:0;}
+.an-lg i{width:11px;height:11px;border-radius:3px;flex:none;}
+.an-lg .nm{flex:1;min-width:0;font-size:14px;color:var(--ink);
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.an-lg .n{font-size:15px;font-weight:600;color:var(--ink);
+  font-variant-numeric:tabular-nums;min-width:34px;text-align:right;}
+.an-lg .r{font-size:12.5px;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;min-width:52px;text-align:right;}
+
+/* 物件別 */
+.an-b{
+  padding:14px 14px 13px;border-radius:14px;cursor:pointer;
+  transition:background .16s;
+}
+.an-b:hover{background:#fafafc;}
+.an-b + .an-b{border-top:1px solid var(--line-2);border-radius:0;}
+.an-b-head{display:flex;align-items:baseline;gap:11px;margin-bottom:9px;}
+.an-b-nm{flex:1;min-width:0;font-size:15px;font-weight:600;letter-spacing:-.012em;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.an-b-n{font-size:13px;color:var(--ink-2);font-variant-numeric:tabular-nums;}
+.an-b-r{font-size:13px;font-weight:600;color:var(--ink-3);
+  font-variant-numeric:tabular-nums;white-space:nowrap;}
+.an-b-r.mid{color:var(--warn);}
+.an-b-r.hi{color:var(--late);}
+.an-bar{height:6px;border-radius:980px;background:var(--g1);overflow:hidden;}
+.an-bar i{display:block;height:100%;border-radius:980px;background:var(--ink-3);}
+.an-bar.mid i{background:var(--warn-bar);}
+.an-bar.hi i{background:var(--late);}
+.an-b-top{margin:9px 0 0;font-size:12.5px;color:var(--ink-2);}
+/* 押すと開く内訳 */
+.an-b-detail{display:none;margin-top:12px;padding-top:11px;border-top:1px solid var(--line-2);}
+.an-b.open .an-b-detail{display:block;}
+.an-dt{display:flex;align-items:center;gap:11px;padding:5px 0;font-size:13px;}
+.an-dt .k{flex:1;min-width:0;color:var(--ink);}
+.an-dt.claim .k{color:var(--late);}
+.an-dt .n{font-weight:600;font-variant-numeric:tabular-nums;min-width:30px;text-align:right;}
+.an-dt .r{color:var(--ink-3);font-variant-numeric:tabular-nums;min-width:52px;text-align:right;}
+
+@media (max-width:640px){
+  .an-hero,.an-card{margin-left:12px;margin-right:12px;padding-left:18px;padding-right:18px;border-radius:16px;}
+  .an-figs{gap:22px;}
+  .an-fig .v{font-size:26px;}
+  .an-pie{gap:20px;justify-content:center;}
+  .an-donut{width:150px;height:150px;}
+  .an-legend{min-width:0;}
+  .an-art{width:76%;opacity:.045;}
+}
+
 /* ---- 詳細 ---- */
 #detailView{background:rgba(0,0,0,.30);
   -webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);}
@@ -829,6 +922,7 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
       <button class="tab" id="tabWait" type="button">返事待ち<span class="tab-n" id="nWait"></span></button>
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
+      <button class="tab" id="tabAnalytics" type="button">分析</button>
     </div>
     <!-- 用件でしぼる。横1列に流し、マウス用に送りボタンを添えます -->
     <div class="fwrap">
@@ -1145,6 +1239,7 @@ async function drawEigyou() {
   $("tabOpen").className   = "tab";
   $("tabDone").className   = "tab";
   $("tabEigyou").className = "tab on";
+  $("tabAnalytics").className = "tab";
 
   $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
   let rows = [];
@@ -1298,8 +1393,198 @@ function drawFilters(rows) {
   });
 }
 
+
+/* ============================================================
+ *  分析
+ *
+ *  いま読み込んでいる案件（未返信・返事待ち・完了）を、用件別と
+ *  物件別に数えます。クラウドを追加で呼ばないので、対象は画面が
+ *  持っているぶんだけです。画面にもその旨を出しています。
+ *
+ *  ★クレーム系の分け方はここで決めています。
+ *    実態に合わせて、足したり外したりしてください。
+ * ============================================================ */
+const CLAIM_TOPICS = ["騒音", "無断駐車", "ゴミ", "修繕", "エアコン", "鍵", "インターネット"];
+
+/* 円グラフの色。6つまでに抑え、7つ目からは「その他」にまとめます
+ * （色が増えすぎると隣どうしが見分けられなくなるため） */
+const PIE_COLORS = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#008300"];
+const PIE_OTHER  = "#9a9aa0";
+
+function isClaim(topic) { return CLAIM_TOPICS.indexOf(topic) >= 0; }
+
+/* 全案件を集計する */
+function analyze() {
+  const all = listOpen.concat(listWait, listDone);
+  const topics = {}, blds = {};
+  let claim = 0;
+
+  all.forEach(function (x) {
+    const t = topicOf(x.content) || "その他";
+    topics[t] = (topics[t] || 0) + 1;
+    if (isClaim(t)) claim++;
+
+    const b = x.building || "物件名なし";
+    if (!blds[b]) blds[b] = { name: b, total: 0, claim: 0, topics: {} };
+    const o = blds[b];
+    o.total++;
+    o.topics[t] = (o.topics[t] || 0) + 1;
+    if (isClaim(t)) o.claim++;
+  });
+
+  const topicList = Object.keys(topics)
+    .map(function (k) { return { name: k, n: topics[k] }; })
+    .sort(function (a, b) { return b.n - a.n || a.name.localeCompare(b.name, "ja"); });
+
+  /* クレーム率の高い順。同率なら件数の多い順 */
+  const bldList = Object.keys(blds).map(function (k) { return blds[k]; })
+    .sort(function (a, b) {
+      const ra = a.total ? a.claim / a.total : 0;
+      const rb = b.total ? b.claim / b.total : 0;
+      return (rb - ra) || (b.total - a.total);
+    });
+
+  return { total: all.length, claim: claim, topics: topicList, blds: bldList };
+}
+
+function pct(n, d) { return d ? (n / d * 100).toFixed(1) + "%" : "0%"; }
+
+/* 上位5件＋その他 に丸めて、円グラフ用の並びにする */
+function pieSlices(topicList, total) {
+  const top = topicList.slice(0, 5).map(function (t, i) {
+    return { name: t.name, n: t.n, color: PIE_COLORS[i] };
+  });
+  const rest = topicList.slice(5).reduce(function (a, t) { return a + t.n; }, 0);
+  if (rest > 0) top.push({ name: "その他", n: rest, color: PIE_OTHER });
+  return top;
+}
+
+/* ドーナツ。すき間を2pxあけて、隣り合う色が溶け合わないようにします */
+function donutSvg(slices, total) {
+  const R = 54, W = 22, C = 2 * Math.PI * R;
+  let off = 0;
+  const arcs = slices.map(function (s) {
+    const len = total ? (s.n / total) * C : 0;
+    const draw = Math.max(len - 2, 0.6);
+    const a = '<circle cx="70" cy="70" r="' + R + '" fill="none" stroke="' + s.color + '"'
+            + ' stroke-width="' + W + '" stroke-dasharray="' + draw.toFixed(2) + ' ' + (C - draw).toFixed(2) + '"'
+            + ' stroke-dashoffset="' + (-off).toFixed(2) + '"></circle>';
+    off += len;
+    return a;
+  }).join("");
+  return '<svg class="an-donut" viewBox="0 0 140 140" role="img" aria-label="用件の内訳">'
+       +   '<g transform="rotate(-90 70 70)">' + arcs + '</g>'
+       +   '<text class="an-dn" x="70" y="68" text-anchor="middle">' + total + '</text>'
+       +   '<text class="an-dl" x="70" y="86" text-anchor="middle">件</text>'
+       + '</svg>';
+}
+
+/* 背景にうっすら敷く絵。自分で描いた線画です */
+function anBackdrop() {
+  return '<svg class="an-art" viewBox="0 0 420 170" aria-hidden="true" fill="none"'
+       + ' stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'
+       +   '<path d="M18 150V72h44v78M28 86h10M46 86h10M28 104h10M46 104h10M28 122h10M46 122h10"/>'
+       +   '<path d="M74 150V46h56v104M86 62h14M110 62h12M86 84h14M110 84h12M86 106h14M110 106h12M86 128h14M110 128h12"/>'
+       +   '<path d="M142 150V92h40v58M152 106h9M170 106h9M152 124h9M170 124h9"/>'
+       +   '<path d="M8 150h196"/>'
+       +   '<path d="M236 40h60a10 10 0 0 1 10 10v26a10 10 0 0 1-10 10h-32l-14 12V86a10 10 0 0 1-10-10V50a10 10 0 0 1 10-10z"/>'
+       +   '<path d="M330 72h56a10 10 0 0 1 10 10v24a10 10 0 0 1-10 10v12l-14-12h-42a10 10 0 0 1-10-10V82a10 10 0 0 1 10-10z"/>'
+       +   '<circle cx="258" cy="63" r="3"/><circle cx="272" cy="63" r="3"/><circle cx="286" cy="63" r="3"/>'
+       +   '<path d="M262 132a18 18 0 1 0 0-36 18 18 0 0 0 0 36zM275 129l14 14"/>'
+       + '</svg>';
+}
+
+function drawStats() {
+  $("tabOpen").className = "tab";
+  $("tabWait").className = "tab";
+  $("tabDone").className = "tab";
+  $("tabEigyou").className = "tab";
+  $("tabAnalytics").className = "tab on";
+  $("filters").innerHTML = "";
+  syncFilterArrows();
+
+  const a = analyze();
+  if (!a.total) {
+    $("list").innerHTML = '<div class="empty">集計できる案件がまだありません</div>';
+    return;
+  }
+
+  const slices = pieSlices(a.topics, a.total);
+  const claimRate = a.claim / a.total * 100;
+
+  /* ① 要約 */
+  let html = '<div class="an-hero">'
+    + anBackdrop()
+    + '<div class="an-hero-in">'
+    +   '<p class="an-eyebrow">問い合わせの中身</p>'
+    +   '<div class="an-figs">'
+    +     '<div class="an-fig"><span class="v">' + a.total + '</span><span class="k">総件数</span></div>'
+    +     '<div class="an-fig"><span class="v ' + (claimRate >= 40 ? "bad" : "") + '">' + claimRate.toFixed(1) + '%</span>'
+    +       '<span class="k">クレーム・不具合の割合</span></div>'
+    +     '<div class="an-fig"><span class="v txt">' + esc(a.topics[0].name) + '</span><span class="k">いちばん多い用件</span></div>'
+    +   '</div>'
+    +   '<p class="an-note">対象：いま読み込んでいる未返信・返事待ち・完了の ' + a.total + ' 件です。</p>'
+    + '</div></div>';
+
+  /* ② 用件の内訳（円グラフ＋一覧） */
+  html += '<div class="an-card"><h3 class="an-h">用件の内訳</h3>'
+    + '<div class="an-pie">' + donutSvg(slices, a.total)
+    + '<div class="an-legend">'
+    + slices.map(function (s) {
+        return '<div class="an-lg">'
+             +   '<i style="background:' + s.color + '"></i>'
+             +   '<span class="nm">' + esc(s.name) + '</span>'
+             +   '<span class="n">' + s.n + '</span>'
+             +   '<span class="r">' + pct(s.n, a.total) + '</span>'
+             + '</div>';
+      }).join("")
+    + '</div></div></div>';
+
+  /* ③ 物件別 */
+  html += '<div class="an-card"><h3 class="an-h">物件別'
+    + '<span class="an-sub">クレーム・不具合の割合が高い順。押すと内訳が開きます</span></h3>'
+    + a.blds.map(function (b, i) {
+        const r = b.claim / b.total * 100;
+        const lv = r >= 50 ? " hi" : (r >= 25 ? " mid" : "");
+        const top3 = Object.keys(b.topics)
+          .map(function (k) { return { k: k, n: b.topics[k] }; })
+          .sort(function (x, y) { return y.n - x.n; })
+          .slice(0, 3)
+          .map(function (t) { return esc(t.k) + " " + t.n; })
+          .join(" ・ ");
+        const detail = Object.keys(b.topics)
+          .map(function (k) { return { k: k, n: b.topics[k] }; })
+          .sort(function (x, y) { return y.n - x.n; })
+          .map(function (t) {
+            return '<div class="an-dt' + (isClaim(t.k) ? " claim" : "") + '">'
+                 +   '<span class="k">' + esc(t.k) + '</span>'
+                 +   '<span class="n">' + t.n + '</span>'
+                 +   '<span class="r">' + pct(t.n, b.total) + '</span>'
+                 + '</div>';
+          }).join("");
+        return '<div class="an-b" data-i="' + i + '">'
+             +   '<div class="an-b-head">'
+             +     '<span class="an-b-nm">' + esc(b.name) + '</span>'
+             +     '<span class="an-b-n">' + b.total + '件</span>'
+             +     '<span class="an-b-r' + lv + '">クレーム ' + r.toFixed(1) + '%</span>'
+             +   '</div>'
+             +   '<div class="an-bar' + lv + '"><i style="width:' + r.toFixed(1) + '%"></i></div>'
+             +   '<p class="an-b-top">' + top3 + '</p>'
+             +   '<div class="an-b-detail">' + detail + '</div>'
+             + '</div>';
+      }).join("")
+    + '</div>';
+
+  $("list").innerHTML = html;
+
+  Array.prototype.forEach.call($("list").querySelectorAll(".an-b"), function (el) {
+    el.addEventListener("click", function () { el.classList.toggle("open"); });
+  });
+}
+
 function drawList() {
   if (listTab === "eigyou") { $("filters").innerHTML = ""; drawEigyou(); return; }
+  if (listTab === "stats")  { drawStats(); return; }
 
   const wait = (listTab === "wait");
   const done = (listTab === "done");
@@ -1318,6 +1603,7 @@ function drawList() {
   $("tabWait").className   = "tab" + (wait ? " on" : "");
   $("tabDone").className   = "tab" + (done ? " on" : "");
   $("tabEigyou").className = "tab";
+  $("tabAnalytics").className = "tab";
 
   drawFilters(all);
 
@@ -1924,6 +2210,7 @@ $("tabOpen").addEventListener("click", function () { listTab = "open"; lateOnly 
 $("tabWait").addEventListener("click", function () { listTab = "wait"; lateOnly = false; topicFilter = ""; drawList(); });
 $("tabDone").addEventListener("click", function () { listTab = "done"; lateOnly = false; topicFilter = ""; drawList(); });
 $("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; lateOnly = false; topicFilter = ""; drawList(); });
+$("tabAnalytics").addEventListener("click", function () { listTab = "stats"; lateOnly = false; topicFilter = ""; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
   if (f) pickAttach(f);
