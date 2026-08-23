@@ -1150,6 +1150,84 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
   .tl::before{left:11.5px;}
   .tl-text{font-size:13.5px;}
 }
+
+/* ---- 完了は「終わったもの」なので、灰色ではなく緑にします ---- */
+:root{ --ok:#1a7f4b; --ok-soft:#e9f6ef; --ok-line:#bfe3ce; }
+#btnDone .v, #btnDone.on .v{color:var(--ok);}
+#btnDone.on{background:var(--ok-soft);}
+#btnDone .k{color:var(--ok);opacity:.85;}
+.card.done::before{background:var(--ok);display:block;}
+.card.done .cico .ic{background:var(--ok-soft);color:var(--ok);}
+.card.done .cico .ct{color:var(--ok);}
+.card.done .sent{color:var(--ok);font-weight:600;}
+.card.done .hl{color:var(--ink);font-weight:600;}
+
+/* ---- 返信の本文：書く場所を1か所にまとめました ---- */
+/* 本体は残しますが、画面には出しません。押す合図だけ送ります */
+#dDraft{display:none;}
+.draft-open{
+  display:flex;align-items:center;gap:12px;width:100%;
+  padding:18px 20px;border:1px solid var(--accent);border-radius:var(--r);
+  background:var(--accent-soft);color:var(--accent);
+  font-family:inherit;font-size:16px;font-weight:600;letter-spacing:-.012em;
+  cursor:pointer;text-align:left;transition:background .15s,box-shadow .15s;
+}
+.draft-open:hover{background:#dbebfd;}
+.draft-open:active{background:#cfe4fc;}
+.draft-open .do-ic{display:flex;flex:none;}
+.draft-open .do-ic svg{width:22px;height:22px;display:block;}
+.draft-open .do-n{
+  margin-left:auto;font-size:13px;font-weight:400;color:var(--ink-2);
+  font-variant-numeric:tabular-nums;
+}
+.draft-open.empty{
+  border-color:var(--warn-bar);background:#fff8ec;color:var(--warn);
+}
+.draft-open.empty:hover{background:#fdf1de;}
+
+/* ---- 時系列：返信案と「いま ここ」を、どちらも淡い青に ---- */
+.tl-item.draft .tl-card{
+  background:#f1f7ff;border-color:#d3e6fb;box-shadow:inset 3px 0 0 var(--accent);
+}
+.tl-item.now .tl-card{
+  background:var(--accent-soft);border:1px solid #bcdcfa;box-shadow:none;
+}
+/* 押せる「いま ここ」 */
+button.tl-card.go{
+  display:block;width:100%;text-align:left;font-family:inherit;cursor:pointer;
+  transition:background .15s,box-shadow .15s;
+}
+button.tl-card.go:hover{background:#dbebfd;}
+button.tl-card.go:active{background:#cfe4fc;}
+button.tl-card.go:focus-visible{outline:none;box-shadow:0 0 0 4px rgba(0,113,227,.22);}
+.tl-go{
+  margin-top:8px;font-size:12.5px;font-weight:600;color:var(--accent);
+  display:flex;align-items:center;gap:5px;
+}
+.tl-go::after{content:"\203A";font-size:16px;line-height:1;}
+
+/* ---- 書く画面を広く ---- */
+.zen{min-height:min(88vh,900px);}
+.zen-edit textarea{font-size:17px;line-height:2;padding:24px 26px;}
+@media (max-width:640px){
+  .zen{min-height:0;}
+  .draft-open{padding:16px;font-size:15px;}
+  .draft-open .do-n{width:100%;margin-left:0;order:3;}
+}
+
+/* ---- 削除：押し間違えないよう、赤で他と分けます ---- */
+button.act.danger{
+  color:var(--late);border-color:#f0c4c1;background:#fff;
+  margin-right:6px;
+}
+button.act.danger:hover{
+  background:var(--late);border-color:var(--late);color:#fff;
+}
+button.act.danger:active{background:#a8231a;border-color:#a8231a;}
+button.act.danger:disabled{opacity:.55;}
+@media (max-width:640px){
+  button.act.danger{margin-right:0;}
+}
 </style>
 </head>
 <body>
@@ -1217,7 +1295,21 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
     </div>
 
     <div class="sec">
-      <h2>返信の本文（ここを直せます）</h2>
+      <h2>返信の本文</h2>
+      <!-- ★書く場所を1か所にまとめました。押すと大きな画面が開きます。
+           #dDraft は残してあります（保存・送信・AI指示はこの値を読むため）。
+           display:none でも .click() は届くので、開く合図に使っています。 -->
+      <button class="draft-open" id="bDraftOpen" type="button">
+        <span class="do-ic" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"
+               stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 20.4l.9-4.2L16.3 4.8a2 2 0 0 1 2.8 0l1.1 1.1a2 2 0 0 1 0 2.8L8.8 20.1z"/>
+            <path d="M14.6 6.5l2.9 2.9"/>
+          </svg>
+        </span>
+        <span class="do-t">返信を書く・直す</span>
+        <span class="do-n" id="dDraftLen"></span>
+      </button>
       <textarea id="dDraft" spellcheck="false"></textarea>
     </div>
 
@@ -1250,6 +1342,8 @@ button.skip{background:#fff;border-color:var(--line);color:var(--ink-2);}
     <div class="acts">
       <button class="act" id="bSave">下書きを保存</button>
       <button class="act skip" id="bSkip">完了にする</button>
+      <!-- ★削除は元に戻せないので、押す前に必ず確認を出します -->
+      <button class="act danger" id="bDel" type="button">削除する</button>
       <button class="act send wait" id="bSendWait">送信して返事待ち</button>
       <button class="act send" id="bSend">送信して完了</button>
     </div>
@@ -1323,7 +1417,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23f";
+const UI_BUILD = "ui-2026-08-23h";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2171,6 +2265,7 @@ async function openDetail(rowNo) {
   $("dContent").textContent = "";
   $("dRaw").textContent     = "読み込んでいます…";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
+  syncDraftBtn();
   $("dPreview").textContent = "";
   $("dPrevBox").open        = false;
   $("dOrder").value         = "";
@@ -2329,6 +2424,7 @@ async function askAi() {
       return;
     }
     $("dDraft").value = r.text;
+    syncDraftBtn();
     setStatus("ok", "文面ができました。内容を確かめて、直すところがあれば直してください。"
                   + "\nまだ保存していません。");
     $("dOrderNote").textContent = "保存するまで台帳は変わりません";
@@ -2400,6 +2496,55 @@ async function skip() {
   } catch (e) {
     setStatus("bad", "記録できませんでした\n理由：" + e.message);
     b.disabled = false; b.textContent = "完了にする";
+  }
+}
+
+/* ---------- 削除する ----------
+ *  ★台帳から消す処理はクラウド側（crmApi.gs）にあります。
+ *    この画面は mode:"delete" を投げるだけです。クラウド側にまだ
+ *    受け口が無いときは、その旨をそのまま画面に出します。
+ *  ★元に戻せないので、押す前に必ず確認を出します。 */
+function removeRow(rowNo) {
+  [listOpen, listWait, listDone].forEach(function (arr) {
+    const i = arr.map(function (x) { return x.rowNo; }).indexOf(rowNo);
+    if (i >= 0) arr.splice(i, 1);
+  });
+  $("nOpen").textContent = listOpen.length;
+  $("nWait").textContent = listWait.length;
+  $("nDone").textContent = listDone.length;
+  $("sOpen").textContent = listOpen.length;
+  $("sDone").textContent = listDone.length;
+  const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
+  $("sLate").textContent = late;
+  $("sLate").className = late ? "v late" : "v muted";
+}
+
+async function delRow() {
+  if (!cur) return;
+
+  const who = ($("dMeta").textContent || "").trim().slice(0, 40);
+  if (!confirm("この問い合わせを削除します。\n\n" + who
+             + "\n\n削除すると元に戻せません。よろしいですか？")) return;
+
+  const b = $("bDel");
+  b.disabled = true;
+  b.textContent = "削除しています…";
+  setStatus("work", "削除しています…");
+
+  try {
+    const r = await api({ mode: "delete", row: cur.rowNo });
+    if (!r.ok) {
+      setStatus("bad", "削除できませんでした\n理由：" + (r.error || "（理由が返っていません）")
+        + "\n※クラウド側に delete の受け口が無いときも、この表示になります。");
+      b.disabled = false; b.textContent = "削除する";
+      return;
+    }
+    setStatus("ok", "削除しました。");
+    removeRow(cur.rowNo);
+    setTimeout(backToList, 800);
+  } catch (e) {
+    setStatus("bad", "削除できませんでした\n理由：" + e.message);
+    b.disabled = false; b.textContent = "削除する";
   }
 }
 
@@ -2560,14 +2705,19 @@ function timelineHtml(items, rowNo, hint) {
          + '</div>';
   }).join("");
 
+  /* 承認まちのときは、ここを押すとそのまま返信を書けるようにします */
+  const canWrite = (now === 2);
+  const inner = '<div class="tl-who"><span>いま ここ</span>'
+              +   '<span class="tl-at">' + esc(FLOW_STEPS[now] || "") + '</span></div>'
+              + (next ? '<div class="tl-text">' + esc(next) + '</div>' : "")
+              + (canWrite ? '<div class="tl-go">ここを押すと、返信を書く画面が開きます</div>' : "");
+
   return '<div class="tl">' + rows
        +   '<div class="tl-item now" style="--i:' + Math.min(items.length, 7) + '">'
        +     '<span class="tl-dot">今</span>'
-       +     '<div class="tl-card">'
-       +       '<div class="tl-who"><span>いま ここ</span>'
-       +         '<span class="tl-at">' + esc(FLOW_STEPS[now] || "") + '</span></div>'
-       +       (next ? '<div class="tl-text">' + esc(next) + '</div>' : "")
-       +     '</div>'
+       +     (canWrite
+           ? '<button class="tl-card go" id="tlGo" type="button">' + inner + '</button>'
+           : '<div class="tl-card">' + inner + '</div>')
        +   '</div>'
        + '</div>';
 }
@@ -2580,6 +2730,7 @@ function drawThread(r) {
   if (!r || !r.ok) {
     box.className = "thread empty-wrap";
     box.innerHTML = '<div class="th-empty">履歴を読み込めませんでした</div>';
+    syncDraftBtn();          /* 履歴が読めなくても、返信の文字数は合わせます */
     return;
   }
 
@@ -2606,6 +2757,23 @@ function drawThread(r) {
       b.remove();
     });
   });
+
+  const go = box.querySelector("#tlGo");
+  if (go) go.addEventListener("click", openWriter);
+  syncDraftBtn();
+}
+
+/* 返信を書く大きな画面を開きます。#dDraft を押したことにするだけなので、
+   保存・送信・AI指示の流れは今までと同じです */
+function openWriter() { $("dDraft").click(); }
+
+/* 押すボタンに、いま何文字あるかを出します */
+function syncDraftBtn() {
+  const n = $("dDraftLen");
+  if (!n) return;
+  const len = ($("dDraft").value || "").trim().length;
+  n.textContent = len ? len.toLocaleString() + " 文字" : "まだ書かれていません";
+  $("bDraftOpen").classList.toggle("empty", !len);
 }
 
 async function loadThread() {
@@ -2762,6 +2930,7 @@ $("dPrevBox").addEventListener("toggle", function () {
   if ($("dPrevBox").open) refreshPreview();
 });
 $("bSkip").addEventListener("click", skip);
+$("bDel").addEventListener("click", delRow);
 $("bSend").addEventListener("click", function () { send(false); });
 $("bSendWait").addEventListener("click", function () { send(true); });
 
