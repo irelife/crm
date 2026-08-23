@@ -1228,6 +1228,25 @@ button.act.danger:disabled{opacity:.55;}
 @media (max-width:640px){
   button.act.danger{margin-right:0;}
 }
+
+/* ---- 画面から隠しているものの帯 ---- */
+.hidden-bar{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  margin:0 22px 12px;padding:13px 18px;border-radius:14px;
+  background:#fff8ec;border:1px solid #f3ddb6;
+  font-size:13.5px;line-height:1.6;color:var(--warn);
+}
+.hidden-bar.hide{display:none;}
+.hidden-bar button{
+  margin-left:auto;height:34px;padding:0 16px;border-radius:980px;
+  border:1px solid #e4c691;background:#fff;color:var(--warn);
+  font-family:inherit;font-size:13px;font-weight:600;cursor:pointer;
+}
+.hidden-bar button:hover{background:var(--warn);border-color:var(--warn);color:#fff;}
+@media (max-width:640px){
+  .hidden-bar{margin:0 12px 10px;padding:12px 14px;font-size:13px;}
+  .hidden-bar button{margin-left:0;width:100%;}
+}
 </style>
 </head>
 <body>
@@ -1263,6 +1282,7 @@ button.act.danger:disabled{opacity:.55;}
       <div class="filters" id="filters"></div>
       <button class="fscroll next" id="fNext" type="button" aria-label="次へ">›</button>
     </div>
+    <div class="hidden-bar hide" id="hiddenBar"></div>
     <div id="list"></div>
     <div class="buildtag" id="buildtag"></div>
   </section>
@@ -1417,7 +1437,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23h";
+const UI_BUILD = "ui-2026-08-23i";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -2136,6 +2156,63 @@ function drawList() {
   });
 }
 
+/* ───────────────────────────────────────────────────────────────
+ * 画面から隠す
+ *
+ * ★台帳から本当に消すのはクラウド側（crmApi.gs）の仕事です。
+ *   向こうに delete の受け口が無いあいだの逃げ道として、
+ *   「この端末の画面からだけ隠す」を用意しています。
+ *   隠した行番号はこの端末の localStorage に残るので、
+ *   他の人の画面や台帳には影響しません。いつでも戻せます。
+ * ─────────────────────────────────────────────────────────────── */
+const HIDE_KEY = "crm.hiddenRows.v1";
+
+function hiddenRows() {
+  try {
+    const v = JSON.parse(localStorage.getItem(HIDE_KEY) || "[]");
+    return Array.isArray(v) ? v : [];
+  } catch (e) { return []; }
+}
+
+function saveHidden(list) {
+  try { localStorage.setItem(HIDE_KEY, JSON.stringify(list)); } catch (e) {}
+}
+
+function hideRow(rowNo) {
+  const list = hiddenRows();
+  if (list.indexOf(rowNo) < 0) list.push(rowNo);
+  saveHidden(list);
+}
+
+function unhideAll() {
+  saveHidden([]);
+  loadList();
+}
+
+/* 隠しているものを一覧から外します */
+function applyHidden() {
+  const h = hiddenRows();
+  if (!h.length) { drawHiddenBar(0); return; }
+  let n = 0;
+  [listOpen, listWait, listDone].forEach(function (arr) {
+    for (let i = arr.length - 1; i >= 0; i--) {
+      if (h.indexOf(arr[i].rowNo) >= 0) { arr.splice(i, 1); n++; }
+    }
+  });
+  drawHiddenBar(n);
+}
+
+function drawHiddenBar(n) {
+  const bar = $("hiddenBar");
+  if (!bar) return;
+  if (!n) { bar.className = "hidden-bar hide"; bar.innerHTML = ""; return; }
+  bar.className = "hidden-bar";
+  bar.innerHTML = '<span>この端末の画面から隠している問い合わせが ' + n + ' 件あります'
+                + '（台帳には残っています）</span>'
+                + '<button type="button" id="bUnhide">ぜんぶ表示に戻す</button>';
+  $("bUnhide").addEventListener("click", unhideAll);
+}
+
 async function loadList() {
   $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
   try {
@@ -2145,6 +2222,7 @@ async function loadList() {
     listOpen = r.open || [];
     listWait = r.waiting || [];
     listDone = r.done || [];
+    applyHidden();          /* 隠しているものを、数える前に外します */
     isTest   = !!r.test;
 
     $("mode").textContent = isTest ? "テスト送信中" : "本番送信";
@@ -2533,18 +2611,30 @@ async function delRow() {
 
   try {
     const r = await api({ mode: "delete", row: cur.rowNo });
-    if (!r.ok) {
-      setStatus("bad", "削除できませんでした\n理由：" + (r.error || "（理由が返っていません）")
-        + "\n※クラウド側に delete の受け口が無いときも、この表示になります。");
-      b.disabled = false; b.textContent = "削除する";
-      return;
-    }
-    setStatus("ok", "削除しました。");
+    if (!r.ok) { fallbackHide(r.error || "（理由が返っていません）"); return; }
+    setStatus("ok", "台帳から削除しました。");
     removeRow(cur.rowNo);
     setTimeout(backToList, 800);
   } catch (e) {
-    setStatus("bad", "削除できませんでした\n理由：" + e.message);
-    b.disabled = false; b.textContent = "削除する";
+    fallbackHide(e.message);
+  }
+
+  /* 台帳から消せなかったとき。せめて画面から外せるようにします */
+  function fallbackHide(why) {
+    const b2 = $("bDel");
+    if (confirm("台帳からは削除できませんでした。\n理由：" + why
+              + "\n\n（クラウド側にまだ削除の受け口がありません）\n\n"
+              + "代わりに、この端末の画面からだけ隠しますか？\n"
+              + "台帳には残ります。あとで「ぜんぶ表示に戻す」で戻せます。")) {
+      hideRow(cur.rowNo);
+      removeRow(cur.rowNo);
+      drawHiddenBar(hiddenRows().length);
+      setStatus("ok", "この端末の画面から隠しました。台帳には残っています。");
+      setTimeout(backToList, 800);
+      return;
+    }
+    setStatus("bad", "削除できませんでした\n理由：" + why);
+    b2.disabled = false; b2.textContent = "削除する";
   }
 }
 
