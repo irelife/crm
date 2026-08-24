@@ -1613,6 +1613,84 @@ h1{letter-spacing:-.03em;}
   .an-tip-t{font-size:14px;}
   .an-tip-d{font-size:13px;}
 }
+
+/* ---- 並べ方の切り替えボタン ---- */
+.viewtog{
+  margin-left:auto;flex:none;height:38px;padding:0 16px;border-radius:980px;
+  border:1px solid var(--line);background:#fff;color:var(--ink-2);
+  font-family:inherit;font-size:13.5px;font-weight:500;cursor:pointer;
+  white-space:nowrap;transition:background .15s,border-color .15s,color .15s;
+}
+.viewtog:hover{background:var(--g1);border-color:var(--g3);color:var(--ink);}
+
+/* ══ 一覧のかたち（1件＝1行） ══════════════════════════════════════ */
+body.view-rows #list{
+  grid-template-columns:1fr;gap:0;
+  background:var(--card);border-radius:var(--r-panel);
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 34px rgba(0,0,0,.05);
+  overflow:hidden;
+}
+body.view-rows .card{
+  aspect-ratio:auto;border-radius:0;padding:18px 22px;
+  box-shadow:none;border-bottom:1px solid var(--line-2);
+}
+body.view-rows .card:last-child{border-bottom:0;}
+body.view-rows .card:hover,body.view-rows .card:focus-visible{
+  transform:none;box-shadow:none;background:#fafafc;
+}
+body.view-rows .crow{flex-direction:row;gap:18px;}
+body.view-rows .cico{flex-direction:column;width:74px;gap:7px;padding-top:2px;}
+body.view-rows .cico .ct{text-align:center;}
+body.view-rows .cbody{padding-bottom:0;}
+body.view-rows .card .hl{font-size:17px;-webkit-line-clamp:1;}
+body.view-rows .card .snip{-webkit-line-clamp:2;flex:0 1 auto;}
+body.view-rows .card .days,body.view-rows .card .sent{
+  position:static;margin-left:auto;
+}
+body.view-rows .card.late{
+  background:#fff8f7;box-shadow:inset 4px 0 0 var(--late);
+}
+body.view-rows .card.late:hover{background:#fff2f0;box-shadow:inset 4px 0 0 var(--late);}
+body.view-rows .card.done,body.view-rows .card.eigyou{
+  background:#ececed;box-shadow:inset 4px 0 0 rgba(0,0,0,.22);
+}
+body.view-rows .card.done:hover,body.view-rows .card.eigyou:hover{
+  background:#e5e5e7;box-shadow:inset 4px 0 0 rgba(0,0,0,.22);
+}
+body.view-rows .card.eigyou{aspect-ratio:auto;}
+
+/* ══ 営業も「対応しないもの」なので、完了と同じ灰色にします ══════════ */
+.card.eigyou{
+  background:#ececed;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.05);
+}
+.card.eigyou:hover,.card.eigyou:focus-visible{
+  background:#e5e5e7;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 10px 30px rgba(0,0,0,.09);
+}
+.card.eigyou .cico svg{color:#8b8b90;}
+.card.eigyou .cico .ct{color:#8b8b90;}
+.card.eigyou .bldg{color:#57575c;}
+.card.eigyou .snip{color:#6e6e73;}
+.card.eigyou .time,.card.eigyou .reason{color:#8b8b90;}
+.card.eigyou .flag{background:#d6d6dc;color:#57575c;border-color:#c9c9d0;}
+
+/* ══ 文字が切れていた件 ═══════════════════════════════════════════
+   ★件名に「1行で省略」を掛けていたため、幅の狭いカードでは
+     途中でぷつりと切れていました。折り返すようにします。 */
+.card .bldg{
+  white-space:normal;overflow:visible;text-overflow:clip;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  line-height:1.5;
+}
+.card .hl{overflow-wrap:anywhere;}
+.card .snip{overflow-wrap:anywhere;}
+.card .time{white-space:normal;overflow-wrap:anywhere;}
+.card.eigyou .unbtn{width:100%;}
+
+@media (max-width:640px){
+  .viewtog{height:34px;padding:0 13px;font-size:12.5px;}
+}
 </style>
 </head>
 <body>
@@ -1641,6 +1719,8 @@ h1{letter-spacing:-.03em;}
       <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
       <button class="tab" id="tabAnalytics" type="button">分析</button>
+      <!-- 並べ方の切り替え。選んだ形はこの端末に覚えさせます -->
+      <button class="viewtog" id="bView" type="button">一覧で見る</button>
     </div>
     <!-- 用件でしぼる。横1列に流し、マウス用に送りボタンを添えます -->
     <div class="fwrap">
@@ -1789,7 +1869,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23v";
+const UI_BUILD = "ui-2026-08-23w";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -3583,6 +3663,27 @@ document.addEventListener("keydown", function (e) {
 });
 $("bSave").addEventListener("click", function () { save(false); });
 $("bAi").addEventListener("click", askAi);
+
+/* ───────────────────────────────────────────────────────────────
+ * 並べ方（カード／一覧）
+ *   ★見え方だけの切り替えです。中身も動きも変わりません。
+ *     選んだ形はこの端末に覚えさせるので、次に開いても同じ形で出ます。
+ * ─────────────────────────────────────────────────────────────── */
+const VIEW_KEY = "crm.view.v1";
+
+function applyView() {
+  let rows = false;
+  try { rows = localStorage.getItem(VIEW_KEY) === "rows"; } catch (e) {}
+  document.body.classList.toggle("view-rows", rows);
+  $("bView").textContent = rows ? "カードで見る" : "一覧で見る";
+}
+
+$("bView").addEventListener("click", function () {
+  const rows = !document.body.classList.contains("view-rows");
+  try { localStorage.setItem(VIEW_KEY, rows ? "rows" : "cards"); } catch (e) {}
+  applyView();
+});
+applyView();
 
 $("bSkip").addEventListener("click", skip);
 $("bDel").addEventListener("click", delRow);
