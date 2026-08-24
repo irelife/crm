@@ -1375,6 +1375,244 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
 #btnDone .k{color:#86868b;opacity:1;}
 #btnDone.on{background:rgba(0,0,0,.09);}
 #btnDone:hover{background:rgba(0,0,0,.04);}
+
+/* ══════════════════════════════════════════════════════════════
+   仕上げ：面と線を減らし、文字で読ませる
+   ────────────────────────────────────────────────────────────
+   ★灰色の角丸タイルに絵を載せる形は、画面のあちこちに四角が並んで
+     しまい、古い管理画面のように見えていました。タイルをやめて絵だけ
+     置き、色は「急ぎ＝赤」「片づいた＝灰」の2つに絞ります。
+     この <style> ごと消せば前に戻ります。
+   ══════════════════════════════════════════════════════════════ */
+
+/* ---- 用件のならび：下地の四角をやめる ---- */
+.ficon .ic{background:transparent;width:auto;height:auto;border-radius:0;}
+.ficon{width:118px;padding:12px 6px 14px;gap:7px;border-radius:16px;}
+.ficon svg{width:32px;height:32px;color:var(--ink-2);}
+.ficon:hover{background:rgba(0,0,0,.035);}
+.ficon:hover .ic{background:transparent;}
+.ficon .fl{font-size:13px;font-weight:400;color:var(--ink-2);min-height:2.5em;}
+.ficon .fn{font-size:21px;font-weight:600;letter-spacing:-.03em;color:var(--ink);}
+.ficon .fr{font-size:11.5px;color:var(--ink-3);}
+/* 選んでいるものは、面ではなく色と太さで示します */
+.ficon.on{background:transparent;}
+.ficon.on .ic{background:transparent;box-shadow:none;}
+.ficon.on svg{color:var(--accent);}
+.ficon.on .fl{color:var(--accent);font-weight:600;}
+.ficon.on .fn{color:var(--accent);}
+
+/* ---- 一覧 ---- */
+#list{box-shadow:0 1px 2px rgba(0,0,0,.04),0 10px 34px rgba(0,0,0,.05);}
+.card{padding:19px 24px 19px 24px;}
+.card::before{display:none;}
+.crow{gap:18px;}
+.cico{width:74px;gap:7px;padding-top:3px;}
+.cico .ic{background:transparent;width:auto;height:auto;border-radius:0;}
+.cico svg{width:29px;height:29px;color:var(--ink-2);}
+.cico .ct{font-size:11.5px;font-weight:500;color:var(--ink-3);letter-spacing:0;}
+
+.card .hl{font-size:17px;font-weight:600;letter-spacing:-.021em;color:var(--ink);}
+.card .hl .room{color:var(--ink-2);font-weight:500;margin-left:7px;font-size:15px;}
+.card .nm{font-size:13.5px;font-weight:500;color:var(--ink-2);}
+.card-sub{gap:10px;}
+.card .kind{
+  background:transparent;border:1px solid var(--line);color:var(--ink-3);
+  font-weight:400;font-size:11px;padding:1px 8px;
+}
+.card .kind.soudan{background:transparent;border-color:var(--g3);color:var(--ink-2);}
+.card .time{font-size:12px;color:var(--ink-3);}
+.card .snip{font-size:14px;line-height:1.7;color:var(--ink-2);margin-top:6px;}
+.card .days{font-size:12.5px;font-weight:500;color:var(--ink-3);letter-spacing:0;}
+
+/* 急ぎ＝赤。枠は細く、面はごく淡く。強いのは文字と絵の色です */
+.card.late{
+  background:#fff8f7;
+  box-shadow:inset 3px 0 0 var(--late),inset 0 0 0 1px rgba(215,0,21,.16);
+}
+.card.late:hover,.card.late:focus-visible{background:#fff2f0;}
+.card.late .cico svg{color:var(--late);}
+.card.late .cico .ct{color:var(--late);}
+.card.late .hl{color:var(--ink);}
+.card.late .hl .room{color:var(--ink-2);}
+.card.late .snip{color:var(--ink-2);}
+.card.late .time{color:#a1737a;}
+.card.late .days{color:var(--late);font-weight:600;}
+
+/* 片づいた＝灰。読まなくてよいので、いちばん静かにします */
+.card.done{
+  background:#ececed;
+  box-shadow:inset 3px 0 0 rgba(0,0,0,.20),inset 0 0 0 1px rgba(0,0,0,.07);
+}
+.card.done:hover,.card.done:focus-visible{background:#e5e5e7;}
+.card.done .cico svg{color:#8b8b90;}
+.card.done .hl{color:#6e6e73;}
+.card.done .hl .room{color:#8b8b90;}
+.card.done .kind{border-color:#cfcfd4;color:#8b8b90;background:transparent;}
+
+/* ---- 上の件数 ---- */
+.stat .v{font-size:32px;font-weight:600;letter-spacing:-.035em;}
+.stat .k{font-size:12px;color:var(--ink-3);}
+#btnDone.on{background:rgba(0,0,0,.055);}
+
+@media (max-width:640px){
+  .ficon{width:104px;}
+  .ficon svg{width:29px;height:29px;}
+  .cico{width:62px;}
+  .cico svg{width:26px;height:26px;}
+  .card{padding:16px 15px;}
+  .crow{gap:13px;}
+}
+
+/* ---- 用件のならびは一覧に出しません（分析には残しています） ---- */
+#filters,.fscroll{display:none!important;}
+
+/* ---- 上のタブを大きく ---- */
+.tabs{padding:18px 22px 10px;gap:10px;}
+.tab{height:50px;padding:0 24px;font-size:18px;font-weight:500;letter-spacing:-.02em;}
+.tab.on{font-weight:600;}
+.tab-n{font-size:15px;margin-left:8px;}
+
+/* 見出し */
+h1{letter-spacing:-.03em;}
+
+@media (max-width:640px){
+  .tabs{padding:14px 12px 8px;gap:6px;}
+  .tab{height:44px;padding:0 18px;font-size:16px;}
+  .tab-n{font-size:13.5px;margin-left:6px;}
+}
+
+/* ══════════════════════════════════════════════════════════════
+   一覧を、横並びの正方形カードにする
+   ────────────────────────────────────────────────────────────
+   1件＝1行の横長だと、広い画面では右側がまるごと余っていました。
+   幅に応じて2列・3列・4列と自動で並べ、1枚を正方形にします。
+   （狭い画面では1列にし、正方形はやめて中身ぶんの高さにします）
+   ══════════════════════════════════════════════════════════════ */
+#list{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:16px;
+  background:transparent;box-shadow:none;overflow:visible;border-radius:0;
+}
+#list > .empty,#list > .eigyou-note{grid-column:1 / -1;}
+/* 分析タブは、カードを並べずに1枚ずつ横いっぱいで見せます */
+#list > .an-hero,#list > .an-card{grid-column:1 / -1;margin-left:0;margin-right:0;}
+
+.card{
+  aspect-ratio:1 / 1;
+  display:flex;flex-direction:column;
+  background:var(--card);border:0;border-bottom:0;
+  border-radius:18px;padding:22px;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 26px rgba(0,0,0,.05);
+  overflow:hidden;
+}
+.card:hover,.card:focus-visible{
+  background:var(--card);
+  box-shadow:0 2px 6px rgba(0,0,0,.07),0 14px 40px rgba(0,0,0,.09);
+  transform:translateY(-1px);
+}
+.card:focus-visible{box-shadow:0 0 0 3px var(--accent);}
+.card.on{box-shadow:0 0 0 2px var(--accent),0 10px 30px rgba(0,113,227,.16);}
+
+/* 中身を、上から下へ流します */
+.crow{flex:1;min-height:0;gap:16px;}
+.cbody{display:flex;flex-direction:column;min-height:0;}
+.card .snip{
+  flex:1;min-height:0;-webkit-line-clamp:6;margin-top:8px;
+}
+.card-top{flex-wrap:wrap;}
+
+/* 急ぎ＝赤 */
+.card.late{
+  background:#fff8f7;
+  box-shadow:inset 4px 0 0 var(--late),0 1px 2px rgba(215,0,21,.08),
+             0 8px 26px rgba(215,0,21,.10);
+}
+.card.late:hover,.card.late:focus-visible{
+  background:#fff2f0;
+  box-shadow:inset 4px 0 0 var(--late),0 2px 8px rgba(215,0,21,.12),
+             0 16px 42px rgba(215,0,21,.16);
+}
+/* 片づいた＝灰 */
+.card.done{
+  background:#ececed;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 1px 2px rgba(0,0,0,.05);
+}
+.card.done:hover,.card.done:focus-visible{
+  background:#e5e5e7;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),0 10px 30px rgba(0,0,0,.09);
+}
+
+/* 営業の行は文章が長いので、正方形にはしません */
+.card.eigyou{aspect-ratio:auto;padding:20px;}
+.card.eigyou .snip{-webkit-line-clamp:4;}
+
+@media (max-width:900px){
+  #list{grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:13px;}
+}
+@media (max-width:640px){
+  /* 1列のときに正方形にすると、間延びして送りが増えるだけなので
+     中身ぶんの高さに戻します */
+  #list{grid-template-columns:1fr;gap:11px;margin:0 12px;}
+  .card{aspect-ratio:auto;padding:16px;border-radius:16px;}
+  .card .snip{-webkit-line-clamp:3;}
+}
+
+/* ---- 正方形カードの中身の組み方 ----
+ * 絵を左の柱にしたままだと、右下がまるごと空いて間延びしていました。
+ * 上から「用件の絵 → 物件名 → お名前と日時 → 本文」と流し、
+ * 経過日数だけを右下に置いて、四隅が締まるようにします。 */
+.crow{flex-direction:column;gap:13px;}
+.cico{
+  flex-direction:row;align-items:center;gap:9px;width:auto;padding-top:0;
+}
+.cico svg{width:26px;height:26px;}
+.cico .ct{
+  font-size:12.5px;font-weight:600;text-align:left;letter-spacing:-.01em;
+  color:var(--ink-2);
+}
+.card.late .cico .ct{color:var(--late);}
+
+.cbody{flex:1;min-height:0;padding-bottom:22px;}
+.card .hl{font-size:18px;line-height:1.35;white-space:normal;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.card .hl .room{margin-left:6px;}
+.card-sub{margin-top:5px;}
+.card .snip{-webkit-line-clamp:5;margin-top:9px;}
+
+/* 経過日数・送信済みは右下へ */
+.card .days,.card .sent{
+  position:absolute;right:22px;bottom:18px;margin-left:0;
+}
+.card.eigyou .days,.card.eigyou .sent{position:static;margin-left:auto;}
+
+@media (max-width:640px){
+  .cbody{padding-bottom:0;}
+  .card .days,.card .sent{position:static;margin-left:auto;}
+  .card .hl{-webkit-line-clamp:2;font-size:16px;}
+}
+
+/* ---- 気づいたこと ---- */
+.an-tips{display:flex;flex-direction:column;gap:12px;}
+.an-tip{
+  padding:15px 18px 15px 20px;border-radius:14px;
+  background:#fbfbfd;border:1px solid var(--line-2);
+  box-shadow:inset 3px 0 0 var(--g3);
+}
+.an-tip.hi{background:#fff8f7;border-color:rgba(215,0,21,.18);box-shadow:inset 3px 0 0 var(--late);}
+.an-tip.mid{background:#fffaf1;border-color:#f0ddb9;box-shadow:inset 3px 0 0 var(--warn-bar);}
+.an-tip.low{background:#f7faff;border-color:#d7e6f8;box-shadow:inset 3px 0 0 var(--accent);}
+.an-tip-t{
+  margin:0 0 5px;font-size:15px;font-weight:600;line-height:1.55;
+  letter-spacing:-.012em;color:var(--ink);
+}
+.an-tip.hi .an-tip-t{color:#8c0512;}
+.an-tip-d{margin:0;font-size:13.5px;line-height:1.8;color:var(--ink-2);}
+@media (max-width:640px){
+  .an-tip{padding:13px 14px 13px 16px;}
+  .an-tip-t{font-size:14px;}
+  .an-tip-d{font-size:13px;}
+}
 </style>
 </head>
 <body>
@@ -1382,7 +1620,7 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
 
   <header>
     <div class="hd">
-      <h1>CRM 返信の承認</h1>
+      <h1>CRM</h1>
       <span class="badge" id="mode">確認中</span>
     </div>
     <!-- いま何件たまっているか。開いてすぐ目に入る場所に置きます -->
@@ -1551,7 +1789,7 @@ function api(params) {
 }
 
 /* ---------- 画面の部品 ---------- */
-const UI_BUILD = "ui-2026-08-23r";
+const UI_BUILD = "ui-2026-08-23v";
 const $ = function (id) { return document.getElementById(id); };
 let cur  = null;
 let isTest = true;
@@ -1982,6 +2220,15 @@ function syncFilterArrows() {
 }
 
 function drawFilters(rows) {
+  /* ★用件の絵のならびは、一覧からは外しました。
+   *   ここで選り分けても使いどころが無く、場所だけ取っていたためです。
+   *   ただし用件そのものは topicOf() で今までどおり見分けており、
+   *   一覧の行の左の絵と、分析タブの集計には、そのまま効いています。
+   *   （元に戻したいときは、この return を消してください） */
+  $("filters").innerHTML = "";
+  topicFilter = "";
+  return;
+
   const box = $("filters");
   const n = {};
   rows.forEach(function (x) {
@@ -2127,6 +2374,132 @@ function anBackdrop() {
        + '</svg>';
 }
 
+
+/* ───────────────────────────────────────────────────────────────
+ * 気づいたこと
+ *
+ * ★数字から機械的に出しています。AIには聞いていません。
+ *   （通信もお金もかからず、その場で出ます。同じ数字なら同じ文が出ます）
+ *   現場の事情は入っていないので、考えるきっかけとして使ってください。
+ * ─────────────────────────────────────────────────────────────── */
+const DOC_TOPICS = ["保管場所使用承諾書", "名義変更", "領収書", "火災保険", "更新", "口座変更"];
+
+function advise(a) {
+  const out = [];
+  const total = a.total;
+  if (!total) return out;
+
+  const pctN = function (n) { return (n / total * 100).toFixed(1) + "%"; };
+
+  /* ① 手が止まっているもの。いちばん先に出します */
+  const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
+  if (late > 0) {
+    out.push({
+      lv: "hi",
+      t: LATE_DAYS + "日以上たっている案件が " + late + " 件あります",
+      d: "内容の良し悪しより、返事が遅いことのほうが不満につながります。"
+       + "今日はここから片づけると、いちばん効きます。",
+    });
+  }
+
+  /* ② クレーム・不具合の割合 */
+  if (a.claim > 0) {
+    const r = a.claim / total * 100;
+    if (r >= 30) {
+      out.push({
+        lv: "hi",
+        t: "クレーム・不具合が全体の " + r.toFixed(1) + "%（" + a.claim + " 件）を占めています",
+        d: "3件に1件がこの種類です。設備の定期点検と、入居時の説明（ゴミ・騒音・駐車のきまり）を"
+         + "見直すと、そもそもの発生が減ります。",
+      });
+    } else if (r >= 15) {
+      out.push({
+        lv: "mid",
+        t: "クレーム・不具合は全体の " + r.toFixed(1) + "%（" + a.claim + " 件）です",
+        d: "いまは問い合わせの中心ではありません。下の物件別で、特定の物件に偏っていないかを見てください。",
+      });
+    }
+  }
+
+  /* ③ いちばん多い用件 */
+  const t1 = a.topics[0];
+  if (t1 && t1.n >= 2 && t1.n / total >= 0.15) {
+    out.push({
+      lv: "mid",
+      t: "いちばん多い用件は「" + t1.name + "」で " + t1.n + " 件（" + pctN(t1.n) + "）です",
+      d: "同じ問いが繰り返し来ています。定型の案内文を1本用意しておけば、"
+       + "返信の手間が減り、答えのばらつきも無くなります。",
+    });
+  }
+
+  /* ④ 書類の依頼 */
+  const doc = a.topics.filter(function (t) { return DOC_TOPICS.indexOf(t.name) >= 0; })
+                      .reduce(function (n, t) { return n + t.n; }, 0);
+  if (doc >= 3) {
+    out.push({
+      lv: "low",
+      t: "書類まわりの依頼が合わせて " + doc + " 件（" + pctN(doc) + "）あります",
+      d: "承諾書・名義変更・領収書などは、様式と手順が決まっているものです。"
+       + "様式を1か所にまとめて案内できるようにすると、その場で返せます。",
+    });
+  }
+
+  /* ⑤ 営業メール */
+  const eig = a.topics.filter(function (t) { return t.name === "営業"; })[0];
+  if (eig && eig.n >= 2) {
+    out.push({
+      lv: "low",
+      t: "営業メールが " + eig.n + " 件（" + pctN(eig.n) + "）混ざっています",
+      d: "自動の振り分けをすり抜けたものです。差出人か、よく出てくる言い回しを"
+       + "振り分けの語句に足すと、一覧が静かになります。",
+    });
+  }
+
+  /* ⑥ 問い合わせが集中している物件 */
+  const many = a.blds.slice().sort(function (x, y) { return y.total - x.total; })[0];
+  if (many && many.total >= 3 && many.name !== "物件名なし" && many.total / total >= 0.15) {
+    const t = Object.keys(many.topics)
+      .map(function (k) { return { k: k, n: many.topics[k] }; })
+      .sort(function (x, y) { return y.n - x.n; })[0];
+    out.push({
+      lv: "mid",
+      t: "「" + many.name + "」に問い合わせが集中しています（" + many.total + " 件・" + pctN(many.total) + "）",
+      d: "内訳のいちばん多いものは「" + t.k + "」で " + t.n + " 件。"
+       + "個別に返し続けるより、一度現地を見るか、掲示で全戸に知らせるほうが早く収まります。",
+    });
+  }
+
+  /* ⑦ クレーム率の高い物件 */
+  const bad = a.blds.filter(function (b) {
+    return b.total >= 3 && b.name !== "物件名なし" && (b.claim / b.total) >= 0.5;
+  }).slice(0, 2);
+  bad.forEach(function (b) {
+    const t = Object.keys(b.topics)
+      .map(function (k) { return { k: k, n: b.topics[k] }; })
+      .filter(function (x) { return isClaim(x.k); })
+      .sort(function (x, y) { return y.n - x.n; })[0];
+    out.push({
+      lv: "hi",
+      t: "「" + b.name + "」はクレーム・不具合の割合が "
+       + (b.claim / b.total * 100).toFixed(0) + "% です",
+      d: (t ? "多いのは「" + t.k + "」で " + t.n + " 件。" : "")
+       + "建物の問題か、住まわれている方の組み合わせの問題かで、打つ手が変わります。"
+       + "続くようなら、次の募集の条件（保証会社・入居審査・ペットや楽器の可否）を"
+       + "見直す判断材料になります。",
+    });
+  });
+
+  /* ⑧ 何も出なかったとき */
+  if (!out.length) {
+    out.push({
+      lv: "low",
+      t: "いまのところ、目立った偏りはありません",
+      d: "件数が増えると、物件や用件の偏りが見えてきます。この欄はそのとき自動で埋まります。",
+    });
+  }
+  return out;
+}
+
 function drawStats() {
   $("tabOpen").className = "tab";
   $("tabWait").className = "tab";
@@ -2160,6 +2533,20 @@ function drawStats() {
     + '</div></div>';
 
   /* ② 用件の内訳（円グラフ＋一覧） */
+  /* 気づいたこと */
+  const tips = advise(a);
+  html += '<div class="an-card"><h3 class="an-h">気づいたこと'
+        + '<span class="an-sub">上の数字から機械的に出しています。'
+        + '現場の事情は入っていないので、考えるきっかけとしてお使いください</span></h3>'
+        + '<div class="an-tips">'
+        + tips.map(function (v) {
+            return '<div class="an-tip ' + v.lv + '">'
+                 +   '<p class="an-tip-t">' + esc(v.t) + '</p>'
+                 +   '<p class="an-tip-d">' + esc(v.d) + '</p>'
+                 + '</div>';
+          }).join("")
+        + '</div></div>';
+
   html += '<div class="an-card"><h3 class="an-h">用件の内訳</h3>'
     + '<div class="an-pie">' + donutSvg(slices, a.total)
     + '<div class="an-legend">'
@@ -2999,6 +3386,19 @@ function drawThread(r) {
   const rowNo = cur ? cur.rowNo : null;
   const hint  = (listOpen.concat(listWait, listDone))
     .filter(function (x) { return x.rowNo === rowNo; })[0];
+
+  /* ★上の「今回の問い合わせ」と同じ文が、履歴の1段目にも出ていました。
+   *   同じものを二度読ませないよう、一致する段は外します。
+   *   空白と改行のちがいは無視して見比べます。 */
+  const flat = function (t) { return String(t || "").replace(/\s+/g, ""); };
+  const me   = flat(cur && cur.content);
+  if (me) {
+    let dropped = false;
+    items = items.filter(function (x) {
+      if (!dropped && x.side === "in" && flat(x.text) === me) { dropped = true; return false; }
+      return true;
+    });
+  }
 
   /* まだ1件も返ってきていないときは、いま開いている問い合わせを
      最初の一段として使います。時系列の形は崩しません */
