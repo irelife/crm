@@ -14671,5 +14671,124 @@ body.tab-rent   #pv-side a[data-k="rent"]{
 /* ---- 物件一覧の帯も黒に ---- */
 .lv-badge{background:var(--pv-line-soft);color:var(--pv-ink-2);}
 </style>
+
+<!-- ============================================================
+     仕上げ・段階5／立体感と背景（見本2枚目）
+     平らな灰色の地に、白いパネルが浮かんでいる形にします。
+     背景は写真ではなく、淡い光を重ねて作っているので、
+     文字の読みやすさを損ないません。
+     ★HTML・id・class・JS には触れていません。
+       この <style> を消せば、段階4の見た目に戻ります。
+     ============================================================ -->
+<style id="pv-tune-5">
+/* ---- 地。うすい光を数か所に置いて奥行きを出します ---- */
+body{
+  background:
+    radial-gradient(46% 34% at 14% 6%,  rgba(255,255,255,.95), rgba(255,255,255,0) 70%),
+    radial-gradient(40% 32% at 88% 12%, rgba(255,255,255,.80), rgba(255,255,255,0) 72%),
+    radial-gradient(56% 44% at 62% 96%, rgba(255,255,255,.70), rgba(255,255,255,0) 70%),
+    radial-gradient(38% 30% at 30% 62%, rgba(31,122,77,.045), rgba(31,122,77,0) 72%),
+    #e4e4e8;
+  background-attachment:fixed;
+}
+
+/* ---- 左メニューを、端から浮かせます ---- */
+body{padding-left:256px;}
+#pv-side{
+  left:16px;top:16px;bottom:16px;width:224px;
+  border:1px solid rgba(255,255,255,.85);
+  border-right:1px solid rgba(255,255,255,.85);
+  border-radius:22px;
+  background:rgba(255,255,255,.90);
+  -webkit-backdrop-filter:saturate(180%) blur(14px);
+  backdrop-filter:saturate(180%) blur(14px);
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 18px 46px rgba(0,0,0,.10);
+}
+
+/* ---- 上の帯と各画面は、地をそのまま見せます ----
+   ★#kb-view と #rent-view に灰色の下地が敷かれていて、body の
+     ぼかしを覆い隠していました。透かして地を見せます。 */
+.app-tabs{background:transparent;}
+#pivot-view,#kb-view,#rent-view{background:transparent!important;}
+
+/* ---- 浮かせるもの：カード・件数・パネル ---- */
+#kb-view .ct-card{
+  border-radius:20px;
+  transition:transform .18s cubic-bezier(.22,.61,.36,1),box-shadow .18s;
+}
+#kb-view .ct-card:hover{transform:translateY(-3px);}
+
+#kb-view .ct-card.status-progress{
+  box-shadow:inset 4px 0 0 var(--pv-ink),
+             0 1px 2px rgba(0,0,0,.05),0 16px 38px rgba(0,0,0,.10);
+}
+#kb-view .ct-card.status-progress:hover{
+  box-shadow:inset 4px 0 0 var(--pv-ink),
+             0 2px 6px rgba(0,0,0,.07),0 26px 56px rgba(0,0,0,.15);
+}
+#kb-view .ct-card.status-almost{
+  box-shadow:inset 4px 0 0 var(--pv-ink),
+             0 1px 2px rgba(0,0,0,.05),0 16px 38px rgba(0,0,0,.10);
+}
+#kb-view .ct-card.status-defect{
+  box-shadow:inset 4px 0 0 var(--k-red),
+             0 1px 2px rgba(0,0,0,.05),0 16px 38px rgba(194,53,42,.14);
+}
+#kb-view .ct-card.status-defect:hover{
+  box-shadow:inset 4px 0 0 var(--k-red),
+             0 2px 6px rgba(0,0,0,.07),0 26px 56px rgba(194,53,42,.20);
+}
+#kb-view .ct-card.status-complete,
+#kb-view .ct-card.done,
+#kb-view .ct-card.status-cancel{
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22),
+             0 1px 2px rgba(0,0,0,.04),0 10px 26px rgba(0,0,0,.07)!important;
+}
+
+/* 上の件数 */
+#kb-view .stat-pill{
+  border:1px solid rgba(255,255,255,.9);
+  background:rgba(255,255,255,.92);
+  border-radius:16px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 8px 22px rgba(0,0,0,.07);
+}
+#kb-view .stat-pill.warn{border-color:#eec9c5;}
+
+/* 物件の一覧・オーナーメールの箱 */
+.lv-wrap,.card,.panel,.rt-card,.owner-card,.bld-list{
+  border-radius:18px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04),0 12px 30px rgba(0,0,0,.08);
+}
+
+/* 編集画面（モーダル）も、しっかり浮かせます */
+.modal{
+  border-radius:22px;
+  box-shadow:0 2px 8px rgba(0,0,0,.06),0 34px 80px rgba(0,0,0,.26);
+}
+.modal-overlay{
+  background:rgba(20,20,24,.34);
+  -webkit-backdrop-filter:blur(6px);
+  backdrop-filter:blur(6px);
+}
+
+/* 押すボタンにも、わずかな高さを持たせます */
+.btn,.btn-primary{
+  box-shadow:0 1px 2px rgba(0,0,0,.10),0 4px 12px rgba(31,122,77,.22);
+}
+.btn:hover,.btn-primary:hover{
+  box-shadow:0 2px 4px rgba(0,0,0,.12),0 8px 20px rgba(31,122,77,.30);
+}
+.btn-outline{
+  background:rgba(255,255,255,.94);
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 3px 10px rgba(0,0,0,.05);
+}
+
+/* ---- 狭い画面。左の柱をたたむので、余白も戻します ---- */
+@media (max-width:860px){
+  body{padding-left:0;}
+  #pv-side{display:none;}
+}
+@media print{ body{background:#fff;padding-left:0;} }
+</style>
 </body>
 </html>
