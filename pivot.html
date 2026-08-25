@@ -14393,5 +14393,168 @@ select:focus-visible,textarea:focus-visible{
   font-size:12px;font-weight:600;color:var(--pv-ink-2);letter-spacing:0;
 }
 </style>
+
+<!-- ============================================================
+     仕上げ・段階3／契約カードの色を3つに絞る
+     ────────────────────────────────────────────────────────────
+     いままで 紫・ピンク・緑・黄・オレンジ・水色・青 の7色が同時に
+     出ていて、どれが急ぎなのか色からは読めませんでした。
+       赤 ＝ いま手を打つもの（不備あり・駐車場未紐づけ・ADなし）
+       青 ＝ 進んでいるもの（進行中・もうすぐ完了）
+       灰 ＝ もう見なくてよいもの（完了・キャンセル）
+     ★JS がカードに直接 style="border-color:…" などを書き込むため、
+       そこだけ !important で上書きしています。JS は触っていません。
+     この <style> を消せば、元の色に完全に戻ります。
+     ============================================================ -->
+<style id="pv-tune-3">
+:root{
+  --k-red:#e5484d;  --k-red-bg:#fff5f4;
+  --k-blue:#007aff; --k-blue-bg:#f4f9ff;
+  --k-gray:#8b8b90; --k-gray-bg:#f1f1f3;
+}
+
+/* ---- カードの土台。太い枠をやめ、左の帯で状態を示します ---- */
+.ct-card{
+  border:1px solid var(--pv-line)!important;
+  border-radius:16px;
+  background:#fff;
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+.ct-card:hover{box-shadow:0 2px 6px rgba(0,0,0,.07),0 14px 36px rgba(0,0,0,.09);}
+
+/* 赤：いま手を打つもの */
+.ct-card.status-defect{
+  background:var(--k-red-bg);
+  box-shadow:inset 4px 0 0 var(--k-red),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(229,72,77,.10);
+}
+/* 青：進んでいるもの */
+.ct-card.status-progress{
+  background:#fff;
+  box-shadow:inset 4px 0 0 var(--k-blue),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+.ct-card.status-almost{
+  background:var(--k-blue-bg);
+  box-shadow:inset 4px 0 0 var(--k-blue),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+/* 灰：もう見なくてよいもの */
+.ct-card.status-complete,
+.ct-card.done,
+.ct-card.status-cancel{
+  background:var(--k-gray-bg)!important;
+  border-color:var(--pv-line)!important;
+  box-shadow:inset 4px 0 0 rgba(0,0,0,.22)!important;
+  filter:none;opacity:1;
+}
+/* 完了カードが揺れ続けるのをやめます（目が休まらないため） */
+.ct-card.done{animation:none!important;}
+
+/* ---- 左上の四角い絵。JS が背景色を書き込むので上書きします ---- */
+.ct-badge{
+  background:var(--pv-line-soft)!important;
+  border-radius:13px;width:46px;height:46px;
+}
+.ct-badge img{filter:grayscale(1) opacity(.55);}
+.ct-card.status-defect .ct-badge{background:#fadedd!important;}
+.ct-card.status-defect .ct-badge img{filter:none;}
+.ct-card.status-progress .ct-badge,
+.ct-card.status-almost .ct-badge{background:var(--pv-accent-soft)!important;}
+.ct-card.status-progress .ct-badge img,
+.ct-card.status-almost .ct-badge img{filter:none;}
+
+/* ---- 進捗バー。JS が塗り色を書き込むので上書きします ---- */
+.prog-seg{height:5px;border-radius:999px;background:#e6e6ea;}
+.prog-seg.on{background:var(--k-gray)!important;}
+.ct-card.status-defect .prog-seg.on{background:var(--k-red)!important;}
+.ct-card.status-progress .prog-seg.on,
+.ct-card.status-almost .prog-seg.on{background:var(--k-blue)!important;}
+
+/* ---- 状況のプルダウン。7色に塗り分けられていたのをやめます ---- */
+.ct-status-select{
+  color:var(--pv-ink)!important;
+  background-color:#fff!important;
+  border:1px solid var(--pv-line)!important;
+  border-radius:999px;
+  font-weight:600;
+  font-size:13px;
+}
+.ct-status-date{color:var(--pv-ink-2)!important;font-weight:500;}
+.ct-status-date-label{font-weight:600;}
+
+/* ---- 個人／法人。急ぎとは関係ないので、色を持たせません ---- */
+.ct-type-label,.ct-type-badge{
+  border:1px solid var(--pv-line)!important;
+  background:#fff!important;
+  color:var(--pv-ink-2)!important;
+  font-weight:600;letter-spacing:0;
+  box-shadow:none;
+  font-size:12.5px;padding:3px 12px;
+}
+
+/* ---- AD。ふつうの100%は静かに。例外だけ色を出します ---- */
+.ct-ad-label{
+  border:1px solid var(--pv-line)!important;
+  background:#fff!important;color:var(--pv-ink-2)!important;
+  font-weight:600;letter-spacing:0;font-size:12.5px;padding:3px 12px;
+  box-shadow:none;
+}
+.ct-ad-label.ad-zero{
+  border-color:#f0b8b6!important;background:var(--k-red-bg)!important;color:#b02a26!important;
+}
+.ct-ad-label.ad-200,.ct-ad-label.ad-300{
+  border-color:#d9d9df!important;background:#f7f7f9!important;color:var(--pv-ink)!important;
+}
+
+/* ---- 「駐車場 未紐づけ」は手を打つものなので赤のまま。枠だけ細く ---- */
+.ct-notlinked{
+  border:1px solid #f0b8b6!important;background:var(--k-red-bg)!important;
+  color:#b02a26!important;font-weight:600;letter-spacing:0;font-size:12.5px;
+  border-radius:999px;padding:3px 12px;
+}
+
+/* ---- マンスリーは分類なので、色を持たせません ---- */
+.ct-monthly-badge{
+  background:#fff!important;color:var(--pv-ink-2)!important;
+  border:1px solid var(--pv-line);
+  font-size:12.5px;font-weight:600;letter-spacing:0;padding:3px 12px;
+}
+
+/* ---- 状態の文字 ---- */
+.ct-stage-name{font-size:13px;font-weight:600;letter-spacing:0;}
+.ct-stage-name.done-label{font-size:16px;font-weight:600;letter-spacing:0;}
+.ct-card.status-complete .ct-stage-name,
+.ct-card.done .ct-stage-name,
+.ct-card.status-cancel .ct-stage-name{color:var(--k-gray)!important;}
+
+/* ============================================================
+   段階3・追記：効いていなかった箇所を、同じ強さで上書きします
+   ★#kb-view .ct-card.status-progress のように id 付きで書かれた
+     規則があり、こちらの規則が負けていました。同じ形にそろえます。
+   ============================================================ */
+#kb-view .ct-card.status-progress{background:#fff;}
+#kb-view .ct-card.status-almost{background:var(--k-blue-bg);}
+#kb-view .ct-card.status-defect{background:var(--k-red-bg);}
+#kb-view .ct-card.status-complete,
+#kb-view .ct-card.done,
+#kb-view .ct-card.status-cancel{background:var(--k-gray-bg);}
+
+/* 状態の文字。JS が style="color:…" を書き込むので上書きします */
+#kb-view .ct-stage-name{color:var(--pv-ink-2)!important;}
+#kb-view .ct-card.status-defect .ct-stage-name{color:#b02a26!important;}
+#kb-view .ct-card.status-progress .ct-stage-name,
+#kb-view .ct-card.status-almost .ct-stage-name{color:var(--k-blue)!important;}
+
+/* 上の件数。4色で塗り分けていたのを、同じ3色にそろえます */
+#kb-view .stat-pill{
+  border:1px solid var(--pv-line);background:#fff;border-radius:14px;
+  box-shadow:0 1px 2px rgba(0,0,0,.04);
+}
+#kb-view .stat-pill .num{font-weight:600;letter-spacing:-.03em;color:var(--pv-ink);}
+#kb-view .stat-pill .lbl{color:var(--pv-ink-3);font-weight:500;}
+#kb-view .stat-pill.warn .num{color:var(--k-red);}
+#kb-view .stat-pill.warn{border-color:#f0b8b6;background:var(--k-red-bg);}
+#kb-view .stat-pill.accent .num,
+#kb-view .stat-pill.almost .num{color:var(--k-blue);}
+#kb-view .stat-pill.success .num{color:var(--k-gray);}
+</style>
 </body>
 </html>
