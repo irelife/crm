@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>PIVOT</title>
+<title>PIVOT2</title>
 <!-- つなぎ先を先に用意しておく（名前解決と接続の待ち時間を減らす） -->
 <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://identitytoolkit.googleapis.com" crossorigin>
@@ -2457,7 +2457,7 @@ tr.sub-row.st-退{background:#e8e8ec;color:var(--pv-ink-2);}
 
 <!-- ===== 統合タブバー ===== -->
 <div class="app-tabs">
-  <span class="app-pivot-logo" onclick="goToTop()" title="PIVOTトップへ">PIVOT</span>
+  <span class="app-pivot-logo" onclick="goToTop()" title="PIVOT2トップへ">PIVOT2</span>
   <span id="sync-status" style="display:none;align-items:center;gap:4px;font-size:12px;font-weight:700;padding:5px 12px;border-radius:999px;background:#f0f0f3;color:#555;margin-left:6px;white-space:nowrap;" title="クラウド同期の状態"></span>
   <button class="app-tab active" id="tab-pivot" onclick="switchApp('pivot')">Property</button>
   <button class="app-tab" id="tab-kanban" onclick="switchApp('kanban')">Contract</button>
@@ -2795,7 +2795,7 @@ tr.sub-row.st-退{background:#e8e8ec;color:var(--pv-ink-2);}
     <div class="modal-header">
       <span style="display:inline-flex;align-items:center;gap:14px;">
         <span class="modal-home-logo" onclick="goToTop()" title="トップページへ戻る"
-          style="font-weight:800;font-size:20px;letter-spacing:1px;cursor:pointer;user-select:none;padding:4px 8px;border-radius:8px;transition:background 0.12s,transform 0.12s;">PIVOT</span>
+          style="font-weight:800;font-size:20px;letter-spacing:1px;cursor:pointer;user-select:none;padding:4px 8px;border-radius:8px;transition:background 0.12s,transform 0.12s;">PIVOT2</span>
         <span class="modal-title" id="modal-title" style="display:none;"></span>
         <button id="undo-btn" onclick="undoLastChange()" title="一つ前に戻る" disabled
           style="width:46px;height:42px;border:1px solid #ddd;border-radius:9px;background:#fff;display:inline-flex;align-items:center;justify-content:center;padding:0;">
@@ -4218,7 +4218,7 @@ function showLoginScreen(){
   ov.style.cssText = 'position:fixed;inset:0;z-index:200000;display:flex;align-items:center;justify-content:center;background:#f5f5f7;';
   ov.innerHTML =
     '<div style="text-align:center;padding:40px 32px;max-width:340px;width:90%;">' +
-      '<div style="font-size:46px;font-weight:900;letter-spacing:2px;color:#111;margin-bottom:6px;">PIVOT</div>' +
+      '<div style="font-size:46px;font-weight:900;letter-spacing:2px;color:#111;margin-bottom:6px;">PIVOT2</div>' +
       '<div style="font-size:13px;color:#888;margin-bottom:28px;">物件・契約 管理</div>' +
       '<form id="pivot-login-form" autocomplete="on" style="margin:0;">' +
         '<input id="pivot-login-id" name="username" type="email" autocomplete="username" placeholder="メールアドレス" style="width:100%;padding:13px 14px;border:1.5px solid #d8d8dc;border-radius:12px;font-size:15px;margin-bottom:10px;font-family:inherit;box-sizing:border-box;">' +
@@ -14254,7 +14254,7 @@ body.tab-rent   #pv-side a[data-k="rent"]{
     n.id = 'pv-side';
     n.setAttribute('aria-label', '\u753B\u9762\u306E\u5207\u308A\u66FF\u3048');
     n.innerHTML =
-      '<div class="lg" title="PIVOT\u30C8\u30C3\u30D7\u3078">PIVOT'
+      '<div class="lg" title="PIVOT2\u30C8\u30C3\u30D7\u3078">PIVOT2'
     +   '<span>IRE\u30E9\u30A4\u30D5\u682A\u5F0F\u4F1A\u793E</span></div>'
     + '<div class="grp">\u7BA1\u7406</div>'
     + NAV.map(function (v) {
