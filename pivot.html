@@ -14281,5 +14281,117 @@ body.tab-rent   #pv-side a[data-k="rent"]{
   }
 })();
 </script>
+
+<!-- ============================================================
+     仕上げ・段階1／土台   pv-tune-2026-08-25a
+     HTML・id・class・JS には触れていません。CSSだけです。
+     この <style> を消せば、そのぶんだけ元に戻ります。
+     ============================================================ -->
+<style id="pv-tune-1">
+:root{
+  /* 線の色。本体では #ddd / #eee / #f0f0f0 / #ececef が混在していました。
+     変数を使っている箇所は、ここで1色にそろいます */
+  --pv-line:#e3e3e6;
+  --pv-line-soft:#eeeef0;
+  /* 角丸の段階を3つに固定します */
+  --pv-r-sm:10px; --pv-r:12px; --pv-r-lg:18px;
+  /* オーナーメール画面は別の変数（--rt-*）で動いているので、
+     同じ値を入れて画面ごとの色ちがいを無くします */
+  --rt-paper:#f5f5f7; --rt-card:#ffffff; --rt-line:#e3e3e6;
+  --rt-ink:#1d1d1f;   --rt-muted:#6e6e73;
+  --rt-accent:#007aff; --rt-accent-d:#0060d0; --rt-soft:#e8f2ff;
+}
+/* 文字の出かたを3画面でそろえます（大きさは変えていません） */
+body,#pivot-view,#kb-view,#rent-view{
+  font-family:var(--pv-font);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  text-rendering:optimizeLegibility;
+}
+/* 数字は等幅にして、桁をそろえます */
+.ct-cdate,.ct-stage-count,.lv-badge,.bstat-chip,.num{
+  font-variant-numeric:tabular-nums;
+}
+/* 選んだ文字の色 */
+::selection{background:var(--pv-accent-soft);color:var(--pv-ink);}
+/* キーボードで移動したときの枠。いままで見えていませんでした */
+a:focus-visible,button:focus-visible,input:focus-visible,
+select:focus-visible,textarea:focus-visible{
+  outline:none;
+  box-shadow:0 0 0 3px rgba(0,122,255,.30);
+  border-radius:var(--pv-r-sm);
+}
+</style>
+
+<!-- ============================================================
+     仕上げ・段階2／部品（ボタン・入力欄）
+     .btn は4か所、.btn-primary も4か所、.search-input は5か所で
+     別々に定義されていて、画面ごとに形が違っていました。
+     ★display と height は変えていません（中身が押し出されるため）。
+       余白・角丸・太さ・色だけをそろえます。
+     ============================================================ -->
+<style id="pv-tune-2">
+.btn,.btn-primary,.btn-outline,.btn-warn{
+  font-family:var(--pv-font);
+  border-radius:999px;
+  font-weight:600;
+  letter-spacing:0;
+  padding:9px 18px;
+  font-size:13.5px;
+  cursor:pointer;
+  transition:background .16s,border-color .16s,color .16s,box-shadow .16s;
+}
+.btn-sm{padding:7px 14px;font-size:12.5px;}
+
+.btn,.btn-primary{
+  background:var(--pv-accent);
+  color:#fff;
+  border:1px solid transparent;
+}
+.btn:hover,.btn-primary:hover{background:var(--pv-accent-d);}
+
+.btn-outline{
+  background:#fff;
+  color:var(--pv-ink);
+  border:1px solid var(--pv-line);
+}
+.btn-outline:hover{background:var(--pv-surface-2);border-color:#d2d2d8;}
+
+.btn:disabled,.btn-primary:disabled,.btn-outline:disabled{
+  opacity:.42;cursor:default;
+}
+
+/* 検索欄。3画面で背景も角丸もばらばらでした */
+.search,.search-input{
+  border:1px solid transparent;
+  background:rgba(0,0,0,.05);
+  border-radius:999px;
+  padding:9px 16px;
+  font-size:14px;
+  font-family:inherit;
+  color:var(--pv-ink);
+}
+.search::placeholder,.search-input::placeholder{color:var(--pv-ink-3);}
+.search:focus,.search-input:focus{
+  background:#fff;border-color:var(--pv-accent);
+}
+
+/* 入力欄。枠の太さと角丸をそろえます */
+.form-field input,.form-field select,.form-field textarea{
+  border:1px solid var(--pv-line);
+  background:#fff;
+  border-radius:var(--pv-r-sm);
+  padding:9px 12px;
+  font-size:14px;
+  font-family:inherit;
+  color:var(--pv-ink);
+}
+.form-field input:focus,.form-field select:focus,.form-field textarea:focus{
+  border-color:var(--pv-accent);
+}
+.form-field label{
+  font-size:12px;font-weight:600;color:var(--pv-ink-2);letter-spacing:0;
+}
+</style>
 </body>
 </html>
