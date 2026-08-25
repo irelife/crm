@@ -14169,5 +14169,117 @@ try{window.updateSortButtons=updateSortButtons;}catch(e){}
 })();
 
 </script>
+
+<!-- ============================================================
+     左メニュー  pv-side-2026-08-25a
+     画面の切り替えを、上のタブから左の柱に移します。
+     ★この <style> と <script> の2つを消せば、元の上タブに戻ります。
+       中の処理には触れていません。押すと今までと同じ switchApp() を
+       呼ぶだけで、どの画面にいるかは body に付く印で判断しています。
+     ============================================================ -->
+<style id="pv-side-css">
+body{padding-left:238px;}
+#pv-side{
+  position:fixed;left:0;top:0;bottom:0;width:238px;z-index:70;
+  background:#1d1d1f;color:#fff;padding:22px 0 18px;overflow-y:auto;
+  font-family:inherit;-webkit-font-smoothing:antialiased;
+}
+#pv-side .lg{
+  padding:0 22px 20px;font-size:22px;font-weight:700;letter-spacing:-.02em;
+  color:#fff;cursor:pointer;user-select:none;
+}
+#pv-side .lg span{
+  display:block;margin-top:4px;font-size:11.5px;font-weight:400;
+  letter-spacing:0;color:#8b8b90;
+}
+#pv-side .lg:hover{opacity:.7;}
+#pv-side .grp{
+  padding:14px 22px 7px;font-size:11px;font-weight:600;
+  letter-spacing:.05em;color:#7c7c82;
+}
+#pv-side a{
+  display:flex;align-items:center;gap:12px;padding:12px 22px;
+  color:#d2d2d6;text-decoration:none;font-size:14.5px;font-weight:400;
+  cursor:pointer;transition:background .14s,color .14s;
+}
+#pv-side a:hover{background:rgba(255,255,255,.07);color:#fff;}
+#pv-side a svg{width:19px;height:19px;flex:none;}
+/* いまいる画面。body に付く印だけで決めています */
+body:not(.tab-kanban):not(.tab-rent) #pv-side a[data-k="pivot"],
+body.tab-kanban #pv-side a[data-k="kanban"],
+body.tab-rent   #pv-side a[data-k="rent"]{
+  background:rgba(255,255,255,.13);color:#fff;font-weight:600;
+  box-shadow:inset 3px 0 0 var(--pv-accent,#007aff);
+}
+/* 上のタブは、左に移したので出しません */
+.app-tabs > #tab-pivot,
+.app-tabs > #tab-kanban,
+.app-tabs > #tab-rent,
+.app-tabs > .app-pivot-logo{display:none!important;}
+.app-tabs{max-width:none;}
+
+/* 狭い画面では左の柱をたたみ、元の上タブに戻します */
+@media (max-width:860px){
+  body{padding-left:0;}
+  #pv-side{display:none;}
+  .app-tabs > #tab-pivot,
+  .app-tabs > #tab-kanban,
+  .app-tabs > #tab-rent{display:inline-block!important;}
+  .app-tabs > .app-pivot-logo{display:inline!important;}
+}
+@media print{ #pv-side{display:none;} body{padding-left:0;} }
+</style>
+<script id="pv-side-js">
+(function pvSide(){
+  var ICON = {
+    pivot:  '<path d="M4 21V9l8-6 8 6v12"/><path d="M9 21v-7h6v7"/>',
+    kanban: '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/>'
+          + '<path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
+    rent:   '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
+  };
+  var NAV = [
+    { k:'pivot',  t:'\u7269\u4EF6' },                       /* 物件 */
+    { k:'kanban', t:'\u5951\u7D04' },                       /* 契約 */
+    { k:'rent',   t:'\u30AA\u30FC\u30CA\u30FC\u30E1\u30FC\u30EB' }  /* オーナーメール */
+  ];
+
+  function svg(d){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"'
+         + ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">' + d + '</svg>';
+  }
+
+  function build(){
+    if (document.getElementById('pv-side')) return;
+    var n = document.createElement('nav');
+    n.id = 'pv-side';
+    n.setAttribute('aria-label', '\u753B\u9762\u306E\u5207\u308A\u66FF\u3048');
+    n.innerHTML =
+      '<div class="lg" title="PIVOT\u30C8\u30C3\u30D7\u3078">PIVOT'
+    +   '<span>IRE\u30E9\u30A4\u30D5\u682A\u5F0F\u4F1A\u793E</span></div>'
+    + '<div class="grp">\u7BA1\u7406</div>'
+    + NAV.map(function (v) {
+        return '<a href="#" data-k="' + v.k + '">' + svg(ICON[v.k]) + v.t + '</a>';
+      }).join('');
+
+    document.body.insertBefore(n, document.body.firstChild);
+
+    n.querySelector('.lg').addEventListener('click', function () {
+      if (typeof window.goToTop === 'function') window.goToTop();
+    });
+    Array.prototype.forEach.call(n.querySelectorAll('a[data-k]'), function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        if (typeof window.switchApp === 'function') window.switchApp(a.dataset.k);
+      });
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', build);
+  } else {
+    build();
+  }
+})();
+</script>
 </body>
 </html>
