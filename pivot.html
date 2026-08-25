@@ -14237,10 +14237,14 @@ body.tab-rent   #pv-side a[data-k="rent"]{
           + '<path d="M14 3v5h5"/><path d="M9 13h6M9 17h4"/>',
     rent:   '<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 7l9 6 9-6"/>'
   };
+  ICON.rank = '<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>';
   var NAV = [
-    { k:'pivot',  t:'\u7269\u4EF6' },                       /* 物件 */
-    { k:'kanban', t:'\u5951\u7D04' },                       /* 契約 */
-    { k:'rent',   t:'\u30AA\u30FC\u30CA\u30FC\u30E1\u30FC\u30EB' }  /* オーナーメール */
+    { g:'\u30E1\u30A4\u30F3' },                                           /* メイン */
+    { k:'pivot',  t:'\u7269\u4EF6' },                                      /* 物件 */
+    { k:'kanban', t:'\u5951\u7D04' },                                      /* 契約 */
+    { k:'rent',   t:'\u30AA\u30FC\u30CA\u30FC\u30E1\u30FC\u30EB' },   /* オーナーメール */
+    { g:'\u5206\u6790' },                                                  /* 分析 */
+    { a:'rank',   t:'\u5BA2\u4ED8\u696D\u8005\u30E9\u30F3\u30AD\u30F3\u30B0' } /* 客付業者ランキング */
   ];
 
   function svg(d){
@@ -14256,8 +14260,9 @@ body.tab-rent   #pv-side a[data-k="rent"]{
     n.innerHTML =
       '<div class="lg" title="PIVOT2\u30C8\u30C3\u30D7\u3078">PIVOT2'
     +   '<span>IRE\u30E9\u30A4\u30D5\u682A\u5F0F\u4F1A\u793E</span></div>'
-    + '<div class="grp">\u7BA1\u7406</div>'
     + NAV.map(function (v) {
+        if (v.g) return '<div class="grp">' + v.g + '</div>';
+        if (v.a) return '<a href="#" data-a="' + v.a + '">' + svg(ICON[v.a]) + v.t + '</a>';
         return '<a href="#" data-k="' + v.k + '">' + svg(ICON[v.k]) + v.t + '</a>';
       }).join('');
 
@@ -14270,6 +14275,17 @@ body.tab-rent   #pv-side a[data-k="rent"]{
       a.addEventListener('click', function (e) {
         e.preventDefault();
         if (typeof window.switchApp === 'function') window.switchApp(a.dataset.k);
+      });
+    });
+    /* 客付業者ランキング。契約の画面に切り替えてから、今までと同じ
+       KB.openBrokerStats() を呼ぶだけです */
+    Array.prototype.forEach.call(n.querySelectorAll('a[data-a="rank"]'), function (a) {
+      a.addEventListener('click', function (e) {
+        e.preventDefault();
+        try { if (typeof window.switchApp === 'function') window.switchApp('kanban'); } catch (x) {}
+        setTimeout(function () {
+          try { if (window.KB && window.KB.openBrokerStats) window.KB.openBrokerStats(); } catch (x) {}
+        }, 60);
       });
     });
   }
@@ -14555,6 +14571,105 @@ select:focus-visible,textarea:focus-visible{
 #kb-view .stat-pill.accent .num,
 #kb-view .stat-pill.almost .num{color:var(--k-blue);}
 #kb-view .stat-pill.success .num{color:var(--k-gray);}
+</style>
+
+<!-- ============================================================
+     仕上げ・段階4／モノクロ基調
+     見本の3枚に共通する形にそろえます。
+       ・左メニューは白地。見出しで区切り、選んでいるものは黒
+       ・青をやめ、押すボタンは黒。アクセントは落ち着いた緑ひとつ
+       ・合図の色は 赤（不備）／黒（進行中）／灰（完了）の3つだけ
+     ★HTML・id・class・既存のJS には触れていません。
+       この <style> を消せば、段階3までの見た目に戻ります。
+     ============================================================ -->
+<style id="pv-tune-4">
+:root{
+  /* 青をやめ、落ち着いた緑ひとつに。どの色とも喧嘩しない濃さです */
+  --pv-accent:#1f7a4d;
+  --pv-accent-d:#186139;
+  --pv-accent-soft:#eaf4ee;
+  --rt-accent:#1f7a4d; --rt-accent-d:#186139; --rt-soft:#eaf4ee;
+  /* 合図の色。3つとも彩度を落として、隣り合っても濁らないようにします */
+  --k-red:#c2352a;  --k-red-bg:#fdf3f2;
+  --k-blue:#1d1d1f; --k-blue-bg:#f7f7f8;   /* 進行中＝黒 */
+  --k-gray:#8b8b90; --k-gray-bg:#f0f0f2;
+}
+
+/* ---- 左メニュー：白地・見出しで区切る・選択中は黒 ---- */
+#pv-side{
+  background:#fff;color:var(--pv-ink);
+  border-right:1px solid var(--pv-line);
+  padding:20px 12px 18px;
+}
+#pv-side .lg{color:var(--pv-ink);padding:0 12px 16px;font-size:21px;}
+#pv-side .lg span{color:var(--pv-ink-3);}
+#pv-side .grp{
+  padding:16px 12px 6px;color:var(--pv-ink-3);
+  font-size:11px;font-weight:600;letter-spacing:.06em;
+}
+#pv-side a{
+  border-radius:11px;margin-bottom:2px;padding:10px 12px;
+  color:var(--pv-ink-2);font-size:14px;font-weight:500;
+}
+#pv-side a:hover{background:rgba(0,0,0,.045);color:var(--pv-ink);}
+body:not(.tab-kanban):not(.tab-rent) #pv-side a[data-k="pivot"],
+body.tab-kanban #pv-side a[data-k="kanban"],
+body.tab-rent   #pv-side a[data-k="rent"]{
+  background:var(--pv-ink);color:#fff;font-weight:600;box-shadow:none;
+}
+/* 画面内のランキングのボタンは、左メニューに移したので出しません */
+.broker-stat-btn{display:none!important;}
+
+/* ---- 押すボタンは、見本と同じく緑ひとつ ----
+   ★はじめ黒にしましたが、.kb-toolbar .btn-primary が緑のままで
+     「＋新規」だけ色が違って見えました。全部を緑にそろえます。
+     選んでいるメニューの黒とは役割が違うので、ぶつかりません。 */
+.btn,.btn-primary,
+.kb-toolbar .btn-primary,#kb-view .btn-primary{
+  background:var(--pv-accent);color:#fff;border-color:transparent;
+}
+.btn:hover,.btn-primary:hover,
+.kb-toolbar .btn-primary:hover,#kb-view .btn-primary:hover{
+  background:var(--pv-accent-d);color:#fff;transform:none;box-shadow:none;
+}
+.btn-outline{background:#fff;color:var(--pv-ink);border-color:var(--pv-line);}
+
+/* ---- カード：モノクロ基調。合図だけ色を持たせます ---- */
+#kb-view .ct-card.status-progress{
+  background:#fff;
+  box-shadow:inset 4px 0 0 var(--pv-ink),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+#kb-view .ct-card.status-almost{
+  background:var(--k-blue-bg);
+  box-shadow:inset 4px 0 0 var(--pv-ink),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(0,0,0,.05);
+}
+#kb-view .ct-card.status-defect{
+  background:var(--k-red-bg);
+  box-shadow:inset 4px 0 0 var(--k-red),0 1px 2px rgba(0,0,0,.05),0 8px 24px rgba(194,53,42,.09);
+}
+#kb-view .ct-card.status-progress .ct-badge,
+#kb-view .ct-card.status-almost .ct-badge{background:#ececee!important;}
+#kb-view .ct-card.status-defect .ct-badge{background:#f6dedb!important;}
+#kb-view .ct-card.status-progress .prog-seg.on,
+#kb-view .ct-card.status-almost .prog-seg.on{background:var(--pv-ink)!important;}
+#kb-view .ct-card.status-defect .prog-seg.on{background:var(--k-red)!important;}
+#kb-view .ct-card.status-progress .ct-stage-name,
+#kb-view .ct-card.status-almost .ct-stage-name{color:var(--pv-ink)!important;}
+#kb-view .ct-card.status-defect .ct-stage-name{color:var(--k-red)!important;}
+
+/* 上の件数も同じ3色に */
+#kb-view .stat-pill.accent .num,
+#kb-view .stat-pill.almost .num{color:var(--pv-ink);}
+#kb-view .stat-pill.warn .num{color:var(--k-red);}
+#kb-view .stat-pill.warn{border-color:#e8c4c0;background:var(--k-red-bg);}
+
+/* 未紐づけ・ADなしの赤も、同じ濃さにそろえます */
+.ct-notlinked,.ct-ad-label.ad-zero{
+  border-color:#e8c4c0!important;background:var(--k-red-bg)!important;color:var(--k-red)!important;
+}
+
+/* ---- 物件一覧の帯も黒に ---- */
+.lv-badge{background:var(--pv-line-soft);color:var(--pv-ink-2);}
 </style>
 </body>
 </html>
