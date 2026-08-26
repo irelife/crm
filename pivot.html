@@ -14790,5 +14790,63 @@ body{padding-left:256px;}
 }
 @media print{ body{background:#fff;padding-left:0;} }
 </style>
+
+<!-- ============================================================
+     仕上げ・段階6／背景を作り込む（見本2枚目の「布」の感じ）
+     ★見本の画像そのものは使っていません。他社のデザイン作品なので
+       切り出して使うわけにいかないためです。同じ質感を、ぼかしの
+       重ね合わせだけで作り直しました。画像を持たないので軽く、
+       どんな画面の大きさにも合います。
+     この <style> を消せば、段階5の背景に戻ります。
+     ============================================================ -->
+<style id="pv-tune-6">
+body{
+  background:
+    /* 光のあたっているところ（布のふくらみ） */
+    radial-gradient(58% 46% at 80% -8%,  rgba(255,255,255,.92), rgba(255,255,255,0) 62%),
+    radial-gradient(46% 38% at 6% 2%,    rgba(255,255,255,.72), rgba(255,255,255,0) 64%),
+    radial-gradient(44% 34% at 99% 66%,  rgba(255,255,255,.62), rgba(255,255,255,0) 64%),
+    radial-gradient(40% 32% at 28% 112%, rgba(255,255,255,.66), rgba(255,255,255,0) 66%),
+    /* 影になっているところ（布のくぼみ）。ここを効かせないと白く飛びます */
+    radial-gradient(72% 58% at 56% 40%,  rgba(140,140,154,.42), rgba(140,140,154,0) 70%),
+    radial-gradient(62% 50% at 10% 76%,  rgba(132,132,147,.38), rgba(132,132,147,0) 70%),
+    radial-gradient(54% 44% at 88% 24%,  rgba(140,140,154,.26), rgba(140,140,154,0) 70%),
+    /* ゆるやかな流れ。中心は画面の外に置いて、渦の芯が見えないようにする */
+    conic-gradient(from 200deg at 118% -14%,
+      rgba(255,255,255,.26), rgba(150,150,163,.13) 30%,
+      rgba(255,255,255,.30) 58%, rgba(150,150,163,.11) 80%, rgba(255,255,255,.26)),
+    #c9c9d2;
+  background-attachment:fixed;
+}
+
+/* 地が濃くなったぶん、浮いているものの影も強めます */
+#pv-side{
+  background:rgba(255,255,255,.94);
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 24px 60px rgba(0,0,0,.16);
+}
+#kb-view .ct-card.status-progress,
+#kb-view .ct-card.status-almost{
+  box-shadow:inset 4px 0 0 var(--pv-ink),
+             0 1px 2px rgba(0,0,0,.06),0 20px 46px rgba(0,0,0,.15);
+}
+#kb-view .ct-card.status-progress:hover,
+#kb-view .ct-card.status-almost:hover{
+  box-shadow:inset 4px 0 0 var(--pv-ink),
+             0 2px 6px rgba(0,0,0,.08),0 30px 64px rgba(0,0,0,.21);
+}
+#kb-view .ct-card.status-defect{
+  box-shadow:inset 4px 0 0 var(--k-red),
+             0 1px 2px rgba(0,0,0,.06),0 20px 46px rgba(194,53,42,.20);
+}
+#kb-view .stat-pill{
+  background:rgba(255,255,255,.95);
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 12px 28px rgba(0,0,0,.11);
+}
+.lv-wrap,.card,.panel,.rt-card,.owner-card,.bld-list{
+  box-shadow:0 1px 2px rgba(0,0,0,.05),0 16px 38px rgba(0,0,0,.12);
+}
+.btn-outline{box-shadow:0 1px 2px rgba(0,0,0,.06),0 5px 14px rgba(0,0,0,.08);}
+@media print{ body{background:#fff;} }
+</style>
 </body>
 </html>
