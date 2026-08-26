@@ -14858,5 +14858,151 @@ body{
 .btn-outline{box-shadow:0 1px 2px rgba(0,0,0,.06),0 5px 14px rgba(0,0,0,.08);}
 @media print{ body{background:#fff;} }
 </style>
+
+<!-- ============================================================
+     仕上げ・段階7／黒いカードと、浮遊感
+     ・件数の帯を黒いカードにまとめる（DOMは触っていません）
+     ・影を3枚重ねて、地から本当に浮いているように見せる
+     ・触れると持ち上がり、押すと沈む
+     この <style> を消せば、段階6の見た目に戻ります。
+     ============================================================ -->
+<style id="pv-tune-7">
+/* ══ 件数を、黒いカードに ══════════════════════════════════════ */
+#kb-view .stats-bar{
+  display:flex;gap:0;margin:6px 24px 18px;padding:22px 8px;
+  background:#17171a;border-radius:22px;overflow:visible;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,.14),
+    0 10px 24px rgba(0,0,0,.16),
+    0 30px 64px rgba(0,0,0,.24);
+}
+#kb-view .stat-pill{
+  flex:1;background:transparent!important;border:0!important;border-radius:0;
+  box-shadow:none!important;padding:2px 18px;position:relative;
+  display:flex;flex-direction:column;align-items:flex-start;gap:2px;
+  transform:none!important;
+}
+#kb-view .stat-pill + .stat-pill::before{
+  content:"";position:absolute;left:0;top:6px;bottom:6px;width:1px;
+  background:rgba(255,255,255,.14);
+}
+#kb-view .stat-pill:hover{background:transparent!important;}
+#kb-view .stat-pill .num{
+  font-size:38px!important;font-weight:600!important;letter-spacing:-.04em!important;
+  line-height:1.05;color:#fff!important;font-variant-numeric:tabular-nums;
+}
+#kb-view .stat-pill .lbl{
+  font-size:12px!important;font-weight:500!important;
+  color:rgba(255,255,255,.52)!important;letter-spacing:.01em;
+}
+#kb-view .stat-pill.warn .num{color:#ff6f61!important;}
+#kb-view .stat-pill.accent .num,
+#kb-view .stat-pill.almost .num{color:#fff!important;}
+#kb-view .stat-pill.success .num{color:rgba(255,255,255,.50)!important;}
+#kb-view .stat-pill.clickable{cursor:pointer;}
+#kb-view .stat-pill.clickable:hover .num{opacity:.72;}
+
+/* ══ 浮遊感 ══════════════════════════════════════════════════
+   影は1枚だと板に見えます。3枚重ねます。
+     1枚目 … 接地。輪郭をはっきりさせる
+     2枚目 … 中間。厚みを出す
+     3枚目 … 遠く。地に落ちる大きな影
+   ============================================================ */
+#kb-view .ct-card{
+  border-radius:22px;
+  transition:transform .26s cubic-bezier(.22,.61,.36,1),
+             box-shadow .26s cubic-bezier(.22,.61,.36,1);
+}
+#kb-view .ct-card.status-progress,
+#kb-view .ct-card.status-almost{
+  box-shadow:
+    inset 4px 0 0 var(--pv-ink),
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 1px 2px rgba(0,0,0,.06),
+    0 8px 18px rgba(0,0,0,.07),
+    0 24px 48px rgba(0,0,0,.11);
+}
+#kb-view .ct-card.status-defect{
+  box-shadow:
+    inset 4px 0 0 var(--k-red),
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 1px 2px rgba(194,53,42,.10),
+    0 8px 18px rgba(194,53,42,.10),
+    0 24px 48px rgba(194,53,42,.16);
+}
+#kb-view .ct-card.status-complete,
+#kb-view .ct-card.done,
+#kb-view .ct-card.status-cancel{
+  box-shadow:
+    inset 4px 0 0 rgba(0,0,0,.22),
+    0 1px 2px rgba(0,0,0,.05),
+    0 6px 14px rgba(0,0,0,.06)!important;
+}
+
+/* 触れると持ち上がる。少しだけ大きくすると、近づいた感じが出ます */
+#kb-view .ct-card:hover{
+  transform:translateY(-7px) scale(1.012);
+  z-index:5;
+}
+#kb-view .ct-card.status-progress:hover,
+#kb-view .ct-card.status-almost:hover{
+  box-shadow:
+    inset 4px 0 0 var(--pv-ink),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 2px 4px rgba(0,0,0,.07),
+    0 16px 30px rgba(0,0,0,.10),
+    0 44px 80px rgba(0,0,0,.18);
+}
+#kb-view .ct-card.status-defect:hover{
+  box-shadow:
+    inset 4px 0 0 var(--k-red),
+    inset 0 1px 0 rgba(255,255,255,.95),
+    0 2px 4px rgba(194,53,42,.12),
+    0 16px 30px rgba(194,53,42,.14),
+    0 44px 80px rgba(194,53,42,.22);
+}
+/* 押すと沈む。押した手ごたえが出ます */
+#kb-view .ct-card:active{
+  transform:translateY(-2px) scale(.998);
+  transition-duration:.08s;
+}
+/* 完了・キャンセルは持ち上げません（もう触らないもののため） */
+#kb-view .ct-card.status-complete:hover,
+#kb-view .ct-card.done:hover,
+#kb-view .ct-card.status-cancel:hover{
+  transform:translateY(-2px);
+}
+
+/* カード同士の間を広げます。詰まっていると浮いて見えません */
+#kb-view .board{gap:22px;}
+
+/* 左メニューも同じ考え方で */
+#pv-side{
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.9),
+    0 1px 2px rgba(0,0,0,.06),
+    0 10px 24px rgba(0,0,0,.07),
+    0 30px 60px rgba(0,0,0,.13);
+}
+#pv-side a{transition:background .16s,color .16s,transform .16s;}
+#pv-side a:hover{transform:translateX(2px);}
+
+/* ボタンも、押した手ごたえを出します */
+.btn,.btn-primary,.btn-outline,.btn-sort{
+  transition:transform .14s cubic-bezier(.22,.61,.36,1),
+             box-shadow .14s,background .16s;
+}
+.btn:active,.btn-primary:active,.btn-outline:active,.btn-sort:active{
+  transform:translateY(1px) scale(.985);
+}
+
+/* 動きを控える設定の端末では、動かしません */
+@media (prefers-reduced-motion:reduce){
+  #kb-view .ct-card,#pv-side a,.btn,.btn-primary,.btn-outline,.btn-sort{
+    transition:none;
+  }
+  #kb-view .ct-card:hover{transform:none;}
+}
+</style>
 </body>
 </html>
