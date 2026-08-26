@@ -15295,5 +15295,106 @@ body{
 #kb-view .ct-card.done,
 #kb-view .ct-card.status-cancel{background:#eaefec!important;}
 </style>
+
+<!-- ============================================================
+     仕上げ・段階10／客付業者ランキングの読みやすさ
+       ・モーダルを広げて、月別グラフの横スクロールを減らす
+       ・年別グラフの棒を、横いっぱいに等間隔で並べる
+       ・薄すぎて見えなかった月別の棒を、読める濃さにする
+       ・棒の足元に基準線を引いて、高さを比べやすくする
+     ★HTML・id・class・JS には触れていません。
+       この <style> を消せば、段階9の見た目に戻ります。
+     ============================================================ -->
+<style id="pv-rank">
+/* ---- 1. 横幅。月別グラフが毎回スクロールになっていたため ---- */
+#bstat-modal.done-modal{
+  max-width:1120px;width:94vw;max-height:90vh;
+}
+#bstat-body{padding-left:22px;padding-right:22px;}
+
+/* ---- 2. 年ごとのグラフ。4本しかないのに左に寄っていました ---- */
+#bstat-body .ov-bars.ov-year{gap:20px;padding-left:4px;padding-right:4px;}
+#bstat-body .ov-year .ovb{flex:1 1 0;width:auto;min-width:56px;max-width:150px;}
+#bstat-body .ov-year .ovb-col{height:104px;}
+#bstat-body .ov-year .ovb-col i{width:74%;max-width:88px;}
+/* 月ごとのグラフも、余れば広がるように */
+#bstat-body .ov-month .ovb{flex:1 0 36px;width:auto;max-width:60px;}
+#bstat-body .ov-month .ovb-col{height:96px;}
+
+/* ---- 3. 会社ごとの月別の棒。ほぼ白で見えていませんでした ---- */
+#bstat-body .mbar-col{height:78px;}
+#bstat-body .mbar-col i{
+  background:linear-gradient(180deg,#8ebfa4,#c2dbcd)!important;width:18px;
+}
+#bstat-body .bstat-card.rk1 .mbar-col i{
+  background:linear-gradient(180deg,rgba(255,255,255,.72),rgba(255,255,255,.34))!important;
+}
+#bstat-body .mbar{width:34px;}
+#bstat-body .mbar-v{font-size:11.5px;}
+#bstat-body .mbar-x{font-size:10px;}
+#bstat-body .bm-chart{min-height:104px;gap:7px;}
+
+/* ---- 4. 棒の足元に基準線。高さを目で比べるための線です ---- */
+#bstat-body .bm-chart,
+#bstat-body .ov-bars{
+  border-bottom:1px solid #e4ece7;padding-bottom:8px;
+}
+#bstat-body .ovb-v{font-size:11.5px;top:0;}
+/* いちばん高い棒だけ、上の数字が棒に重なって読めませんでした
+   （2025年の「259」が黒い棒の上に黒い字で乗っていました）。
+   棒の上に19pxの余白をつくり、数字をそこに逃がします。 */
+#bstat-body .ovb-col{box-sizing:border-box;padding-top:19px;}
+#bstat-body .ov-year .ovb-col{height:120px;}
+#bstat-body .ov-month .ovb-col{height:108px;}
+#bstat-body .ov-h,#bstat-body .bstat-years-h{font-size:15px;}
+#bstat-body .ov-chart,#bstat-body .bstat-years{padding:16px 18px;}
+
+/* ---- 5. 「物件別」タブだけ、青いままでした ----
+   段階9で緑にそろえたとき、こちらのクラス名（pb- / bt3-）を
+   見落としていました。同じ緑に合わせます。 */
+#bstat-body .pb-strong-badge{
+  background:linear-gradient(120deg,#e9f4ee,#fff);
+  border:1px solid #cfe3d7;color:#215c40;font-weight:600;border-radius:12px;
+}
+#bstat-body .pb-strong-badge b{color:var(--pv-accent);font-weight:700;}
+#bstat-body .pb-share{color:var(--pv-accent);font-weight:600;}
+#bstat-body .pb-ct{color:var(--pv-accent);font-weight:700;}
+#bstat-body .pb-row.pb-strong{background:#eef6f1;}
+#bstat-body .pb-row.pb-strong .pb-nm{color:#215c40;}
+#bstat-body .pb-nm{font-weight:600;color:var(--pv-ink);}
+#bstat-body .pb-row{border-bottom:1px solid #eef3f0;}
+#bstat-body .bt3-ct{color:var(--pv-accent);font-weight:700;}
+#bstat-body .bt3-item{background:#f4f8f5;border:1px solid #e6ece8;}
+#bstat-body .bt3-nm{font-weight:600;}
+/* 1位（黒いカード）の中では、白ぬきにします */
+#bstat-body .bstat-card.rk1 .pb-strong-badge{
+  background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:rgba(255,255,255,.82);
+}
+#bstat-body .bstat-card.rk1 .pb-strong-badge b{color:#8ad9b0;}
+#bstat-body .bstat-card.rk1 .pb-share{color:#8ad9b0;}
+#bstat-body .bstat-card.rk1 .pb-nm{color:#fff;}
+#bstat-body .bstat-card.rk1 .pb-row{border-bottom-color:rgba(255,255,255,.10);}
+#bstat-body .bstat-card.rk1 .pb-ct{color:#8ad9b0;}
+#bstat-body .bstat-card.rk1 .bt3-item{
+  background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.16);color:#fff;
+}
+#bstat-body .bstat-card.rk1 .bt3-nm{color:#fff;}
+#bstat-body .bstat-card.rk1 .bt3-ct{color:#8ad9b0;}
+
+/* ---- 6. 切替タブ（業者別／物件別） ---- */
+#bstat-body .bmode{
+  border:1px solid #e2eae4;border-radius:12px;background:#fff;
+  color:var(--pv-ink-2);font-size:14px;font-weight:600;padding:10px 12px;
+}
+#bstat-body .bmode.on{background:#0f1a14;border-color:#0f1a14;color:#fff;}
+
+/* 「今月」の棒だけ、ひときわ明るい黄緑でした。落ち着いた緑にします */
+#bstat-body .ovb-now .ovb-col i{
+  background:linear-gradient(180deg,#1f7a4d,#4fc088)!important;
+}
+#bstat-body .ovb-now .ovb-v{color:var(--pv-accent);}
+#bstat-body .ovb-now .ovb-x{background:var(--pv-accent);color:#fff;font-weight:600;}
+</style>
+
 </body>
 </html>
