@@ -3,7 +3,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#115e59">
-<title>清掃勤怠システム｜要対応</title>
+<title>清掃勤怠システム｜清掃記録（写真）</title>
 <style>/* ===== shadcn/ui 相当のトークン（Tailwind slate/teal/emerald/amber/rose の実値） ===== */
 :root{
   --bg:#F5F5F7;          /* slate-50 */
@@ -2578,7 +2578,7 @@ body{
     line-height:1.6;resize:vertical;}
   .sd-card .snd{margin-top:.5rem;width:100%;padding:.6rem;border-radius:8px;border:none;
     background:#2f6f4f;color:#fff;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer;}
-  .sd-card.done{opacity:.62;}</style></head>
+  .sd-card.done{opacity:.62;}</style><style>*{animation:none!important;transition:none!important;}#modal-host,#modal-host *{opacity:1!important;}</style></head>
 <body>
 
 <header class="hd">
@@ -2598,9 +2598,9 @@ body{
   <div class="wrap hd-sub-in">
     <nav class="hd-sub" id="hd-sub">
       <button data-tab="home" class="tab-top"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="m3 10 9-7 9 7v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Z"></path><path d="M9 22V12h6v10"></path></svg><span>TOP</span></button>
-      <button data-tab="today" class=""><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path><circle cx="12" cy="12" r="4"></circle></svg><span>今日</span></button>
+      <button data-tab="today" class="on"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4M12 18v4M2 12h4M18 12h4"></path><circle cx="12" cy="12" r="4"></circle></svg><span>今日</span></button>
       <button data-tab="cal"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 2v4M16 2v4M3 10h18"></path><rect width="18" height="18" x="3" y="4" rx="2"></rect></svg><span>カレンダー</span></button>
-      <button data-tab="ng" class="on"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg><span>要対応</span><i class="tabbadge urgent" id="ng-badge">3</i></button>
+      <button data-tab="ng"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.7 18-8-14a2 2 0 0 0-3.4 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.7-3Z"></path><path d="M12 9v4M12 17h.01"></path></svg><span>要対応</span><i class="tabbadge urgent" id="ng-badge">3</i></button>
       <button data-tab="prop"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"></path><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"></path><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"></path><path d="M10 6h4M10 10h4M10 14h4M10 18h4"></path></svg><span>物件リスト</span></button>
       <button data-tab="set"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg><span>LINE設定</span></button>
       <button data-tab="kt"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg><span>勤怠</span></button>
@@ -2621,7 +2621,7 @@ body{
       <div class="buildtag">build 2026-08-11 a</div>
     </div></div></div>
 
-  <div class="page" id="page-today" data-flow-ready=""><div class="flow-h" id="flow-today"><span class="flow-en">today</span><span class="flow-ja">今日の清掃</span></div><div id="today-body">
+  <div class="page on" id="page-today" data-flow-ready=""><div class="flow-h" id="flow-today"><span class="flow-en">today</span><span class="flow-ja">今日の清掃</span></div><div id="today-body">
     <details class="tdhowto"><summary>
       <span class="tdhowto-badge">必ず見る</span>
       <span class="tdhowto-t">清掃でやること・要対応にするもの</span></summary>
@@ -2873,7 +2873,7 @@ body{
   </div>
 
   <!-- LINE設定 -->
-  <div class="page on" id="page-ng" data-flow-ready=""><div class="flow-h" id="flow-ng"><span class="flow-en">issues</span><span class="flow-ja">要対応</span></div>
+  <div class="page" id="page-ng" data-flow-ready=""><div class="flow-h" id="flow-ng"><span class="flow-en">issues</span><span class="flow-ja">要対応</span></div>
     <div class="ptab-h">
       <div>
         <h1>要対応</h1>
@@ -2881,63 +2881,7 @@ body{
       </div>
       <button class="btn btn-outline btn-sm" id="ng-sync">GASへ送る</button>
     </div>
-    <div id="ng-list"><div class="ngview">
-      <button class="ngview-b on" data-ngview="open">
-        <svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> 未解決 <b>3</b></button>
-      <button class="ngview-b " data-ngview="fixed">
-        <svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> 解決済み <b>0</b></button>
-    </div><div class="ng-sec" style="color:#8A2743">期限切れ（1件）</div><div class="ng-row" role="button" tabindex="0" data-open="サンライズ第二|2026-09-05" style="--rule:#9B2C4A">
-      <span class="ng-row-th"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAwICQsJCAwLCgsODQwOEh4UEhEREiUbHBYeLCcuLisnKyoxN0Y7MTRCNCorPVM+QkhKTk9OLztWXFVMW0ZNTkv/2wBDAQ0ODhIQEiQUFCRLMisyS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0v/wAARCADwAUADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0OiiimIKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKZLIIlyevYetADmYKMsQB71H9oi/vfoaqgPcOT3/AEFSiz45fn6UwJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DT1dXGVINV/sf8At/pUTxvAQ35EUAX6KihmEo9GHUVLSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqV22ZcdlFXaoXP8Ar2/D+VMC5EgjQKAPf60+iikAUyV/LQtjOO1PqK5/1Dfh/OgCL7Z/sfrR9s/2P1qrRTAtfbP9j9akhn81iu3HGetUasWf+tP+7QBcooopAFFFFABRRRQAUjKGBBGQaWigChCTHOB77TV+qH/Lz/wP+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKoXP+vb8P5Vfqhc/69vw/lTAv0UUUgCkIBGCAR70tFADPLT+4v5UeWn9xfyp9NZgilj0FADWWJBllQD6VCbiND+7jH16VExe4kwPwHpVhLVB97LH8qYDVuxn5kIHsc1Ojq4ypBqJrWMjjKn61XYPbyZH4H1oAv0UyNxIgYflT6QBRRRQAUUUUAUP+Xn/gf9av1Q/5ef8Agf8AWr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/Xt+H8qv1Quf8AXt+H8qYF+iiikAUUUUAFV7xsIq+pqxVa9HyqewOKAHWi4j3d2NT1BaNmLHdTU9ABUVwu6JvUc1LUdw22JvcYoAgsm+Zl7YzVuqdkPnY9gMVcpgFFFFIAooooAof8vP8AwP8ArV+qH/Lz/wAD/rV+mAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqFz/AK9vw/lV+qFz/r2/D+VMC/RRRSAKKKKACmyKHQqe9OooAoKXt5MH8R61aSeNv4sH34p0kayDDD6VXa0OflYY96YE7TxqPvA/TmqssjTuFUHHYU5bRs/MwA9uasRxJH90c+poAIY/LQL36mpKKKQBRRRQAUUUUAUP+Xn/AIH/AFq/VD/l5/4H/Wr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/AF7fh/Kr9UboYmJ9RmmBeopqNvQMO4p1IAooooAKKKKACiiigAooooAKKKKACiiigAoopCcDJ6UAUf8Al5/4H/Wr9UI/3lwCOMtn+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKiniEq+hHSpaKAKEcjwMQRx3FTi7THKtmpXjR/vKDUX2RPVvzpgH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyqGWdpcKBgeg71N9kT1b86kSFI+VXn1NADbeHyxub7x/SpqKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/9k=" alt=""><button class="ng-thx" data-ngdel="サンライズ第二|2026-09-05|ng:0|before|0" aria-label="この写真を消す"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></span>
-      <span class="ng-row-b">
-        <span class="ng-row-i">設備／破損汚損</span>
-        <span class="ng-row-p">サンライズ第二<span class="ng-row-t">3階の共用廊下の蛍光灯が切れています。</span></span>
-        
-        <span class="ng-row-m">
-          <span class="ng-row-due" style="background:#9B2C4A">2日超過</span>
-          <span class="ng-row-mt">期限 9月12日(土)</span>
-          <span class="ng-row-mr">9月5日(土) の記録</span>
-        </span>
-        <span class="ng-row-act">
-          <button class="ngact ngact-cam" data-ngaft="サンライズ第二|2026-09-05|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> アフター撮影（0/2）</button>
-          <button class="ngact ngact-lib" data-ngaftlib="サンライズ第二|2026-09-05|ng:0"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
-          <button class="ngact ngact-fix off" data-ngfixrow="サンライズ第二|2026-09-05|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> 解決</button>
-        </span>
-      </span>
-    </div><div class="ng-sec" style="color:#A9762A">まもなく（1件）</div><div class="ng-row" role="button" tabindex="0" data-open="メゾン白鳥|2026-09-09" style="--rule:#E0B44C">
-      <span class="ng-row-th"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAwICQsJCAwLCgsODQwOEh4UEhEREiUbHBYeLCcuLisnKyoxN0Y7MTRCNCorPVM+QkhKTk9OLztWXFVMW0ZNTkv/2wBDAQ0ODhIQEiQUFCRLMisyS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0v/wAARCADwAUADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0OiiimIKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKZLIIlyevYetADmYKMsQB71H9oi/vfoaqgPcOT3/AEFSiz45fn6UwJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DT1dXGVINV/sf8At/pUTxvAQ35EUAX6KihmEo9GHUVLSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqV22ZcdlFXaoXP8Ar2/D+VMC5EgjQKAPf60+iikAUyV/LQtjOO1PqK5/1Dfh/OgCL7Z/sfrR9s/2P1qrRTAtfbP9j9akhn81iu3HGetUasWf+tP+7QBcooopAFFFFABRRRQAUjKGBBGQaWigChCTHOB77TV+qH/Lz/wP+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKoXP+vb8P5Vfqhc/69vw/lTAv0UUUgCkIBGCAR70tFADPLT+4v5UeWn9xfyp9NZgilj0FADWWJBllQD6VCbiND+7jH16VExe4kwPwHpVhLVB97LH8qYDVuxn5kIHsc1Ojq4ypBqJrWMjjKn61XYPbyZH4H1oAv0UyNxIgYflT6QBRRRQAUUUUAUP+Xn/gf9av1Q/5ef8Agf8AWr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/Xt+H8qv1Quf8AXt+H8qYF+iiikAUUUUAFV7xsIq+pqxVa9HyqewOKAHWi4j3d2NT1BaNmLHdTU9ABUVwu6JvUc1LUdw22JvcYoAgsm+Zl7YzVuqdkPnY9gMVcpgFFFFIAooooAof8vP8AwP8ArV+qH/Lz/wAD/rV+mAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqFz/AK9vw/lV+qFz/r2/D+VMC/RRRSAKKKKACmyKHQqe9OooAoKXt5MH8R61aSeNv4sH34p0kayDDD6VXa0OflYY96YE7TxqPvA/TmqssjTuFUHHYU5bRs/MwA9uasRxJH90c+poAIY/LQL36mpKKKQBRRRQAUUUUAUP+Xn/AIH/AFq/VD/l5/4H/Wr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/AF7fh/Kr9UboYmJ9RmmBeopqNvQMO4p1IAooooAKKKKACiiigAooooAKKKKACiiigAoopCcDJ6UAUf8Al5/4H/Wr9UI/3lwCOMtn+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKiniEq+hHSpaKAKEcjwMQRx3FTi7THKtmpXjR/vKDUX2RPVvzpgH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyqGWdpcKBgeg71N9kT1b86kSFI+VXn1NADbeHyxub7x/SpqKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/9k=" alt=""><button class="ng-thx" data-ngdel="メゾン白鳥|2026-09-09|ng:0|before|0" aria-label="この写真を消す"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></span>
-      <span class="ng-row-b">
-        <span class="ng-row-i">ゴミ庫／破損汚損</span>
-        <span class="ng-row-p">メゾン白鳥<span class="ng-row-t">ゴミ庫の扉の建て付けが悪くなっています。</span></span>
-        
-        <span class="ng-row-m">
-          <span class="ng-row-due" style="background:#E0B44C">あと3日</span>
-          <span class="ng-row-mt">期限 9月17日(木)</span>
-          <span class="ng-row-mr">9月9日(水) の記録</span>
-        </span>
-        <span class="ng-row-act">
-          <button class="ngact ngact-cam" data-ngaft="メゾン白鳥|2026-09-09|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> アフター撮影（0/2）</button>
-          <button class="ngact ngact-lib" data-ngaftlib="メゾン白鳥|2026-09-09|ng:0"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
-          <button class="ngact ngact-fix off" data-ngfixrow="メゾン白鳥|2026-09-09|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> 解決</button>
-        </span>
-      </span>
-    </div><div class="ng-sec" style="color:#A9762A">対応中（1件）</div><div class="ng-row" role="button" tabindex="0" data-open="ハイツ潮見|2026-09-12" style="--rule:#EBD08A">
-      <span class="ng-row-th"><img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAwICQsJCAwLCgsODQwOEh4UEhEREiUbHBYeLCcuLisnKyoxN0Y7MTRCNCorPVM+QkhKTk9OLztWXFVMW0ZNTkv/2wBDAQ0ODhIQEiQUFCRLMisyS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0v/wAARCADwAUADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD0OiiimIKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKZLIIlyevYetADmYKMsQB71H9oi/vfoaqgPcOT3/AEFSiz45fn6UwJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DR9oi/vfoai+x/7f6UfY/8Ab/SgCX7RF/e/Q0faIv736Govsf8At/pR9j/2/wBKAJftEX979DT1dXGVINV/sf8At/pUTxvAQ35EUAX6KihmEo9GHUVLSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqV22ZcdlFXaoXP8Ar2/D+VMC5EgjQKAPf60+iikAUyV/LQtjOO1PqK5/1Dfh/OgCL7Z/sfrR9s/2P1qrRTAtfbP9j9akhn81iu3HGetUasWf+tP+7QBcooopAFFFFABRRRQAUjKGBBGQaWigChCTHOB77TV+qH/Lz/wP+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKoXP+vb8P5Vfqhc/69vw/lTAv0UUUgCkIBGCAR70tFADPLT+4v5UeWn9xfyp9NZgilj0FADWWJBllQD6VCbiND+7jH16VExe4kwPwHpVhLVB97LH8qYDVuxn5kIHsc1Ojq4ypBqJrWMjjKn61XYPbyZH4H1oAv0UyNxIgYflT6QBRRRQAUUUUAUP+Xn/gf9av1Q/5ef8Agf8AWr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/Xt+H8qv1Quf8AXt+H8qYF+iiikAUUUUAFV7xsIq+pqxVa9HyqewOKAHWi4j3d2NT1BaNmLHdTU9ABUVwu6JvUc1LUdw22JvcYoAgsm+Zl7YzVuqdkPnY9gMVcpgFFFFIAooooAof8vP8AwP8ArV+qH/Lz/wAD/rV+mAUUUUgCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACqFz/AK9vw/lV+qFz/r2/D+VMC/RRRSAKKKKACmyKHQqe9OooAoKXt5MH8R61aSeNv4sH34p0kayDDD6VXa0OflYY96YE7TxqPvA/TmqssjTuFUHHYU5bRs/MwA9uasRxJH90c+poAIY/LQL36mpKKKQBRRRQAUUUUAUP+Xn/AIH/AFq/VD/l5/4H/Wr9MAooopAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFULn/AF7fh/Kr9UboYmJ9RmmBeopqNvQMO4p1IAooooAKKKKACiiigAooooAKKKKACiiigAoopCcDJ6UAUf8Al5/4H/Wr9UI/3lwCOMtn+tX6YBRRRSAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKiniEq+hHSpaKAKEcjwMQRx3FTi7THKtmpXjR/vKDUX2RPVvzpgH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyo+1p6N+VH2RPVvzo+yJ6t+dAB9rT0b8qPtaejflR9kT1b86PsierfnQAfa09G/Kj7Wno35UfZE9W/Oj7Inq350AH2tPRvyqGWdpcKBgeg71N9kT1b86kSFI+VXn1NADbeHyxub7x/SpqKKQBRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB/9k=" alt=""><button class="ng-thx" data-ngdel="ハイツ潮見|2026-09-12|ng:0|before|0" aria-label="この写真を消す"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></span>
-      <span class="ng-row-b">
-        <span class="ng-row-i">放置自転車／迷惑</span>
-        <span class="ng-row-p">ハイツ潮見<span class="ng-row-t">駐輪場に放置自転車が2台あります。</span></span>
-        
-        <span class="ng-row-m">
-          <span class="ng-row-due" style="background:#EBD08A">あと6日</span>
-          <span class="ng-row-mt">期限 9月20日(日)</span>
-          <span class="ng-row-mr">9月12日(土) の記録</span>
-        </span>
-        <span class="ng-row-act">
-          <button class="ngact ngact-cam" data-ngaft="ハイツ潮見|2026-09-12|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> アフター撮影（0/2）</button>
-          <button class="ngact ngact-lib" data-ngaftlib="ハイツ潮見|2026-09-12|ng:0"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
-          <button class="ngact ngact-fix off" data-ngfixrow="ハイツ潮見|2026-09-12|ng:0"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> 解決</button>
-        </span>
-      </span>
-    </div></div>
+    <div id="ng-list"></div>
   </div>
 
   <div class="page" id="page-set" data-flow-ready="">
@@ -3028,7 +2972,154 @@ body{
 </main>
 
 <div id="side-backdrop"></div>
-<div id="modal-host"></div>
+<div id="modal-host"><div class="mask" id="mask">
+    <div class="modal xwide" role="dialog" aria-modal="true">
+      <div class="modal-h"><h2>清掃記録</h2><button class="x" id="m-x"><svg class="" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></div>
+      <div id="m-body" style="display:flex;flex-direction:column;gap:1.25rem">
+        <div class="mbox">
+          <div class="mbox-n">コート緑が丘
+            <button class="navbtn" id="m-nav" title="この物件までの道順を開く"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg> ナビ</button></div>
+          <div class="mbox-a">神奈川県みなと市若葉四丁目4番4号</div>
+          <div id="onsite-warn"><div class="os-check" style="display: none;"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg> 現在地を確認しています…</div></div>
+          <div class="mbox-s">
+            <span style="color:var(--teal-700)">完了: 3/7箇所</span>
+            
+          </div>
+          
+          <div class="stmeter " title="端末に保存できる写真の残り容量">
+            <div class="stmeter-bar"><div class="stmeter-fill" style="width:42%"></div></div>
+            <span class="stmeter-t">端末の空き 58%</span>
+          </div>
+        </div>
+        
+        
+        <div class="field" style="margin-bottom: -0.4rem; pointer-events: none; opacity: 0.4;" aria-disabled="true">
+          
+          
+          <div class="dropbox-done shootguide"><svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg>
+            <b>下の箇所のカードをタップして、その場で写真を撮ってください</b>
+            <span>1箇所ずつ、清掃後の写真を<b>2枚ずつ</b>登録します。</span>
+          </div>
+          
+          
+        </div>
+        <div class="field" aria-disabled="true" style="pointer-events: none; opacity: 0.4;">
+          <label class="pending-label"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> まだ写真が未登録の箇所が 4件あります</label>
+          <div class="pcards"><div class="pcard" data-drop="item|corridor" data-pickitem="corridor" style="border-color: rgb(110, 231, 183); background: rgb(236, 253, 245); pointer-events: none; opacity: 0.45;">
+      <div class="pcard-badge" style="background:#10b981"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> 未登録</div>
+      <div class="pcard-h">
+        <span class="pcard-l" style="color:#047857">共用廊下</span>
+        <button class="item-x" data-delitem="corridor" title="この項目を削除" aria-label="項目を削除"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="pcard-msg" style="color:#047857">清掃後の写真を2枚登録</div>
+      <div class="pcard-btns">
+        <button class="pcard-cam" data-cam="corridor"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> 撮影</button>
+        <button class="pcard-lib" data-pickitem="corridor" style="pointer-events: none; opacity: 0.45;"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
+      </div>
+      <div class="pshots">
+          <div class="pshot"><img src="data:image/jpeg;base64,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" alt="">
+                 <button data-del="item|corridor||0" aria-label="写真を消す"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button></div><button class="pshot-add" data-pickitem="corridor" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>2枚目</span><span class="pshot-tap">タップ</span></button>
+        </div>
+    </div><div class="pcard" data-drop="item|weed" data-pickitem="weed" style="border-color: rgb(110, 231, 183); background: rgb(236, 253, 245); pointer-events: none; opacity: 0.45;">
+      <div class="pcard-badge" style="background:#10b981"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> 未登録</div>
+      <div class="pcard-h">
+        <span class="pcard-l" style="color:#047857">草刈り・植栽</span>
+        <button class="item-x" data-delitem="weed" title="この項目を削除" aria-label="項目を削除"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="pcard-msg" style="color:#047857">清掃後の写真を2枚登録</div>
+      <div class="pcard-btns">
+        <button class="pcard-cam" data-cam="weed"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> 撮影</button>
+        <button class="pcard-lib" data-pickitem="weed" style="pointer-events: none; opacity: 0.45;"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
+      </div>
+      <div class="pshots">
+          <button class="pshot-add" data-pickitem="weed" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>1枚目</span><span class="pshot-tap">タップ</span></button><button class="pshot-add" data-pickitem="weed" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>2枚目</span><span class="pshot-tap">タップ</span></button>
+        </div>
+    </div><div class="pcard" data-drop="item|garbage" data-pickitem="garbage" style="border-color: rgb(110, 231, 183); background: rgb(236, 253, 245); pointer-events: none; opacity: 0.45;">
+      <div class="pcard-badge" style="background:#10b981"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> 未登録</div>
+      <div class="pcard-h">
+        <span class="pcard-l" style="color:#047857">ゴミ庫</span>
+        <button class="item-x" data-delitem="garbage" title="この項目を削除" aria-label="項目を削除"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="pcard-msg" style="color:#047857">中身の画像を2枚映す</div>
+      <div class="pcard-btns">
+        <button class="pcard-cam" data-cam="garbage"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> 撮影</button>
+        <button class="pcard-lib" data-pickitem="garbage" style="pointer-events: none; opacity: 0.45;"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
+      </div>
+      <div class="pshots">
+          <button class="pshot-add" data-pickitem="garbage" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>1枚目</span><span class="pshot-tap">タップ</span></button><button class="pshot-add" data-pickitem="garbage" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>2枚目</span><span class="pshot-tap">タップ</span></button>
+        </div>
+    </div><div class="pcard" data-drop="item|bike" data-pickitem="bike" style="border-color: rgb(110, 231, 183); background: rgb(236, 253, 245); pointer-events: none; opacity: 0.45;">
+      <div class="pcard-badge" style="background:#10b981"><svg class="" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> 未登録</div>
+      <div class="pcard-h">
+        <span class="pcard-l" style="color:#047857">放置自転車</span>
+        <button class="item-x" data-delitem="bike" title="この項目を削除" aria-label="項目を削除"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg></button>
+      </div>
+      <div class="pcard-msg" style="color:#047857">清掃後の写真を2枚登録</div>
+      <div class="pcard-btns">
+        <button class="pcard-cam" data-cam="bike"><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg> 撮影</button>
+        <button class="pcard-lib" data-pickitem="bike" style="pointer-events: none; opacity: 0.45;"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="18" height="18" x="3" y="3" rx="2"></rect><circle cx="9" cy="9" r="2"></circle><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path></svg> 写真</button>
+      </div>
+      <div class="pshots">
+          <button class="pshot-add" data-pickitem="bike" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>1枚目</span><span class="pshot-tap">タップ</span></button><button class="pshot-add" data-pickitem="bike" style="pointer-events: none; opacity: 0.45;">
+                 <svg class="" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path><circle cx="12" cy="13" r="3"></circle></svg><span>2枚目</span><span class="pshot-tap">タップ</span></button>
+        </div>
+    </div></div>
+          <button class="btn btn-outline btn-sm" id="item-add" style="margin-top:.5rem"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M12 5v14"></path></svg> 項目を追加</button>
+        </div>
+        <div class="twocol">
+          <div class="field">
+            <label class="biglabel">要対応（清掃以外で気づいたこと）</label>
+            <div class="ng-guide">
+              <div class="ng-guide-h"><svg class="" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> こんなことがあったら登録します</div>
+              <div class="ng-guide-def">
+                <b>その日のうちに片付けられないもの</b>（後日の対応が必要）を登録。<br>
+                その場で対応が完結するなら、登録は<b>不要</b>です。
+              </div>
+              <div class="ng-guide-list">
+                <span>放置物</span><span>迷惑駐車</span>
+                <span>外壁・マス蓋・雨樋・管理看板の破損</span>
+                <span>設備・アスファルト・階段の破損や重度の汚損</span>
+                <span>ゴミの不法投棄・分別違反</span><span>大量の草抜き</span>
+                <span>植栽の剪定・伐採</span><span>用水路の掃除</span>
+              </div>
+              <div class="ng-guide-note strong"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg> <b>登録したら終わりではありません。期限までに対応して「解決済み」にすること。</b></div>
+              <div class="ng-guide-x"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"></path></svg> 糞尿・嘔吐物は写真を撮らなくてよい（その場で片付けるだけ）</div>
+            </div>
+            <div id="ngentry">
+      <button class="ngstart" id="ng-start"><svg class="" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"></path><path d="M12 9v4M12 17h.01"></path></svg>要対応を追加する
+        <span>破損・迷惑駐車など、後日の対応が必要なこと</span></button></div>
+          </div>
+          <div class="field" style="display:none">
+            <label>作業場所の記録</label>
+            <div class="geobox geoempty"><svg class="" width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"></path><circle cx="12" cy="10" r="3"></circle></svg>位置はまだ記録されていません</div>
+          </div>
+        </div>
+        
+        <div class="field" aria-disabled="true" style="pointer-events: none; opacity: 0.4;">
+          <button class="donefolder-h " id="donefolder-toggle">
+            <span class="df-ico"><svg class="" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"></path></svg></span>
+            <span class="df-l">✅ 完了 3件</span>
+            <span class="df-chev "><svg class="" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m6 9 6 6 6-6"></path></svg></span>
+          </button>
+          
+        </div>
+        
+        
+        <div class="modal-f" aria-disabled="true" style="pointer-events: none; opacity: 0.4;">
+          <button class="btn btn-danger btn-sm" id="m-del"><svg class="" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path></svg> 予定から外す</button>
+          <div style="display:flex;gap:.6rem;align-items:center">
+            <span class="autosave-note"><svg class="" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.801 10A10 10 0 1 1 17 3.335"></path><path d="m9 11 3 3L22 4"></path></svg> 自動保存されます</span>
+            <button class="btn btn-default" id="m-cancel">OK</button>
+          </div>
+        </div>
+      </div>
+    </div></div></div>
 <div id="assign-host"></div>
 <div id="lightbox-host"></div>
 <div class="toast hide" id="toast" role="status" aria-live="polite"></div>
