@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ja" style="height: auto; overflow: visible;"><head>
+<html lang="ja" style="height: auto;"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
-<title>駐車場管理システム｜区画一覧</title>
+<title>駐車場管理システム｜オーナー一覧</title>
 <!-- つなぎ先を先に用意しておく（名前解決と接続の待ち時間を減らす） -->
 
 
@@ -7683,16 +7683,16 @@ tr.sub-row td{font-size:13px;}
 #oi-prev .oi-cancel{background:#f0f0f3;color:#3d3d42;}
 #oi-prev .oi-ok{background:#17171a;color:#fff;}
 @media (max-width:640px){#oi-prev .oi-sum{grid-template-columns:repeat(2,1fr);}
-  #oi-prev .oi-list{max-height:22vh;}}</style><style id="hs-style">.hs-sec{border:1px solid #e5e5e7;border-radius:12px;padding:14px 16px;margin-bottom:16px;background:#fff;}.hs-head{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:4px;}.hs-title{font-size:14px;font-weight:800;letter-spacing:.02em;}.hs-on{display:inline-block;margin-left:8px;padding:3px 10px;border-radius:100px;background:#c7362a;color:#fff;font-size:11.5px;font-weight:800;vertical-align:1px;}.hs-head-a{margin-left:auto;display:flex;gap:8px;}.hs-btn{border:1px solid #000;background:#000;color:#fff;font-size:12px;font-weight:700;padding:6px 12px;border-radius:8px;cursor:pointer;}.hs-btn.ghost{background:#fff;color:#000;}.hs-btn[disabled]{opacity:.35;cursor:default;}.hs-lead{font-size:11.5px;line-height:1.75;color:#666;margin:6px 0 10px;}.hs-term{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:0 0 12px;padding:9px 12px;border-radius:9px;background:#f6f6f8;}.hs-term label{font-size:11.5px;font-weight:700;color:#555;}.hs-term input{border:1px solid #d5d5d8;border-radius:7px;padding:6px 8px;font-size:12.5px;background:#fff;}.hs-cd{font-size:12px;color:#555;line-height:1.5;}.hs-cd b{font-size:13.5px;font-weight:800;color:#111;}.hs-cd span{margin-left:8px;font-size:11px;color:#999;}.hs-cd.near b{color:#c7362a;}.hs-cd.over b{color:#c7362a;}.hs-wrap{max-height:430px;overflow:auto;}.hs-hd,.hs-row{display:grid;gap:8px;align-items:center;grid-template-columns:92px 126px 112px 112px minmax(96px,1fr) 152px 66px 26px;}.hs-hd{font-size:11px;font-weight:700;color:#888;padding:0 2px 6px;position:sticky;top:0;background:#fff;z-index:1;}.hs-row{padding:5px 2px;border-top:1px solid #f0f0f2;}.hs-row.on{background:#fff5f4;}.hs-hd > div,.hs-row > div{min-width:0;}.hs-c-sign{border-left:1px solid #ececee;padding-left:12px;}.hs-hd .hs-c-sign{border-left:1px solid #ececee;}.hs-row input{width:100%;border:1px solid #d5d5d8;border-radius:7px;padding:7px 8px;font-size:12.5px;}.hs-row input:focus{outline:none;border-color:#000;}.hs-row input.ro{border-color:transparent;background:transparent;font-weight:700;}.hs-amt{font-size:13px;font-weight:800;padding:7px 8px;white-space:nowrap;}.hs-day{font-size:12px;font-weight:700;color:#666;padding:7px 4px;white-space:nowrap;}.hs-day b{font-size:14px;}.hs-day.on{color:#c7362a;}.hs-day .hs-sub{display:block;font-size:10.5px;font-weight:500;color:#999;}.hs-wari{font-size:10.5px;line-height:1.55;color:#666;margin-top:4px;padding:0 1px;overflow-wrap:anywhere;}.hs-wari .hs-wsub{display:block;color:#999;}.hs-now{font-size:10.5px;line-height:1.5;color:#c7362a;padding:0 8px;}.hs-now b{font-size:12px;font-weight:800;}.hs-wari b{font-size:12px;font-weight:800;color:#111;}.hs-wari.no{color:#999;}.hs-day.on .hs-sub{color:#c7362a;opacity:.8;}.hs-x{border:0;background:transparent;color:#c7362a;font-size:15px;cursor:pointer;padding:4px;}.hs-fin{border:1px solid #000;background:#fff;color:#000;font-size:11.5px;font-weight:700;padding:6px 6px;border-radius:7px;cursor:pointer;white-space:nowrap;}.hs-fin.go{background:#000;color:#fff;}.hs-fin[disabled]{opacity:.3;cursor:default;}.hs-none{font-size:12px;color:#999;padding:14px 2px;}.hs-warn{margin-top:10px;padding:10px 12px;border-radius:9px;background:#fff4e2;color:#7a4e0c;font-size:12px;line-height:1.7;font-weight:600;}.hs-warn.cut{background:#fcf0ee;color:#8e2a20;}#hs-hist{position:fixed;inset:0;z-index:100050;display:none;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.42);}#hs-hist.on{display:flex;}.hs-hcard{width:min(760px,100%);max-height:82vh;overflow:auto;background:#fff;border-radius:16px;padding:24px;}.hs-hcard h3{margin:0 0 4px;font-size:17px;font-weight:800;}.hs-hsub{font-size:12px;color:#888;margin-bottom:16px;}.hs-hrow{border-top:1px solid #eee;padding:12px 2px;display:grid;gap:6px;grid-template-columns:88px 1fr 120px;align-items:baseline;}.hs-hrow b{font-size:14px;font-weight:800;}.hs-hrow .hs-hd2{font-size:12px;color:#555;line-height:1.8;}.hs-hrow .hs-hy{font-size:14px;font-weight:800;text-align:right;white-space:nowrap;}.hs-hrow .hs-hy small{display:block;font-size:10.5px;font-weight:600;color:#999;}.hs-hclose{margin-top:20px;width:100%;border:0;background:#000;color:#fff;font-size:14px;font-weight:700;padding:12px;border-radius:10px;cursor:pointer;}.pv-hosho{display:inline-block;margin-right:7px;padding:2px 9px;border-radius:6px;background:#c7362a;color:#fff;font-size:11px;font-weight:800;vertical-align:1.5px;letter-spacing:.02em;}@media (max-width:900px){.hs-hd{display:none;}.hs-row{grid-template-columns:1fr 1fr;padding:12px 2px;}.hs-row .hs-c-amt,.hs-row .hs-c-day,.hs-row .hs-c-sign{grid-column:1 / -1;}.hs-c-sign{border-left:0;padding-left:0;}.hs-hrow{grid-template-columns:1fr;}.hs-hrow .hs-hy{text-align:left;}}</style></head>
-<body class="pv-anyopen" style="height: auto; overflow: visible; position: static;"><nav id="pv-side" aria-label="画面の切り替え"><div class="lg" title="トップへ">駐車場管理システム<span>サンプル管理株式会社</span></div><div class="grp">メイン</div><a href="#" data-k="pivot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-6 8 6v12"></path><path d="M9 21v-7h6v7"></path></svg>物件</a><a href="#" data-k="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>契約</a><a href="#" data-k="rent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>オーナーメール</a><div class="grp">分析</div><a href="#" data-a="rank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>客付業者ランキング</a></nav>
+  #oi-prev .oi-list{max-height:22vh;}}</style></head>
+<body class="tab-rent" style="overflow: visible; height: auto;"><nav id="pv-side" aria-label="画面の切り替え"><div class="lg" title="トップへ">駐車場管理システム<span>サンプル管理株式会社</span></div><div class="grp">メイン</div><a href="#" data-k="pivot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 21V9l8-6 8 6v12"></path><path d="M9 21v-7h6v7"></path></svg>物件</a><a href="#" data-k="kanban"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"></path><path d="M14 3v5h5"></path><path d="M9 13h6M9 17h4"></path></svg>契約</a><a href="#" data-k="rent"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>オーナーメール</a><div class="grp">分析</div><a href="#" data-a="rank"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"></path></svg>客付業者ランキング</a></nav>
  
 <!-- ===== 統合タブバー ===== -->
 <div class="app-tabs">
   <span class="app-pivot-logo" onclick="goToTop()" title="トップへ">PARK</span>
   <span id="sync-status" style="display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 5px 12px; border-radius: 999px; background: rgb(240, 240, 243); color: rgb(85, 85, 85); margin-left: 6px; white-space: nowrap;" title="クラウド同期の状態" data-state="ok">同期済み</span><span id="pv-stamp" style="margin-left: 10px; font-size: 12px; color: rgb(107, 114, 128); white-space: nowrap;"></span>
-  <button class="app-tab active" id="tab-pivot" onclick="switchApp('pivot')" style="height: auto; max-height: none; overflow-y: visible;">Property</button>
+  <button class="app-tab" id="tab-pivot" onclick="switchApp('pivot')" style="height: auto; max-height: none; overflow-y: visible;">Property</button>
   <button class="app-tab" id="tab-kanban" onclick="switchApp('kanban')" style="height: auto; max-height: none; overflow-y: visible;">Contract</button>
-  <button class="app-tab" id="tab-rent" onclick="switchApp('rent')" style="height: auto; max-height: none; overflow-y: visible;">Owner Mail</button>
+  <button class="app-tab active" id="tab-rent" onclick="switchApp('rent')" style="height: auto; max-height: none; overflow-y: visible;">Owner Mail</button>
   <!-- 契約管理のツールバー(タブバー内・契約管理タブ表示時のみ) -->
   <div class="kb-toolbar" id="kb-toolbar">
     <input type="text" id="kb-search" class="search-input" placeholder="物件名・契約者で検索" oninput="KB.renderAll()" value="" style="">
@@ -7757,147 +7757,14 @@ tr.sub-row td{font-size:13px;}
  
   <!-- ツールバー -->
   <div class="toolbar">
-    <input type="search" class="search" placeholder="物件名・住所で検索" id="search" oninput="renderList()" style="" value="">
+    <input type="search" class="search" placeholder="物件名・住所で検索" id="search" oninput="renderList()" value="" style="">
     <button class="btn" onclick="openModal()">+ 物件を追加</button>
   </div>
  
   <!-- 物件リスト -->
   <div class="bld-list" id="list"><div class="pref-grid"><div class="pref-folder" data-pref="東京都"><div class="pref-header" onclick="togglePref('東京都')"><span class="pref-arrow">▼</span><span>AREA A</span><span class="pref-count">4件</span></div><div class="pref-body"><div class="bld-card" onclick="openModal('b6')"><div class="bld-card-info"><div class="bld-name">ヴィラ橘</div><div class="bld-meta">東京都さくら市西町五丁目5番5号 / 全9区画 (使用中 7)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b6')" title="この物件を削除">🗑</button></div><div class="bld-card" onclick="openModal('b1')"><div class="bld-card-info"><div class="bld-name">グリーンハイツ</div><div class="bld-meta">東京都さくら市中央一丁目1番1号 / 全12区画 (使用中 10)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b1')" title="この物件を削除">🗑</button></div><div class="bld-card" onclick="openModal('b3')"><div class="bld-card-info"><div class="bld-name"><span class="pv-hosho">30％保証中</span>サンライズ第二</div><div class="bld-meta">東京都さくら市緑町三丁目3番3号 / 全15区画 (使用中 12)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b3')" title="この物件を削除">🗑</button></div><div class="bld-card" onclick="openModal('b2')"><div class="bld-card-info"><div class="bld-name">パークサイド青葉</div><div class="bld-meta">東京都さくら市本町二丁目2番2号 / 全8区画 (使用中 6)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b2')" title="この物件を削除">🗑</button></div></div></div><div class="pref-folder" data-pref="神奈川県"><div class="pref-header" onclick="togglePref('神奈川県')"><span class="pref-arrow">▼</span><span>AREA B</span><span class="pref-count">2件</span></div><div class="pref-body"><div class="bld-card" onclick="openModal('b5')"><div class="bld-card-info"><div class="bld-name">コート緑が丘</div><div class="bld-meta">神奈川県みなと市若葉四丁目4番4号 / 全10区画 (使用中 9)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b5')" title="この物件を削除">🗑</button></div><div class="bld-card" onclick="openModal('b4')"><div class="bld-card-info"><div class="bld-name">メゾン白鳥</div><div class="bld-meta">神奈川県みなと市栄町一丁目1番1号 / 全6区画 (使用中 4)</div></div><button class="bld-card-del" onclick="event.stopPropagation();deleteBldFromList('b4')" title="この物件を削除">🗑</button></div></div></div></div></div>
  
-<div class="modal-overlay active" id="modal" style="position: static; display: block; background: transparent; padding: 24px 0px 0px; height: auto; max-height: none; overflow: visible;">
-  <div class="modal" style="max-height: none; height: auto; width: 1424px; max-width: none;">
-    <div class="modal-header">
-      <span style="display:inline-flex;align-items:center;gap:14px;">
-        <span class="modal-home-logo" onclick="goToTop()" title="トップページへ戻る" style="font-weight:800;font-size:20px;letter-spacing:1px;cursor:pointer;user-select:none;padding:4px 8px;border-radius:8px;transition:background 0.12s,transform 0.12s;">PARK</span>
-        <span class="modal-title" id="modal-title" style="display: inline-block;">サンライズ第二</span>
-        <button id="undo-btn" onclick="undoLastChange()" title="一つ前に戻る" disabled="" style="width: 46px; height: 42px; border: 1px solid rgb(226, 226, 226); border-radius: 9px; background: rgb(250, 250, 250); display: inline-flex; align-items: center; justify-content: center; padding: 0px; color: rgb(200, 200, 200); cursor: default;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="20" y1="12" x2="5" y2="12"></line><polyline points="11 18 5 12 11 6"></polyline></svg>
-        </button>
-        <button id="redo-btn" onclick="redoLastChange()" title="一つ先に進む" disabled="" style="width: 46px; height: 42px; border: 1px solid rgb(226, 226, 226); border-radius: 9px; background: rgb(250, 250, 250); display: inline-flex; align-items: center; justify-content: center; padding: 0px; color: rgb(200, 200, 200); cursor: default;">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"></line><polyline points="13 6 19 12 13 18"></polyline></svg>
-        </button>
-        <button class="modal-tab-btn" onclick="closeModal();switchApp('pivot')">Property</button>
-        <button class="modal-tab-btn" onclick="closeModal();switchApp('kanban')">Contract</button>
-        <button class="modal-tab-btn" onclick="closeModal();switchApp('rent')">Owner Mail</button>
-      </span>
-      <button class="modal-close" onclick="closeModal()">×</button>
-    </div>
-    <div class="modal-body" style="max-height: none; overflow: visible; height: auto;">
-      <!-- 物件基本情報 -->
-      <div class="form-row">
-        <div class="form-field" style="flex:2;">
-          <label>物件名 *</label>
-          <input type="text" id="f-name" placeholder="例: グリーンハイツ 駐車場" style="" value="サンライズ第二">
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-field" style="flex:1;max-width:140px;">
-          <label>郵便番号</label>
-          <input type="text" id="f-zip" placeholder="例: 100-0001" onchange="lookupZipForField('f-zip','f-addr')" oninput="onZipInput('f-zip','f-addr')" style="" value="">
-        </div>
-        <div class="form-field" style="flex:3;">
-          <label>住所(物件メイン)</label>
-          <input type="text" id="f-addr" placeholder="例: 東京都さくら市中央1-2-3" oninput="onMainTouChange();markAddrManual('f-addr')" data-autofilled="" style="" value="東京都さくら市緑町三丁目3番3号">
-        </div>
-        <div class="form-field" style="max-width:120px;">
-          <label>棟ラベル(任意)</label>
-          <input type="text" id="f-main-tou" placeholder="例: A" oninput="onMainTouChange()" title="この住所に棟名を付ける場合に入力(例: A、北棟)" style="" value="">
-        </div>
-        <div class="form-field" style="max-width:120px;">
-          <label>区画数</label>
-          <input type="number" id="f-count" min="0" max="200" value="15" onchange="regenSpots()" style="">
-        </div>
-      </div>
- 　　　<!-- 棟マスター(同じ物件に別棟がある場合) -->
-      <div id="tou-addr-section" class="tou-master" style="margin-bottom: 16px; display: none;">
-        <div class="tou-master-head">
-          <div class="tou-master-title">棟マスター</div>
-          <button type="button" class="tou-master-add" onclick="addTouAddr()">＋ 棟を追加</button>
-        </div>
-        <div class="tou-master-lead">
-          同じ物件に <b>別棟（A棟・B棟・北棟 など）がある場合は、必ずここに登録してください。</b><br>
-          登録すると、区画一覧の「棟」欄で棟を選べるようになり、棟ごとの住所も正しく印刷されます。<br>
-          メイン住所に棟ラベル（例: A、北棟）を付けると、その棟の区画にメイン住所が紐づきます。
-        </div>
-        <div id="tou-addr-list"><div style="font-size:11px;color:#888;padding:4px 0;">(棟別住所は未登録。物件のメイン住所が全区画に適用されます)</div></div>
-      </div><div id="hs-section" class="hs-sec"><div class="hs-head"><div class="hs-title">30％保証賃料<span id="hs-on" class="hs-on" style="display: inline-block;">保証中 1 部屋</span></div><div class="hs-head-a"><button type="button" class="hs-btn" id="hs-add">＋ 部屋を追加</button><button type="button" class="hs-btn ghost" id="hs-hist-b">履歴</button></div></div><div class="hs-term"><label for="hs-from">管理開始日</label><input type="date" id="hs-from" style="" value="2025-08-10"><div class="hs-cd" id="hs-cd">保証契約の満了まで <b>あと 10か月 26日</b><span>2027年8月9日 まで（2年）</span></div></div><div class="hs-lead">解約日から起算して <b>90日目</b>までが免責。<b>91日目</b>から、<b>募集賃料</b>の <b>30％</b> を保証します。（7月1日に解約なら、9月29日までが免責、9月30日から保証です）<br>募集賃料は満室想定の月額賃料で、<b>共益費・駐車場使用料は含みません</b>。<br>オーナー様へは<b>毎月15日に当月ぶん</b>を送金します。保証がその月のとちゅうで始まる／終わるときは、<b>その月の実日数で日割り</b>します。<br>契約が決まった日を入れると、月ごとの内わけが出ます。「完了」を押すと、履歴に残します。</div><div class="hs-wrap"><div class="hs-hd"><div>部屋番号</div><div>解約日</div><div>募集賃料</div><div>保証賃料（30％）</div><div>空室の日数</div><div class="hs-c-sign">契約が決まった日</div><div></div><div></div></div><div id="hs-rows"><div class="hs-row on" data-i="0"><div><input type="text" class="hs-f" data-k="room" value="103" placeholder="101" style=""></div><div><input type="date" class="hs-f" data-k="out" value="2026-06-06" style=""></div><div><input type="number" class="hs-f" data-k="rent" value="12000" min="0" step="1000" placeholder="65000" style=""></div><div class="hs-c-amt"><div class="hs-amt">¥3,600</div><div class="hs-now"></div></div><div class="hs-c-day"><div class="hs-day on"><b>100</b> 日目<span class="hs-sub">9月5日 から保証中</span></div></div><div class="hs-c-sign"><input type="date" class="hs-f" data-k="sign" value="" style=""><div class="hs-wari"></div></div><div><button type="button" class="hs-fin" data-a="fin" disabled="" title="契約日を入れると押せます">完了</button></div><div><button type="button" class="hs-x" data-a="del" title="この行を消す">✕</button></div></div><div class="hs-row" data-i="1"><div><input type="text" class="hs-f" data-k="room" value="205" placeholder="101" style=""></div><div><input type="date" class="hs-f" data-k="out" value="2026-08-15" style=""></div><div><input type="number" class="hs-f" data-k="rent" value="10000" min="0" step="1000" placeholder="65000" style=""></div><div class="hs-c-amt"><div class="hs-amt">¥3,000</div><div class="hs-now"></div></div><div class="hs-c-day"><div class="hs-day"><b>30</b> 日目<span class="hs-sub">あと 61 日（11月14日 から）</span></div></div><div class="hs-c-sign"><input type="date" class="hs-f" data-k="sign" value="" style=""><div class="hs-wari"></div></div><div><button type="button" class="hs-fin" data-a="fin" disabled="" title="契約日を入れると押せます">完了</button></div><div><button type="button" class="hs-x" data-a="del" title="この行を消す">✕</button></div></div></div></div><div id="hs-warn"><div class="hs-warn cut">保証契約の満了は <b>2027年8月9日</b> です。それより後のぶんは、金額に入れていません　103　／　205</div></div></div>
-
-      <!-- 配置図 + 区画 左右並びレイアウト -->
-      <div class="spot-layout-row">
-        <!-- 左側: 配置図 -->
-        <div class="spot-layout-left-img" style="display: none;">
-          <div class="img-block img-block-layout">
-            <div class="img-block-title">配置図(JPEGのみ・最大2件)</div>
-            <div class="img-block-content" id="layout-area"><label class="img-upload-btn" title="配置図をアップロード(画像またはPDF・クリック/ドラッグ&amp;ドロップ・最大2件)"><span>📐</span><span>+ 配置図を追加</span><span style="font-size:10px;color:#888;">画像/PDF・クリック/ドラッグ&amp;ドロップ</span><input type="file" accept="image/*" style="display: none;" onchange="onLayoutSelected(event)" value=""></label></div>
-          </div>
-        </div>
- 
-        <!-- 右側: 区画テーブル -->
-        <div class="spots-section spot-layout-right-spots">
-          <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
-            <h3 style="margin:0;">区画一覧</h3>
-            <div style="display:flex;align-items:center;gap:6px;font-size:12px;">
-              <input type="number" id="add-spot-count" min="1" max="200" value="1" style="width: 60px; border: 1px solid rgb(0, 0, 0); padding: 6px 8px; font-size: 12px; text-align: right;" title="追加する区画数">
-              <button type="button" class="btn btn-sm" onclick="addSpots()">+ 区画追加</button>
-            </div>
-            <button type="button" class="btn btn-outline btn-sm" onclick="toggleBulkSet()" id="bulk-toggle-btn" style="font-size:11px;padding:4px 10px;">
-              <span id="bulk-toggle-icon">▼</span> 一括設定
-            </button>
-          </div>
- 
-          <!-- 一括設定(初期は閉じている) -->
-          <div class="bulk-set" id="bulk-set-container" style="display:none;">
-            <div class="bulk-set-header">
-              <span class="bulk-set-title">一括設定 <span style="font-weight:400;color:#666;font-size:11px;">(範囲を指定して項目を適用)</span></span>
-              <div style="display:flex;gap:6px;">
-                <button type="button" class="btn btn-outline btn-sm" onclick="addBulkRow()" style="font-size:11px;padding:4px 10px;">+ 入力行を追加</button>
-                <button type="button" class="btn btn-sm" onclick="applyAllBulkRows()" style="font-size:11px;padding:4px 12px;" title="全ての行を一気に適用">▶▶ 全行を一括適用</button>
-              </div>
-            </div>
-            <div id="bulk-rows-container"><div class="bulk-row" data-bulk-row="1"><div class="bulk-field-inline"><label>範囲</label><span style="font-size:11px;">P</span><input type="number" data-bf="from" min="1" max="200" value="1" style=""><span style="font-size:11px;">〜 P</span><input type="number" data-bf="to" min="1" max="200" value="1" style=""></div><div class="bulk-field-inline"><label>種別</label><select data-bf="type" onchange="onBulkTypeChangeRow(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></div><div class="bulk-field-inline"><label>月額</label><input type="text" data-bf="price" value="3,300" inputmode="numeric" oninput="onPriceInput(this)" style="text-align: right;"></div><div class="bulk-field-inline"><label>状況</label><select data-bf="status"><option value="空" selected="">空き</option><option value="借">使用中</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></div><div class="bulk-row-actions"><button type="button" class="btn-mini" onclick="applyBulkRow(1)" title="この行の設定を範囲の区画に適用">▶ 適用</button><button type="button" class="bulk-row-remove" onclick="removeBulkRow(1)" title="この行を削除">×</button></div></div></div>
-          </div>
- 
-          <!-- 上部のカスタム横スライダー(stickyで常時上端表示・テーブルと同期) -->
-          <div class="spots-table-sticky-top">
-            <div class="spots-table-slider" id="spots-table-slider" data-scroll-sync-bound="1" style="opacity: 1;">
-              <div class="spots-table-slider-thumb" id="spots-table-slider-thumb" style="width: 1392px; left: 0px;"></div>
-            </div>
-          </div>
-          <div class="spots-table-wrap" id="spots-table-wrap" style="overflow-x:scroll;overflow-y:hidden;max-width:100%;width:100%;-webkit-overflow-scrolling:touch;">
-            <table class="spots-table" id="spots-table">
-              <thead>
-                <tr>
-                  <th style="width:80px;">区画番号</th>
-                  <th style="width:120px;">種別</th>
-                  <th style="width:95px;">棟</th>
-                  <th style="width:70px;">号室</th>
-                  <th style="width:180px;">使用者</th>
-                  <th style="width:95px;">月額(円)</th>
-                  <th style="width:140px;">状況</th>
-                  <th style="min-width:220px;">備考</th>
-                  <th style="width:290px;text-align:center;">書類</th>
-                </tr>
-              </thead>
-              <tbody id="spots-tbody"><tr class="st-借 spot-row" data-idx="0" data-no="01"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,0)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,0)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(0)" title="この区画を削除">×</button><span class="spot-no-label">P01</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="1" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="101" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="伊藤 さくら" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="11,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(0)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(0)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(0)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="1" data-no="02"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,1)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,1)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(1)" title="この区画を削除">×</button><span class="spot-no-label">P02</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="2" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="108" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="小林 翔" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="12,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(1)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(1)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(1)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-解 spot-row" data-idx="2" data-no="03"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,2)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,2)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(2)" title="この区画を削除">×</button><span class="spot-no-label">P03</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="3" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="106" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="山本 桃子" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="13,500" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借">使用中</option><option value="空">空き</option><option value="解" selected="">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(2)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(2)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(2)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-解 sub-row" data-sub-of="2" data-sub-type="end"><td colspan="2" style="text-align:right;font-size:11px;color:#666;padding-right:10px;">└ 解約日:</td><td colspan="6"><input type="date" data-field="end_date" value="2026-06-06" style="width: auto;"></td><td></td></tr><tr class="st-解 sub-row" data-sub-of="2" data-sub-type="add-res-btn"><td colspan="9" style="text-align:center;padding:6px;background:#fef2f2;"><button type="button" class="btn btn-outline btn-sm" onclick="addReservationToSpot(2)" style="font-size:11px;padding:4px 12px;">+ 予約者を追加</button></td></tr><tr class="st-借 spot-row" data-idx="3" data-no="04"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,3)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,3)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(3)" title="この区画を削除">×</button><span class="spot-no-label">P04</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="4" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="104" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="木村 詩織" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="15,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(3)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(3)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(3)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="4" data-no="05"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,4)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,4)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(4)" title="この区画を削除">×</button><span class="spot-no-label">P05</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="5" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="102" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="鈴木 一郎" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="8,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(4)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(4)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(4)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="5" data-no="06"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,5)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,5)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(5)" title="この区画を削除">×</button><span class="spot-no-label">P06</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="6" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="109" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="伊藤 さくら" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="9,500" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(5)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(5)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(5)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="6" data-no="07"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,6)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,6)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(6)" title="この区画を削除">×</button><span class="spot-no-label">P07</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="7" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="107" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="小林 翔" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="10,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(6)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(6)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(6)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="7" data-no="08"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,7)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,7)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(7)" title="この区画を削除">×</button><span class="spot-no-label">P08</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="8" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="105" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="山本 桃子" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="11,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(7)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(7)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(7)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="8" data-no="09"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,8)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,8)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(8)" title="この区画を削除">×</button><span class="spot-no-label">P09</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="9" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="103" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="木村 詩織" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="12,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(8)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(8)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(8)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="9" data-no="10"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,9)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,9)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(9)" title="この区画を削除">×</button><span class="spot-no-label">P10</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="10" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="101" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="鈴木 一郎" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="13,500" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(9)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(9)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(9)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="10" data-no="11"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,10)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,10)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(10)" title="この区画を削除">×</button><span class="spot-no-label">P11</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="11" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="108" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="伊藤 さくら" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="15,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(10)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(10)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(10)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="11" data-no="12"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,11)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,11)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(11)" title="この区画を削除">×</button><span class="spot-no-label">P12</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="12" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="106" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="小林 翔" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="8,000" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(11)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(11)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(11)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-借 spot-row" data-idx="12" data-no="13"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,12)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,12)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(12)" title="この区画を削除">×</button><span class="spot-no-label">P13</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="13" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="104" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="山本 桃子" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="9,500" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借" selected="">使用中</option><option value="空">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(12)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(12)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(12)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-空 spot-row" data-idx="13" data-no="14"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,13)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,13)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(13)" title="この区画を削除">×</button><span class="spot-no-label">P14</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="14" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並">並列</option><option value="縦">縦列</option><option value="軽" selected="">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借">使用中</option><option value="空" selected="">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(13)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(13)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(13)" title="保管場所使用承諾書を発行">承諾書</button></td></tr><tr class="st-空 spot-row" data-idx="14" data-no="15"><td class="spot-no-cell" draggable="true" ondragstart="onSpotDragStart(event,14)" ondragend="onSpotDragEnd(event)" ondragover="onSpotDragOver(event)" ondragleave="onSpotDragLeave(event)" ondrop="onSpotDrop(event,14)" title="ドラッグで並び替え"><button type="button" class="spot-remove-btn" onclick="removeSpot(14)" title="この区画を削除">×</button><span class="spot-no-label">P15</span><span class="spot-drag-icon" title="ドラッグで並び替え">⋮⋮</span><input type="hidden" data-field="no" value="15" style=""></td><td><select data-field="type" onchange="onTypeChange(this)"><option value="並" selected="">並列</option><option value="縦">縦列</option><option value="軽">軽専用</option><option value="機">機械式</option></select></td><td><input type="text" data-field="tou" value="" placeholder="棟" style=""></td><td><input type="text" data-field="room" value="" placeholder="号室" style=""></td><td><input type="text" data-field="user" value="" placeholder="使用者名" oninput="onUserInput(this)" style=""></td><td><input type="text" data-field="price" value="" placeholder="0" oninput="onPriceInput(this)" inputmode="numeric" style="text-align: right;"></td><td><select data-field="status" onchange="onStatusChange(this)"><option value="借">使用中</option><option value="空" selected="">空き</option><option value="解">解約中</option><option value="予">予約中</option><option value="退">退去済</option><option value="募停">募集停止</option><option value="申">申込中</option></select></td><td><input type="text" data-field="note" value="" placeholder="備考" style=""></td><td style="text-align:center;padding:4px;white-space:nowrap;"><button type="button" class="btn-doc" onclick="openSeikyuModal(14)" title="請求書を発行" style="margin-right:4px;">請求書</button><button type="button" class="btn-doc" onclick="openKeiyakuModal(14)" title="駐車場賃貸借契約書を発行" style="margin-right:4px;">契約書</button><button type="button" class="btn-doc" onclick="openShoudakuModal(14)" title="保管場所使用承諾書を発行">承諾書</button></td></tr></tbody>
-            </table>
-          </div>
-        </div>
-      </div>
- 
-      <!-- 現地写真(下に配置) -->
-      <div class="img-section" style="display: none;">
-        <div class="img-block" style="display: none;">
-          <div class="img-block-title">現地写真(最大5枚)</div>
-          <div class="img-block-content" id="photos-area"><label class="img-upload-btn" title="現地写真をアップロード(クリック または ドラッグ&amp;ドロップ・最大5枚)"><span>📷</span><span>+ 現地写真 (残5)</span><span style="font-size:10px;color:#888;">クリック / ドラッグ&amp;ドロップ</span><input type="file" accept="image/*" multiple="" style="display: none;" onchange="onPhotoSelected(event)" value=""></label></div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-footer">
-      <button class="btn btn-outline btn-sm" onclick="cancelModal()">キャンセル</button>
-      <button class="btn btn-sm" id="save-bld-btn" onclick="saveBld()" data-saving-img="">保存</button>
-    </div>
-  </div>
-</div></div>
+</div>
  
 </div><!-- /#pivot-view -->
  
@@ -8033,28 +7900,28 @@ tr.sub-row td{font-size:13px;}
   </div>
  
   <div class="tabs">
-    <button class="tab active" data-v="send" onclick="RENT.showView('send')">明細取込・送信</button>
-    <button class="tab" data-v="owners" onclick="RENT.showView('owners')">オーナー一覧</button>
+    <button class="tab" data-v="send" onclick="RENT.showView('send')">明細取込・送信</button>
+    <button class="tab active" data-v="owners" onclick="RENT.showView('owners')">オーナー一覧</button>
     <button class="tab" data-v="tmpl" onclick="RENT.showView('tmpl')">定型文</button>
     <button class="tab" data-v="history" onclick="RENT.showView('history')">送信履歴</button>
   </div>
  
   <!-- ===== 送信ビュー ===== -->
-  <div class="view active" id="view-send">
+  <div class="view" id="view-send">
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
-      <label class="drop" id="drop" style="flex:1;min-width:280px;">
+      <label class="drop" id="drop" style="flex: 1 1 0%; min-width: 280px; display: none;">
         <div class="ico">📄</div>
         <div class="big">① 月額明細をドロップ / クリック</div>
         <div class="sub">毎月の収支報告書PDF（複数ページ可）</div>
         <input type="file" id="pdfInput" accept="application/pdf" value="" style="">
       </label>
-      <label class="drop" id="dropYear" style="flex:1;min-width:280px;border-color:#ffb340;">
+      <label class="drop" id="dropYear" style="flex: 1 1 0%; min-width: 280px; border-color: rgb(255, 179, 64); display: none;">
         <div class="ico">📊</div>
         <div class="big">② 年間収支表をドロップ / クリック（年1回・任意）</div>
         <div class="sub">年間収支一覧表PDF（複数ページ可）</div>
         <input type="file" id="pdfInputYear" accept="application/pdf" value="" style="">
       </label>
-      <label class="drop" id="dropPay" style="flex:1;min-width:280px;border-color:#7fb3f5;">
+      <label class="drop" id="dropPay" style="flex: 1 1 0%; min-width: 280px; border-color: rgb(127, 179, 245); display: none;">
         <div class="ico">💳</div>
         <div class="big">③ 振込明細をドロップ / クリック（管理会社宛のみ添付）</div>
         <div class="sub">振込明細PDF（info@sample-kanri.example.jp にだけ添付されます）</div>
@@ -8085,7 +7952,7 @@ tr.sub-row td{font-size:13px;}
       <span id="rent-action-status" style="font-size:.8rem;font-weight:700;color:var(--rt-accent-d);width:100%;"></span>
     </div>
     <div id="rent-exclude-note" style="display:none;font-size:.8rem;color:var(--rt-muted);background:#f3f0ee;border-radius:8px;padding:8px 12px;margin-bottom:10px;"></div>
-    <div class="preview" id="preview"><div class="empty">明細PDFを取り込むと、オーナーごとの送信内容がここに表示されます。</div></div>
+    <div class="preview" id="preview"><div class="empty">まず上の「明細PDFをここにドロップ」から収支報告書PDFを取り込んでください。<br>取り込むと、オーナーごとに「宛先・件名・本文（空き予定の一言入り）・添付される明細PDF」がここに一覧表示され、送信前に確認できます。</div></div>
     <div id="rent-excluded-section" style="display:none;margin-top:18px;border:2px dashed #c8a96b;border-radius:10px;padding:12px 14px;background:#fdfaf3;">
       <div style="font-weight:800;color:#8a6d2f;font-size:.92rem;margin-bottom:4px;">メール送信しないオーナー（別管理）</div>
       <div style="font-size:.78rem;color:var(--rt-muted);margin-bottom:10px;">「除外」に指定したオーナーです。メールは送らず、明細PDFを共用Drive（社員全員が閲覧・蓄積可）に保存します。</div>
@@ -8100,7 +7967,7 @@ tr.sub-row td{font-size:13px;}
   </div>
  
   <!-- ===== オーナー一覧ビュー ===== -->
-  <div class="view" id="view-owners">
+  <div class="view active" id="view-owners">
     <div class="bar">
       <h2>オーナー一覧</h2>
       <span class="spacer"></span>
@@ -8108,7 +7975,7 @@ tr.sub-row td{font-size:13px;}
       <button class="btn btn-sm btn-warn" onclick="RENT.resetOwners()">初期データに戻す</button>
       <span id="ownerSaveStat" style="font-size:.76rem;font-weight:700;color:var(--rt-accent);opacity:0;transition:opacity .3s;margin-left:6px;">✅ 自動保存しました</span>
     </div>
-    <div id="oiDrop" style="border:3px dashed #b9b9c2;border-radius:16px;padding:42px 24px;text-align:center;cursor:pointer;margin-bottom:18px;background:#fafafa;transition:background .2s,border-color .2s;" onclick="document.getElementById('oiFile').click();">
+    <div id="oiDrop" style="border: 3px dashed rgb(185, 185, 194); border-radius: 16px; padding: 42px 24px; text-align: center; cursor: pointer; margin-bottom: 18px; background: rgb(250, 250, 250); transition: background 0.2s, border-color 0.2s; display: none;" onclick="document.getElementById('oiFile').click();">
       <div style="font-size:2.4rem;line-height:1;margin-bottom:10px;">📗</div>
       <div style="font-weight:800;font-size:1.15rem;">家主基本情報一覧（Excel）をドロップ / クリック</div>
       <div style="font-size:.86rem;color:var(--rt-muted);margin-top:8px;line-height:1.7;">
@@ -8120,10 +7987,11 @@ tr.sub-row td{font-size:13px;}
     </div>
     <div style="display:flex;gap:10px;align-items:center;margin-bottom:10px;">
       <input id="ownerSearch" type="search" placeholder="オーナー名・物件名・メール・住所・備考で検索" oninput="RENT.filterOwners(this.value)" style="flex: 1 1 0%; padding: 11px 14px; font-size: 0.92rem; border: 1px solid rgb(220, 220, 224); border-radius: 10px; font-family: inherit;" value="">
-      <span id="ownerCount" style="font-size:.8rem;font-weight:800;color:var(--rt-muted);white-space:nowrap;"></span>
+      <span id="ownerCount" style="font-size:.8rem;font-weight:800;color:var(--rt-muted);white-space:nowrap;">6 件</span>
     </div>
     <div style="overflow-x:auto;">
-      <table class="owners" id="ownerTable"></table>
+      <div id="ownerCards"><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(0)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(0)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">株式会社さくら地所</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">2</span><span class="unit">棟</span></span></div></button></div><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(1)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(1)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">みなと開発株式会社</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">2</span><span class="unit">棟</span></span></div></button></div><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(2)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(2)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">山田 太郎</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">1</span><span class="unit">棟</span></span></div></button></div><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(3)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(3)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">佐藤 花子</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">1</span><span class="unit">棟</span></span></div></button></div><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(4)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(4)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">あおば不動産株式会社</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">2</span><span class="unit">棟</span></span></div></button></div><div class="ow-row"><button type="button" class="ow-trash" onclick="RENT.delOwner(5)" aria-label="削除" style="display: none;"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14"></path><path d="M10 11v6M14 11v6"></path></svg></button><button type="button" class="ow-card ow-r0" onclick="RENT.openOwnerSheet(5)"><div class="ow-head"></div><div class="ow-mid"><div class="ow-atena">鈴木 一郎</div></div><div class="ow-foot"><span class="ow-tou"><span class="num">1</span><span class="unit">棟</span></span></div></button></div></div><div class="ow-sheet" id="ow-sheet" style="position: static; display: block; background: rgb(255, 255, 255); height: auto; max-height: none; overflow: visible; margin-top: 20px; border-radius: 16px; padding-bottom: 8px; width: 1144px;"><div class="ow-sheet-head"><button type="button" class="ow-sheet-close" onclick="RENT.closeOwnerSheet()" title="閉じる">×</button></div><div class="ow-sheet-body" style="max-height: none; overflow: visible; height: auto;"><div class="ow-sheet-inner"><aside class="ow-aside" style="min-height: 1634px;"><h2 class="ow-h2">オーナー情報</h2><div class="ow-aside-nm">株式会社さくら地所</div><div class="ow-aside-tou"><span class="n">2</span><span class="u">棟</span></div><p class="ow-aside-p">右の項目を直すと、その場で保存されます。<br>「サンライズ第二 A棟」「B棟」のような同じ建物は 1棟 として数えます。</p><p class="ow-aside-p ow-aside-props">登録物件 2件<br>グリーンハイツ<br>パークサイド青葉</p></aside><div class="ow-form"><label class="ow-f"><span class="ow-lb">オーナー名<i class="ow-req">必須</i></span><input value="株式会社さくら地所" oninput="RENT.editOwner(0,'name',this.value)" placeholder="株式会社〇〇" style=""></label><label class="ow-f"><span class="ow-lb">宛名<i class="ow-req">必須</i></span><input value="株式会社さくら地所 御中" oninput="RENT.editOwner(0,'atena',this.value)" placeholder="株式会社〇〇 御中／山田 太郎 様" style=""></label><label class="ow-f"><span class="ow-lb">メールアドレス</span><input value="owner1@example.com" oninput="RENT.editOwner(0,'email',this.value)" placeholder="owner@example.com" style=""></label><label class="ow-f"><span class="ow-lb">物件名<i class="ow-any">複数は改行で</i></span><textarea rows="4" oninput="RENT.editProps(0,this.value)" placeholder="グロリオサ" style="">グリーンハイツ
+パークサイド青葉</textarea></label><label class="ow-f"><span class="ow-lb">郵便番号</span><input value="100-0001" oninput="RENT.editOwner(0,'zip',this.value)" placeholder="100-0001" style=""></label><label class="ow-f"><span class="ow-lb">住所</span><input value="東京都さくら市中央一丁目1番1号" oninput="RENT.editOwner(0,'addr',this.value)" placeholder="東京都さくら市…" style=""></label><label class="ow-f"><span class="ow-lb">電話番号</span><input value="000-0000-0000" oninput="RENT.editOwner(0,'tel',this.value)" placeholder="000-0000-0000" style=""></label><label class="ow-f"><span class="ow-lb">FAX</span><input value="" oninput="RENT.editOwner(0,'fax',this.value)" placeholder="000-0000-0000" style=""></label><label class="ow-f"><span class="ow-lb">課税区分</span><select onchange="RENT.editOwner(0,'taxKbn',this.value)"><option value="">選択してください</option><option value="課税事業者" selected="">課税事業者</option><option value="免税事業者">免税事業者</option><option value="未確認">未確認</option></select></label><label class="ow-f"><span class="ow-lb">インボイス登録番号</span><input value="T0000000000001" oninput="RENT.editOwner(0,'invoiceNo',this.value)" placeholder="T1234567890123" style=""></label><label class="ow-f"><span class="ow-lb">備考<i class="ow-any">任意</i></span><textarea rows="4" oninput="RENT.editOwner(0,'memo',this.value)" placeholder="例）固定電話への連絡は不可。メールは奥様もCC希望。" style=""></textarea></label><div class="ow-f ow-f-check"><label class="ow-check"><input type="checkbox" onclick="RENT.editOwner(0,'exclude',this.checked)" style=""><span>このオーナーを一斉送信の対象から外す</span></label></div><div class="ow-save"><button type="button" class="ow-save-b" onclick="RENT.saveOwnersNow(this)">保存する</button><p class="ow-save-n">入力は打つたびに残ります。すぐクラウドへ送りたいときに押してください。</p></div><div class="ow-del"><button type="button" onclick="RENT.delOwner(0);RENT.closeOwnerSheet()">このオーナーを削除する</button></div></div></div></div></div><table class="owners" id="ownerTable" style="display: none;"></table>
     </div>
     <p style="font-size:.76rem;color:var(--rt-muted);margin-top:8px;">※ 宛名はメール冒頭の「〇〇 御中／様」に使われます。物件名で明細と照合します。<br>※ メールアドレスがうすい赤の行は、まだ登録されていません。</p>
   </div>
@@ -8136,9 +8004,25 @@ tr.sub-row td{font-size:13px;}
         <span style="flex:1;"></span>
         <button class="btn btn-sm btn-warn" onclick="RENT.resetTmpl()">定型文を初期に戻す</button>
       </div>
-      <textarea id="tmplSubject" style="min-height: 48px;" oninput="RENT.saveTmpl();RENT.renderPreview()"></textarea>
+      <textarea id="tmplSubject" style="min-height: 48px;" oninput="RENT.saveTmpl();RENT.renderPreview()">【{{対象月}}分】収支報告書のご送付（{{オーナー名}}様）</textarea>
       <label style="margin-top:14px;">本文テンプレート</label>
-      <textarea id="tmplBody" oninput="RENT.saveTmpl();RENT.renderPreview()" style=""></textarea>
+      <textarea id="tmplBody" oninput="RENT.saveTmpl();RENT.renderPreview()" style="">{{宛名}}
+ 
+いつも大変お世話になっております。
+サンプル管理株式会社でございます。
+ 
+{{対象月}}分の収支報告書（家賃明細）を添付にてお送りいたします。
+お振込みにつきましても、明細記載のとおり手続きを進めております。
+ご査収のほど、よろしくお願い申し上げます。
+{{空き予定}}
+ご不明な点やお気づきの点がございましたら、お気軽に当社担当までお問い合わせくださいませ。
+ 
+今後ともどうぞよろしくお願い申し上げます。
+ 
+─────────────────
+サンプル管理株式会社
+info@sample-kanri.example.jp
+─────────────────</textarea>
       <div class="hint">差し込みタグ： {{宛名}} / {{オーナー名}} / {{対象月}} / {{物件一覧}} / {{送金合計}} / {{空き予定}} / {{送金日}}　※新規契約は{{空き予定}}内に自動で追記されます</div>
     </div>
   </div>
@@ -8159,7 +8043,144 @@ tr.sub-row td{font-size:13px;}
  
  
 <!-- モーダル(物件編集) -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header">
+      <span style="display:inline-flex;align-items:center;gap:14px;">
+        <span class="modal-home-logo" onclick="goToTop()" title="トップページへ戻る" style="font-weight:800;font-size:20px;letter-spacing:1px;cursor:pointer;user-select:none;padding:4px 8px;border-radius:8px;transition:background 0.12s,transform 0.12s;">PARK</span>
+        <span class="modal-title" id="modal-title" style="display:none;"></span>
+        <button id="undo-btn" onclick="undoLastChange()" title="一つ前に戻る" disabled="" style="width:46px;height:42px;border:1px solid #ddd;border-radius:9px;background:#fff;display:inline-flex;align-items:center;justify-content:center;padding:0;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="20" y1="12" x2="5" y2="12"></line><polyline points="11 18 5 12 11 6"></polyline></svg>
+        </button>
+        <button id="redo-btn" onclick="redoLastChange()" title="一つ先に進む" disabled="" style="width:46px;height:42px;border:1px solid #ddd;border-radius:9px;background:#fff;display:inline-flex;align-items:center;justify-content:center;padding:0;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="12" x2="19" y2="12"></line><polyline points="13 6 19 12 13 18"></polyline></svg>
+        </button>
+        <button class="modal-tab-btn" onclick="closeModal();switchApp('pivot')">Property</button>
+        <button class="modal-tab-btn" onclick="closeModal();switchApp('kanban')">Contract</button>
+        <button class="modal-tab-btn" onclick="closeModal();switchApp('rent')">Owner Mail</button>
+      </span>
+      <button class="modal-close" onclick="closeModal()">×</button>
+    </div>
+    <div class="modal-body">
+      <!-- 物件基本情報 -->
+      <div class="form-row">
+        <div class="form-field" style="flex:2;">
+          <label>物件名 *</label>
+          <input type="text" id="f-name" placeholder="例: グリーンハイツ 駐車場" value="" style="">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field" style="flex:1;max-width:140px;">
+          <label>郵便番号</label>
+          <input type="text" id="f-zip" placeholder="例: 100-0001" onchange="lookupZipForField('f-zip','f-addr')" oninput="onZipInput('f-zip','f-addr')" value="" style="">
+        </div>
+        <div class="form-field" style="flex:3;">
+          <label>住所(物件メイン)</label>
+          <input type="text" id="f-addr" placeholder="例: 東京都さくら市中央1-2-3" oninput="onMainTouChange();markAddrManual('f-addr')" value="" style="">
+        </div>
+        <div class="form-field" style="max-width:120px;">
+          <label>棟ラベル(任意)</label>
+          <input type="text" id="f-main-tou" placeholder="例: A" oninput="onMainTouChange()" title="この住所に棟名を付ける場合に入力(例: A、北棟)" value="" style="">
+        </div>
+        <div class="form-field" style="max-width:120px;">
+          <label>区画数</label>
+          <input type="number" id="f-count" min="0" max="200" value="0" onchange="regenSpots()" style="">
+        </div>
+      </div>
+ 　　　<!-- 棟マスター(同じ物件に別棟がある場合) -->
+      <div id="tou-addr-section" class="tou-master" style="margin-bottom:16px;">
+        <div class="tou-master-head">
+          <div class="tou-master-title">棟マスター</div>
+          <button type="button" class="tou-master-add" onclick="addTouAddr()">＋ 棟を追加</button>
+        </div>
+        <div class="tou-master-lead">
+          同じ物件に <b>別棟（A棟・B棟・北棟 など）がある場合は、必ずここに登録してください。</b><br>
+          登録すると、区画一覧の「棟」欄で棟を選べるようになり、棟ごとの住所も正しく印刷されます。<br>
+          メイン住所に棟ラベル（例: A、北棟）を付けると、その棟の区画にメイン住所が紐づきます。
+        </div>
+        <div id="tou-addr-list"></div>
+      </div>
 
+      <!-- 配置図 + 区画 左右並びレイアウト -->
+      <div class="spot-layout-row">
+        <!-- 左側: 配置図 -->
+        <div class="spot-layout-left-img">
+          <div class="img-block img-block-layout">
+            <div class="img-block-title">配置図(JPEGのみ・最大2件)</div>
+            <div class="img-block-content" id="layout-area">
+              <!-- ここに動的に画像 or アップロードボタンが表示される -->
+            </div>
+          </div>
+        </div>
+ 
+        <!-- 右側: 区画テーブル -->
+        <div class="spots-section spot-layout-right-spots">
+          <div style="display:flex;align-items:center;gap:16px;margin-bottom:12px;flex-wrap:wrap;">
+            <h3 style="margin:0;">区画一覧</h3>
+            <div style="display:flex;align-items:center;gap:6px;font-size:12px;">
+              <input type="number" id="add-spot-count" min="1" max="200" value="1" style="width: 60px; border: 1px solid rgb(0, 0, 0); padding: 6px 8px; font-size: 12px; text-align: right;" title="追加する区画数">
+              <button type="button" class="btn btn-sm" onclick="addSpots()">+ 区画追加</button>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" onclick="toggleBulkSet()" id="bulk-toggle-btn" style="font-size:11px;padding:4px 10px;">
+              <span id="bulk-toggle-icon">▼</span> 一括設定
+            </button>
+          </div>
+ 
+          <!-- 一括設定(初期は閉じている) -->
+          <div class="bulk-set" id="bulk-set-container" style="display:none;">
+            <div class="bulk-set-header">
+              <span class="bulk-set-title">一括設定 <span style="font-weight:400;color:#666;font-size:11px;">(範囲を指定して項目を適用)</span></span>
+              <div style="display:flex;gap:6px;">
+                <button type="button" class="btn btn-outline btn-sm" onclick="addBulkRow()" style="font-size:11px;padding:4px 10px;">+ 入力行を追加</button>
+                <button type="button" class="btn btn-sm" onclick="applyAllBulkRows()" style="font-size:11px;padding:4px 12px;" title="全ての行を一気に適用">▶▶ 全行を一括適用</button>
+              </div>
+            </div>
+            <div id="bulk-rows-container"></div>
+          </div>
+ 
+          <!-- 上部のカスタム横スライダー(stickyで常時上端表示・テーブルと同期) -->
+          <div class="spots-table-sticky-top">
+            <div class="spots-table-slider" id="spots-table-slider">
+              <div class="spots-table-slider-thumb" id="spots-table-slider-thumb"></div>
+            </div>
+          </div>
+          <div class="spots-table-wrap" id="spots-table-wrap" style="overflow-x:scroll;overflow-y:hidden;max-width:100%;width:100%;-webkit-overflow-scrolling:touch;">
+            <table class="spots-table" id="spots-table">
+              <thead>
+                <tr>
+                  <th style="width:80px;">区画番号</th>
+                  <th style="width:120px;">種別</th>
+                  <th style="width:95px;">棟</th>
+                  <th style="width:70px;">号室</th>
+                  <th style="width:180px;">使用者</th>
+                  <th style="width:95px;">月額(円)</th>
+                  <th style="width:140px;">状況</th>
+                  <th style="min-width:220px;">備考</th>
+                  <th style="width:290px;text-align:center;">書類</th>
+                </tr>
+              </thead>
+              <tbody id="spots-tbody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- 現地写真(下に配置) -->
+      <div class="img-section">
+        <div class="img-block">
+          <div class="img-block-title">現地写真(最大5枚)</div>
+          <div class="img-block-content" id="photos-area">
+            <!-- ここに動的に画像 or アップロードボタンが表示される -->
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline btn-sm" onclick="cancelModal()">キャンセル</button>
+      <button class="btn btn-sm" id="save-bld-btn" onclick="saveBld()">保存</button>
+    </div>
+  </div>
+</div>
  
 <!-- 保管場所使用承諾書 発行モーダル -->
 <div class="modal-overlay" id="shoudaku-modal">
