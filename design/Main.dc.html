@@ -1,0 +1,136 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <style>
+    body{margin:0;background:#f2f2f6;
+      font-family:-apple-system,BlinkMacSystemFont,"Hiragino Sans","Hiragino Kaku Gothic ProN","Yu Gothic",system-ui,sans-serif;
+      color:#12131a;-webkit-font-smoothing:antialiased;}
+    a{color:#0a68e8;text-decoration:none;} a:hover{color:#0851b4;}
+  </style>
+</helmet>
+
+<div style="min-height:100%; background:#f2f2f6; padding:28px 0 40px;">
+
+  <!-- 大見出し -->
+  <div style="display:flex; flex-direction:column; gap:6px; padding:0 20px 18px;">
+    <div style="display:flex; align-items:center; gap:10px;">
+      <h1 style="margin:0; font-size:34px; line-height:1.15; letter-spacing:-0.02em; font-weight:700;">返信の承認</h1>
+      <span style="margin-left:auto; font-size:12px; font-weight:600; letter-spacing:0.02em; color:#6d6f7a; background:#e6e6ec; border-radius:999px; padding:5px 11px;">テスト送信中</span>
+    </div>
+    <p style="margin:0; font-size:15px; line-height:1.5; color:#6d6f7a;">返信を待っている案件が 12 件<br>うち4日以上たっているものが 2 件</p>
+  </div>
+
+  <!-- セグメント -->
+  <div style="padding:0 20px 14px;">
+    <div style="display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:2px; background:#e3e3e9; border-radius:10px; padding:2px;">
+      <div style="display:flex; align-items:center; justify-content:center; gap:6px; height:36px; border-radius:8px; background:#ffffff; box-shadow:0 1px 3px rgba(0,0,0,.10); font-size:14px; font-weight:600;">未返信<span style="font-size:12px; font-weight:600; color:#6d6f7a;">12</span></div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:6px; height:36px; border-radius:8px; font-size:14px; font-weight:500; color:#4b4d57;">完了<span style="font-size:12px; color:#8a8c96;">48</span></div>
+      <div style="display:flex; align-items:center; justify-content:center; gap:6px; height:36px; border-radius:8px; font-size:14px; font-weight:500; color:#4b4d57;">営業<span style="font-size:12px; color:#8a8c96;">5</span></div>
+    </div>
+  </div>
+
+  <!-- 用件チップ -->
+  <div style="display:flex; gap:8px; padding:0 20px 20px; overflow:hidden;">
+    <div style="display:flex; align-items:center; gap:5px; height:32px; padding:0 13px; border-radius:999px; background:#12131a; color:#ffffff; font-size:13px; font-weight:600; white-space:nowrap;">すべて<span style="opacity:.6;">12</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:32px; padding:0 13px; border-radius:999px; background:#ffffff; color:#3c3e48; font-size:13px; font-weight:500; white-space:nowrap;">保管場所使用承諾書<span style="color:#9698a2;">3</span></div>
+    <div style="display:flex; align-items:center; gap:5px; height:32px; padding:0 13px; border-radius:999px; background:#ffffff; color:#3c3e48; font-size:13px; font-weight:500; white-space:nowrap;">修繕<span style="color:#9698a2;">3</span></div>
+  </div>
+
+  <!-- 4日以上 -->
+  <div style="padding:0 20px 7px;">
+    <p style="margin:0; font-size:13px; font-weight:600; letter-spacing:0.01em; color:#8a4038;">4日以上たっています</p>
+  </div>
+  <div style="margin:0 20px 26px; background:#ffffff; border-radius:12px; overflow:hidden;">
+
+    <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;">
+      <div style="flex-shrink:0; width:9px; height:9px; margin-top:6px; border-radius:999px; background:#d9382c;"></div>
+      <div style="display:flex; flex-direction:column; gap:5px; flex-grow:1; min-width:0;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em;">保管場所使用承諾書</span>
+          <span style="margin-left:auto; font-size:13px; font-weight:600; color:#d9382c; white-space:nowrap;">4日経過</span>
+        </div>
+        <p style="margin:0; font-size:13px; color:#6d6f7a;">メゾン中央 203 ・ 入居者相談 ・ 08-18 09:12</p>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#4b4d57;">車庫証明の申請に必要な保管場所使用承諾書を発行していただきたく…</p>
+      </div>
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="flex-shrink:0; margin-top:9px;"><path d="M1.5 1.5 6.5 6.5 1.5 11.5" stroke="#c2c2c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div style="height:1px; background:#e4e4ea; margin-left:37px;"></div>
+
+    <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;">
+      <div style="flex-shrink:0; width:9px; height:9px; margin-top:6px; border-radius:999px; background:#d9382c;"></div>
+      <div style="display:flex; flex-direction:column; gap:5px; flex-grow:1; min-width:0;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em;">無断駐車</span>
+          <span style="margin-left:auto; font-size:13px; font-weight:600; color:#d9382c; white-space:nowrap;">5日経過</span>
+        </div>
+        <p style="margin:0; font-size:13px; color:#6d6f7a;">パークハイツ 1102 ・ 入居者相談 ・ 08-17 20:41</p>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#4b4d57;">来客用の区画に知らない車が停められていて困っています。対応を…</p>
+      </div>
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="flex-shrink:0; margin-top:9px;"><path d="M1.5 1.5 6.5 6.5 1.5 11.5" stroke="#c2c2c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+  </div>
+
+  <!-- 今週 -->
+  <div style="padding:0 20px 7px;">
+    <p style="margin:0; font-size:13px; font-weight:600; letter-spacing:0.01em; color:#6d6f7a;">今週とどいたもの</p>
+  </div>
+  <div style="margin:0 20px 26px; background:#ffffff; border-radius:12px; overflow:hidden;">
+
+    <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;">
+      <div style="flex-shrink:0; width:9px; height:9px; margin-top:6px; border-radius:999px; background:#c06a10;"></div>
+      <div style="display:flex; flex-direction:column; gap:5px; flex-grow:1; min-width:0;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em;">名義変更</span>
+          <span style="margin-left:auto; font-size:13px; font-weight:600; color:#c06a10; white-space:nowrap;">2日経過</span>
+        </div>
+        <p style="margin:0; font-size:13px; color:#6d6f7a;">サンコーポ 305 ・ 問い合わせ ・ 08-20 11:30</p>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#4b4d57;">結婚により姓が変わりました。契約者名の変更手続きについて…</p>
+      </div>
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="flex-shrink:0; margin-top:9px;"><path d="M1.5 1.5 6.5 6.5 1.5 11.5" stroke="#c2c2c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div style="height:1px; background:#e4e4ea; margin-left:37px;"></div>
+
+    <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;">
+      <div style="flex-shrink:0; width:9px; height:9px; margin-top:6px; border-radius:999px; background:#c9c9d0;"></div>
+      <div style="display:flex; flex-direction:column; gap:5px; flex-grow:1; min-width:0;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em;">修繕</span>
+          <span style="margin-left:auto; font-size:13px; color:#8a8c96; white-space:nowrap;">本日</span>
+        </div>
+        <p style="margin:0; font-size:13px; color:#6d6f7a;">メゾン中央 108 ・ 入居者相談 ・ 08-22 08:05</p>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#4b4d57;">洗面台の下から水漏れしています。床が濡れてしまっていて…</p>
+      </div>
+      <svg width="8" height="13" viewBox="0 0 8 13" fill="none" style="flex-shrink:0; margin-top:9px;"><path d="M1.5 1.5 6.5 6.5 1.5 11.5" stroke="#c2c2c9" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+
+    <div style="height:1px; background:#e4e4ea; margin-left:37px;"></div>
+
+    <div style="display:flex; align-items:flex-start; gap:12px; padding:14px 14px 14px 16px;">
+      <div style="flex-shrink:0; width:9px; height:9px; margin-top:6px; border-radius:999px; background:#c9c9d0;"></div>
+      <div style="display:flex; flex-direction:column; gap:5px; flex-grow:1; min-width:0;">
+        <div style="display:flex; align-items:baseline; gap:8px;">
+          <span style="font-size:17px; font-weight:600; letter-spacing:-0.01em; color:#8a8c96;">内見</span>
+          <span style="margin-left:auto; font-size:13px; color:#8a8c96; white-space:nowrap;">作成中</span>
+        </div>
+        <p style="margin:0; font-size:13px; color:#6d6f7a;">ロイヤルステージ ・ 問い合わせ ・ 08-22 09:48</p>
+        <p style="margin:0; font-size:14px; line-height:1.55; color:#8a8c96;">返信案を作っています…（10分ほどで並びます）</p>
+      </div>
+    </div>
+
+  </div>
+
+  <p style="margin:0; padding:0 20px; font-size:11px; color:#a9abb4;">画面 ui-2026-08-20e ／ API v18 ／ 一覧 v7</p>
+
+</div>
+</x-dc>
+</body>
+</html>

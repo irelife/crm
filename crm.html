@@ -424,6 +424,33 @@ button.send.wait:hover{background:var(--g1);border-color:#000;color:#000}
   .zen-foot .r{width:100%;margin-left:0}
   .zen-foot .r .act{flex:1}
 }
+
+/* ★★ 合言葉の画面（2026/9/18）
+   いまの画面と同じ色づかい（--ink / --paper / --card）にそろえています。 */
+.gate{position:fixed;inset:0;z-index:200;background:var(--paper);
+  display:flex;align-items:center;justify-content:center;padding:24px;}
+.gate.off{display:none;}
+.gate-card{background:var(--card);border-radius:20px;padding:40px 32px 28px;
+  width:100%;max-width:360px;box-shadow:0 1px 3px rgba(0,0,0,.05), 0 12px 32px rgba(0,0,0,.09);
+  display:flex;flex-direction:column;}
+.gate-mark{font-size:30px;font-weight:600;letter-spacing:.06em;color:var(--ink);
+  text-align:center;}
+.gate-sub{font-size:13.5px;color:var(--ink-3);text-align:center;margin-top:6px;
+  margin-bottom:28px;}
+.gate-lab{font-size:12px;font-weight:600;color:var(--ink-2);letter-spacing:.04em;
+  margin-bottom:6px;}
+.gate-card input{width:100%;box-sizing:border-box;border:1px solid var(--line);
+  border-radius:12px;padding:13px 14px;font-size:16px;color:var(--ink);
+  background:var(--card);outline:none;}
+.gate-card input:focus{border-color:var(--ink-3);}
+.gate-go{margin-top:18px;border:0;border-radius:12px;padding:14px;
+  background:var(--ink);color:#fff;font-size:15px;font-weight:600;cursor:pointer;}
+.gate-go:hover{opacity:.88;}
+.gate-err{min-height:20px;margin-top:12px;font-size:13px;color:#c7362a;
+  text-align:center;}
+.gate-foot{margin-top:18px;font-size:11.5px;color:var(--ink-3);text-align:center;}
+/* 合言葉が通るまで、うしろの画面は見せません */
+body.locked .wrap{display:none;}
 </style>
 
 <!-- ============================================================
@@ -1694,6 +1721,27 @@ body.view-rows .card.eigyou{aspect-ratio:auto;}
 </style>
 </head>
 <body>
+
+<!-- ★★ 合言葉の画面（2026/9/18）
+     これまで、この画面はサーバーに合言葉を1つも送っていませんでした。
+     Apps Script のアドレスがこのファイルに書いてあり、
+     リポジトリは公開なので、アドレスを見た人が
+     mode=list / mode=detail をそのまま呼べる状態でした。
+     合言葉をここで受け取り、毎回いっしょに送ります。
+     ★合言葉はこのファイルに書きません。お使いの端末に覚えます。 -->
+<div id="gate" class="gate">
+  <form class="gate-card" id="gateForm" autocomplete="on">
+    <div class="gate-mark">CRM</div>
+    <div class="gate-sub">問い合わせ　返信の承認</div>
+    <label class="gate-lab" for="gateKey">合言葉</label>
+    <input type="password" id="gateKey" name="current-password"
+           autocomplete="current-password" placeholder="合言葉">
+    <button class="gate-go" type="submit">ひらく</button>
+    <div class="gate-err" id="gateErr"></div>
+    <div class="gate-foot">IREライフ株式会社</div>
+  </form>
+</div>
+
 <div class="wrap">
 
   <header>
@@ -1835,9 +1883,37 @@ body.view-rows .card.eigyou{aspect-ratio:auto;}
 <script>
 const API = "https://script.google.com/macros/s/AKfycbws85BB01CV2U4yJO6z3gHnH5ZjQp0rPviQ_XTpGR2c5p5uxJUKCwxz_M47y3TViLD1/exec";
 
+/* ★★ 合言葉（2026/9/18）
+ *
+ *  【これまで】
+ *    この画面は、サーバーへ合言葉を1つも送っていませんでした。
+ *    Apps Script のアドレスはこのファイルに書いてあり、
+ *    リポジトリは公開なので、アドレスを見た人が
+ *      …/exec?mode=list      → 問い合わせ一覧ぜんぶ
+ *      …/exec?mode=detail    → お名前・電話・メール・住所・本文
+ *    をそのまま呼べる状態でした。
+ *
+ *  【これから】
+ *    合言葉を画面で受け取り、api() が毎回いっしょに送ります。
+ *    ★合言葉はこのファイルに書きません（書くと公開されてしまいます）。
+ *      お使いの端末にだけ覚えます。
+ *    サーバー側（crmApi.gs）でも確かめます。両方そろって初めて塞がります。
+ */
+const KEY_STORE = "ire_crm_key";
+let CRM_KEY = "";
+try { CRM_KEY = localStorage.getItem(KEY_STORE) || ""; } catch (e) { CRM_KEY = ""; }
+
+function keyForget() {
+  CRM_KEY = "";
+  try { localStorage.removeItem(KEY_STORE); } catch (e) {}
+}
+
 /* ---------- APIを呼ぶ（JSONP） ---------- */
 let jsonpSeq = 0;
 function api(params) {
+  /* ★ どの呼び出しにも合言葉を添えます。
+       1か所で入れておけば、入れ忘れが起きません。 */
+  if (CRM_KEY && !params.key) params.key = CRM_KEY;
   return new Promise(function (resolve, reject) {
     const cb = "__crm_cb_" + (++jsonpSeq) + "_" + Date.now();
     const s  = document.createElement("script");
@@ -3798,10 +3874,82 @@ function bootRow_() {
   });
 })();
 
-(function boot() {
+/* ★★ 合言葉が通るまで、中を見せません（2026/9/18）
+ *
+ *  ・合言葉は、サーバーに ping を投げて確かめます。
+ *    画面だけで判定すると、画面を書き換えれば素通りできてしまいます。
+ *  ・通ったら、この端末に覚えます。次からは聞きません。
+ *  ・サーバーが「合言葉がちがいます」と言ったら、覚えたものを捨てて、
+ *    もういちど聞きます（合言葉を変えたときに、ここで気づけます）。
+ */
+function gateOpen(on) {
+  const g = document.getElementById("gate");
+  if (g) g.classList.toggle("off", !on ? true : false);
+  document.body.classList.toggle("locked", !!on);
+}
+
+function startApp() {
+  gateOpen(false);
   const row = bootRow_();
   loadList();                       // 一覧は裏で読み込んでおく（戻ったときのため）
   if (row >= 2) openDetail(row);    // 指定があれば、その案件をすぐ開く
+}
+
+/* サーバーに、この合言葉でよいか聞きます */
+function keyCheck(k) {
+  return api({ mode: "ping", key: k }).then(function (d) {
+    /* ★ サーバーがまだ合言葉に対応していないとき（入れ替えの最中）も、
+         業務を止めないように通します。
+         サーバー側を入れたあとは ok:false / err が返るので、ここで止まります。 */
+    if (d && d.ok === false && /合言葉|パスワード|key/i.test(String(d.err || ""))) return false;
+    return true;
+  }).catch(function () {
+    /* 通信できないだけのときは、合言葉のせいにしません */
+    return true;
+  });
+}
+
+(function boot() {
+  const form = document.getElementById("gateForm");
+  const inp  = document.getElementById("gateKey");
+  const err  = document.getElementById("gateErr");
+  const go   = form ? form.querySelector(".gate-go") : null;
+
+  function fail(msg) {
+    keyForget();
+    if (err) err.textContent = msg;
+    gateOpen(true);
+    if (go) { go.disabled = false; go.textContent = "ひらく"; }
+    if (inp) { inp.value = ""; inp.focus(); }
+  }
+
+  if (form) {
+    form.addEventListener("submit", function (ev) {
+      ev.preventDefault();
+      const k = (inp ? inp.value : "").trim();
+      if (!k) { if (err) err.textContent = "合言葉を入れてください。"; return; }
+      if (err) err.textContent = "";
+      if (go) { go.disabled = true; go.textContent = "確かめています…"; }
+      keyCheck(k).then(function (okKey) {
+        if (!okKey) { fail("合言葉がちがいます。"); return; }
+        CRM_KEY = k;
+        try { localStorage.setItem(KEY_STORE, k); } catch (e) {}
+        startApp();
+      });
+    });
+  }
+
+  /* 前に入れた合言葉があれば、それで開きます */
+  if (CRM_KEY) {
+    gateOpen(true);
+    keyCheck(CRM_KEY).then(function (okKey) {
+      if (okKey) startApp();
+      else fail("合言葉が変わったようです。もういちど入れてください。");
+    });
+  } else {
+    gateOpen(true);
+    if (inp) inp.focus();
+  }
 })();
 </script>
 </body>

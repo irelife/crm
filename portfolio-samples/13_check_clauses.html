@@ -1,0 +1,390 @@
+<!doctype html>
+<html lang="ja" id="pf-scroll-1"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="format-detection" content="telephone=no">
+<title>入居時チェック｜ご説明の確認</title>
+<style>
+/* =====================================================================
+   見た目の決まり（管理画面と同じ考え方）
+     ・枠線はつかいません。薄い塗りと、余白で分けます。
+     ・角はやわらかく、文字は太くしすぎません。
+     ・気にかけてほしいところだけ、薄い赤にします。
+   ===================================================================== */
+:root{
+  --ink:#1D1D1F; --ink2:#424245; --ink3:#86868B; --ink4:#B0B0B5;
+  --bg:#F5F5F7; --card:#fff; --fill:#F0F0F2; --fill2:#E8E8ED;
+  --ng:#C7362A; --ngbg:#FCF0EE;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",Meiryo,sans-serif;
+  font-size:18px;line-height:1.8;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;}
+body{padding-bottom:calc(100px + env(safe-area-inset-bottom));}
+img{max-width:100%;}
+button,input,textarea{font-family:inherit;font-size:18px;}
+
+/* ---- 上のバー ---- */
+header{position:sticky;top:0;z-index:20;background:rgba(29,29,31,.88);color:#fff;
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  padding:calc(12px + env(safe-area-inset-top)) 18px 12px;}
+header .h-logo{display:flex;align-items:center;gap:6px;margin-bottom:6px;
+  color:rgba(255,255,255,.55);}
+header .h-logo .ic{width:16px;height:16px;flex:0 0 auto;}
+header .h-logo span{font-size:13px;font-weight:600;letter-spacing:.04em;}
+header .h-bldg{font-size:20px;font-weight:600;letter-spacing:-.01em;}
+header .h-sub{font-size:13px;color:rgba(255,255,255,.62);margin-top:3px;}
+.bar{height:3px;background:rgba(255,255,255,.18);border-radius:100px;margin-top:12px;overflow:hidden;}
+.bar > i{display:block;height:100%;background:#fff;border-radius:100px;transition:width .35s;}
+.steps{display:flex;gap:4px;margin-top:10px;font-size:12.5px;color:rgba(255,255,255,.5);}
+.steps span{flex:1;text-align:center;padding:5px 0;border-radius:100px;transition:background .2s,color .2s;}
+.steps span.on{background:#fff;color:var(--ink);font-weight:600;}
+
+/* ---- 中身 ---- */
+main{padding:20px 16px 0;max-width:640px;margin:0 auto;}
+.card{background:var(--card);border:0;border-radius:20px;padding:24px 20px;margin-bottom:16px;}
+h2{font-size:21px;font-weight:600;letter-spacing:-.01em;margin:0 0 8px;}
+.lead{font-size:14.5px;color:var(--ink3);margin:0 0 18px;line-height:1.8;}
+/* 文の折り返しは、文節（意味のかたまり）の切れめでおります。
+   また、最後の行に一文字だけ残らないようにします。
+   長いURLだけは、途中でおらないと画面からはみ出すので、a に別あつかいをします */
+p,li{word-break:auto-phrase;line-break:strict;text-wrap:pretty;}
+.note{font-size:13.5px;color:var(--ink3);line-height:1.85;}
+
+/* ---- パスワード ---- */
+#pw-box{max-width:400px;margin:60px auto;}
+#pw{width:100%;text-align:center;letter-spacing:.2em;font-size:26px;font-weight:600;
+  padding:16px 14px;border:0;border-radius:14px;background:var(--fill);text-transform:uppercase;
+  transition:background .15s,box-shadow .15s;}
+#pw:focus{outline:none;background:#fff;box-shadow:0 0 0 4px rgba(29,29,31,.10);}
+.err{color:var(--ng);font-size:14.5px;font-weight:500;margin-top:12px;min-height:1.2em;}
+
+/* ---- ボタン ---- */
+.btn{display:block;width:100%;border:0;border-radius:100px;padding:16px;
+  font-size:17px;font-weight:500;background:var(--ink);color:#fff;cursor:pointer;
+  transition:opacity .15s;}
+.btn:active{opacity:.7;}
+.btn.ghost{background:var(--fill);color:var(--ink);}
+.btn[disabled]{opacity:.35;}
+
+/* ---- 間取り図 ---- */
+#plan{margin-bottom:16px;}
+#plan img{width:100%;border-radius:18px;border:0;display:block;background:var(--fill);}
+.plan-cap{font-size:12.5px;color:var(--ink3);text-align:center;margin-top:8px;}
+.plan-link{display:block;text-align:center;padding:16px;border:0;border-radius:16px;
+  background:var(--fill);font-size:16px;font-weight:500;color:var(--ink);text-decoration:none;}
+
+/* ---- ご質問のあて先のご案内 ---- */
+.askbox{border:0;background:#fff;border-radius:20px;padding:22px 20px;margin-top:16px;}
+.askbox > b{display:block;font-size:16px;font-weight:600;color:var(--ink);margin-bottom:10px;}
+.askbox p{margin:0;font-size:14.5px;line-height:1.9;color:var(--ink2);}
+.askbox p b{font-weight:600;color:var(--ink);}
+.askbox a.hp{display:block;margin-top:18px;text-align:center;padding:15px;
+  border-radius:100px;background:var(--ink);color:#fff;font-size:16px;font-weight:500;
+  text-decoration:none;}
+
+/* ---- 部屋 ---- */
+.place{border:0;border-radius:18px;background:var(--fill);padding:16px 16px 14px;margin-bottom:10px;
+  transition:background .2s;}
+.place.is-ng{background:var(--ngbg);}
+.place-h{font-size:17px;font-weight:600;margin-bottom:12px;}
+.pick{display:flex;gap:5px;background:#fff;padding:5px;border-radius:15px;}
+.pick label{flex:1;position:relative;}
+.pick input{position:absolute;opacity:0;pointer-events:none;}
+/* 選んでいないほうも、押せる場所だと分かるように、薄い塗りにします */
+.pick span{display:block;text-align:center;padding:11px 6px;border-radius:11px;
+  border:0;background:var(--fill);font-size:16px;font-weight:500;color:var(--ink2);
+  transition:background .18s,color .18s;}
+.pick input:checked + span{background:var(--ink);color:#fff;font-weight:600;}
+.pick .ng input:checked + span{background:var(--ng);}
+.detail{margin-top:12px;}
+.detail textarea{width:100%;min-height:78px;padding:13px 14px;border:0;
+  border-radius:14px;resize:vertical;line-height:1.7;background:#fff;
+  transition:box-shadow .15s;}
+.detail textarea:focus{outline:none;box-shadow:0 0 0 4px rgba(29,29,31,.10);}
+.shots{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;}
+.shot{position:relative;width:76px;height:76px;border-radius:14px;overflow:hidden;border:0;}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;background:var(--fill2);}
+.shot button{position:absolute;top:3px;right:3px;width:22px;height:22px;border:0;border-radius:50%;
+  background:rgba(0,0,0,.6);color:#fff;font-size:13px;line-height:1;cursor:pointer;}
+.addshot{width:76px;height:76px;border:0;border-radius:14px;background:#fff;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+  font-size:10.5px;color:var(--ink3);cursor:pointer;font-weight:500;}
+.addshot b{font-size:22px;font-weight:300;line-height:1;}
+
+/* ---- 期限のお知らせ ---- */
+.duebox{border:0;background:var(--ngbg);border-radius:18px;padding:18px 18px;margin-bottom:16px;}
+.duebox b{display:block;font-size:15.5px;font-weight:600;color:var(--ng);margin-bottom:8px;}
+.duebox p{margin:0;font-size:14px;line-height:1.9;color:var(--ink2);}
+
+/* ---- 確認事項 ---- */
+.chk{display:block;border:0;border-radius:18px;background:var(--fill);
+  padding:16px 16px;margin-bottom:8px;position:relative;cursor:pointer;
+  transition:background .18s;}
+/* 印を付けたものは、白く浮き上がらせます（下地の白い箱に溶けないように） */
+.chk.on{background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.05), 0 4px 14px rgba(0,0,0,.05);}
+.chk input{position:absolute;opacity:0;pointer-events:none;}
+.chk-h{display:flex;align-items:flex-start;gap:12px;}
+.box{flex:0 0 26px;width:26px;height:26px;border:0;border-radius:9px;
+  background:#fff;margin-top:1px;position:relative;box-shadow:inset 0 0 0 2px var(--fill2);
+  transition:background .18s,box-shadow .18s;}
+.chk.on .box{background:var(--ink);box-shadow:none;}
+.chk.on .box::after{content:"";position:absolute;left:8px;top:3px;width:6px;height:12px;
+  border:solid #fff;border-width:0 2.5px 2.5px 0;transform:rotate(42deg);}
+.chk-t{flex:1;min-width:0;font-size:16.5px;font-weight:500;line-height:1.6;color:var(--ink3);
+  transition:color .18s;}
+.chk.on .chk-t{color:var(--ink);font-weight:600;}
+.chk-b{font-size:14px;color:var(--ink2);line-height:1.85;margin:10px 0 0 38px;
+  overflow-wrap:anywhere;word-break:break-word;}
+.chk-b a{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.tag{display:inline-block;font-size:11.5px;font-weight:500;border:0;
+  border-radius:100px;padding:2px 9px;color:var(--ink2);background:var(--fill2);margin-left:7px;
+  vertical-align:2px;white-space:nowrap;}
+.tag.money{background:var(--ink);color:#fff;}
+.sec-h{font-size:13px;font-weight:500;letter-spacing:.04em;color:var(--ink3);
+  margin:26px 0 10px;padding-left:4px;}
+
+/* ---- 印を付けなかった理由 ---- */
+.clwrap{margin-bottom:8px;}
+.clwrap .chk{margin-bottom:0;border-radius:18px 18px 0 0;}
+.why{border:0;background:var(--ngbg);border-radius:0 0 18px 18px;padding:16px 16px 18px;margin:0;}
+.why-q{font-size:14px;font-weight:600;color:var(--ng);margin-bottom:11px;line-height:1.7;}
+.whyr{display:flex;align-items:flex-start;gap:11px;background:#fff;border:0;
+  border-radius:14px;padding:13px 14px;margin-bottom:7px;cursor:pointer;position:relative;}
+.whyr input{position:absolute;opacity:0;pointer-events:none;}
+.whyr span{flex:1;font-size:15px;font-weight:500;color:var(--ink2);line-height:1.6;}
+.whyr::before{content:"";flex:0 0 20px;width:20px;height:20px;border:2px solid var(--fill2);
+  border-radius:50%;background:#fff;margin-top:2px;transition:border-color .18s,border-width .18s;}
+.whyr.on::before{border-color:var(--ng);border-width:6px;}
+.whyr.on span{color:var(--ink);font-weight:600;}
+.why-n{width:100%;min-height:58px;padding:13px 14px;border:0;background:#fff;
+  border-radius:14px;resize:vertical;line-height:1.7;font-size:16px;margin-top:4px;
+  transition:box-shadow .15s;}
+.why-n:focus{outline:none;box-shadow:0 0 0 4px rgba(199,54,42,.15);}
+
+/* ---- まとめ ---- */
+.sum{border:0;border-radius:18px;background:var(--fill);padding:8px 18px;margin-bottom:16px;}
+.sum-row{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border:0;font-size:15.5px;}
+.sum-row + .sum-row{box-shadow:inset 0 1px 0 rgba(0,0,0,.05);}
+.sum-row b{font-weight:600;}
+.sum-ng{color:var(--ng);}
+
+/* ---- 下の固定ボタン ---- */
+footer{position:fixed;left:0;right:0;bottom:0;z-index:20;background:rgba(245,245,247,.8);
+  -webkit-backdrop-filter:saturate(180%) blur(20px);backdrop-filter:saturate(180%) blur(20px);
+  border:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom));}
+footer .inner{max-width:640px;margin:0 auto;display:flex;gap:10px;}
+footer .btn{margin:0;}
+footer .btn.ghost{flex:0 0 34%;background:rgba(0,0,0,.06);}
+@media (max-width:400px){ footer .btn.ghost{flex:0 0 30%;} }
+/* ★ 一時保存は、下のバーの上に、小さな字で置きます。
+     「戻る」「つぎへ」と同じ大きさにすると、
+     「つぎへ」に入る長い字（暮らしのルールが残り 3 件）が入らなくなるためです。 */
+#hold{display:block;width:auto;margin:0 auto 10px;padding:3px 12px;border:0;border-radius:8px;
+  background:none;color:#6E6E73;font-size:13.5px;font-weight:500;line-height:1.6;
+  text-decoration:underline;text-underline-offset:3px;cursor:pointer;}
+#hold:active{opacity:.6;}
+#hold[disabled]{opacity:.45;text-decoration:none;}
+/* ★ 一時保存できたことを、下から静かに知らせます */
+#toast{position:fixed;left:50%;bottom:90px;transform:translateX(-50%) translateY(14px);
+  z-index:60;max-width:min(420px,calc(100% - 32px));padding:13px 20px;border-radius:14px;
+  background:rgba(29,29,31,.94);color:#fff;font-size:14px;line-height:1.7;text-align:center;
+  opacity:0;pointer-events:none;transition:opacity .22s ease,transform .22s ease;}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0);}
+@media (prefers-reduced-motion:reduce){ #toast{transition:none;} }
+/* ★ ご返信の受付が終わったことの、お知らせ */
+.closed-note{margin:0 0 18px;padding:15px 17px;border-radius:14px;
+  background:#FFF4E2;color:#7A4E0C;font-size:14.5px;line-height:1.85;}
+.closed-note b{display:block;font-size:15.5px;margin-bottom:5px;}
+/* ★ 前に一時保存したぶんから続けていることの、お知らせ */
+.hold-note{margin:0 0 16px;padding:13px 16px;border-radius:14px;
+  background:rgba(0,0,0,.05);color:#3A3A3C;font-size:14px;line-height:1.8;}
+
+/* ---- 送信中・完了 ---- */
+#veil{position:fixed;inset:0;z-index:60;background:rgba(245,245,247,.85);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  display:none;align-items:center;justify-content:center;text-align:center;padding:30px;}
+#veil.on{display:flex;}
+#veil .in{font-size:16px;font-weight:500;color:var(--ink2);}
+.spin{width:30px;height:30px;border:3px solid var(--fill2);border-top-color:var(--ink);
+  border-radius:50%;margin:0 auto 16px;animation:sp .8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+/* ---- お部屋のご案内 ---- */
+header .h-info{margin-top:10px;background:rgba(255,255,255,.14);color:#fff;border:0;
+  border-radius:100px;padding:7px 16px;font-size:13px;font-weight:500;cursor:pointer;}
+header .h-info:hover{background:rgba(255,255,255,.22);}
+.iv{background:#fff;border-radius:20px;padding:20px 22px;margin-bottom:12px;}
+.iv h3{font-size:13px;font-weight:600;color:var(--ink3);margin:0 0 10px;
+  letter-spacing:.04em;}
+.iv .big{font-size:24px;font-weight:600;letter-spacing:-.01em;line-height:1.5;}
+.iv .big .u{font-size:15px;font-weight:500;color:var(--ink3);margin-left:6px;}
+.iv p{margin:8px 0 0;font-size:14.5px;color:var(--ink2);line-height:1.85;
+  overflow-wrap:break-word;}
+.iv p a{color:inherit;text-decoration:underline;text-underline-offset:2px;
+  word-break:normal;overflow-wrap:anywhere;}
+.iv .row2{display:flex;gap:26px;flex-wrap:wrap;}
+.iv .row2 .pkn{margin:0 0 1px;font-size:12.5px;color:var(--ink3);line-height:1.4;}
+.iv .tel{display:inline-block;margin-top:10px;background:var(--fill);color:var(--ink);
+  border-radius:100px;padding:9px 18px;font-size:15px;font-weight:600;text-decoration:none;}
+.iv.keep{background:var(--fill);}
+.iv.keep p{color:var(--ink2);}
+
+.done{text-align:center;padding:60px 20px;}
+.done .mk{width:66px;height:66px;border-radius:50%;background:var(--ink);color:#fff;
+  font-size:30px;line-height:66px;margin:0 auto 20px;}
+.hide{display:none !important;}
+
+/* ---- 写真の拡大 ---- */
+#zoom{position:fixed;inset:0;z-index:70;background:rgba(0,0,0,.94);display:none;
+  align-items:center;justify-content:center;padding:16px;}
+#zoom.on{display:flex;}
+#zoom img{max-width:100%;max-height:100%;border-radius:14px;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="h-logo"><svg class="ic" viewBox="0 0 100 100" fill="currentColor" aria-hidden="true"><circle cx="34" cy="30" r="16"></circle><path d="M34 51C18 51 8 66 6 88h40c0-4 .6-8 1.8-11.5l9.4 4.4c1.6.8 3.5 0 4.2-1.6.8-1.6 0-3.5-1.6-4.2l-9.6-4.5C54 60 45 51 34 51Z"></path><path d="M58.5 63.5 85 53.5 94 76 67.5 86Z" fill="none" stroke="currentColor" stroke-width="6.5" stroke-linejoin="round"></path><path fill-rule="evenodd" d="M79 6a21 21 0 1 0 0 42 21 21 0 0 0 0-42ZM76.2 36.4 66 26.2l4.6-4.6 5.6 5.6 12-12 4.6 4.6Z"></path></svg><span>入居時チェック</span></div>
+  <div class="h-bldg" id="h-bldg">グリーンハイツ 101号室</div>
+  <div class="h-sub" id="h-sub">山田 太郎 様　／　2026年9月30日 までにご返信ください</div>
+  <button type="button" id="btn-info" class="h-info">お部屋のご案内を見る</button>
+  <div class="bar"><i id="bar" style="width: 100%;"></i></div>
+  <div class="steps" id="steps">
+    <span data-s="1" class="">① お部屋</span><span data-s="2" class="on">② ご説明</span><span data-s="3">③ 送信</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ===== パスワード ===== -->
+  <section id="s-pw" class="hide">
+    <div id="pw-box">
+      <div class="card">
+        <h2>パスワードを入れてください</h2>
+        <p class="lead">ご案内のメールに記載の6文字です。</p>
+        <input id="pw" type="text" inputmode="latin" autocapitalize="characters" autocomplete="one-time-code" autocorrect="off" spellcheck="false" maxlength="6" placeholder="ここに貼り付け" value="SAMPLE1" style="">
+        <p class="note" style="margin:8px 2px 0;">
+          メール内のパスワードを長押しでコピーし、上の欄を長押し →「ペースト」で貼り付けられます。
+        </p>
+        <div class="err" id="pw-err"></div>
+        <button class="btn" id="pw-go" style="margin-top:6px;">確認をはじめる</button>
+      </div>
+      <p class="note" style="text-align:center;">
+        開けない場合は、管理会社までご連絡ください。
+      </p>
+    </div>
+  </section>
+
+  <!-- ===== ① 室内 ===== -->
+  <section id="s1" class="hide">
+    <div id="plan"></div>
+    <div class="duebox">
+      <b>ご返信の期限について</b>
+      <p id="due-note" data-due="1"><b style="display:inline;font-size:15px;">2026年9月30日 まで</b>にご返信ください。<br>
+        この確認は、入居されたときのお部屋の状態を、記録として残すためのものです。<br>
+        <b style="display:inline;font-size:14.5px;">期限までにご返信がないと</b>、入居前からあったキズや汚れであっても、
+        ご退去のときにご負担をお願いすることがあります。<br>
+        期限を過ぎてもご返信がない場合は、管理会社よりご連絡いたします。
+      </p>
+    </div>
+
+    <div class="card">
+      <h2>お部屋の状態をご確認ください</h2>
+      <p class="lead">
+        入居前からあるキズ・汚れ・不具合の有無を、場所ごとにご確認ください。<br>
+        気になるところがあれば、<b>写真</b>を撮って送ってください。<br>
+        後日「入居前からあったもの」と確認できるようにするためのものです。<br>
+        <b>お部屋に該当の場所や設備が無い場合は、「問題なし」をお選びください。</b>
+      </p>
+      <div id="places"><div class="place" data-p="玄関（クロス・傷）"><div class="place-h">玄関（クロス・傷）</div><div class="pick"><label><input type="radio" name="r0" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r0" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="廊下（クロス・傷）"><div class="place-h">廊下（クロス・傷）</div><div class="pick"><label><input type="radio" name="r1" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r1" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place is-ng" data-p="洋室・和室（クロス・傷）"><div class="place-h">洋室・和室（クロス・傷）</div><div class="pick"><label><input type="radio" name="r2" value="ok" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r2" value="ng" checked="" style=""><span>気になる</span></label></div><div class="detail"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style="">北側の壁に10cm程度のキズがあります。</textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="リビング（クロス・傷）"><div class="place-h">リビング（クロス・傷）</div><div class="pick"><label><input type="radio" name="r3" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r3" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="キッチン（クロス・傷）"><div class="place-h">キッチン（クロス・傷）</div><div class="pick"><label><input type="radio" name="r4" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r4" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="浴室（クロス・傷）"><div class="place-h">浴室（クロス・傷）</div><div class="pick"><label><input type="radio" name="r5" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r5" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="洗面所（クロス・傷）"><div class="place-h">洗面所（クロス・傷）</div><div class="pick"><label><input type="radio" name="r6" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r6" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="トイレ（クロス・傷）"><div class="place-h">トイレ（クロス・傷）</div><div class="pick"><label><input type="radio" name="r7" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r7" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="バルコニー"><div class="place-h">バルコニー</div><div class="pick"><label><input type="radio" name="r8" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r8" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="収納（クロス・傷）"><div class="place-h">収納（クロス・傷）</div><div class="pick"><label><input type="radio" name="r9" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r9" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="窓・網戸・建具"><div class="place-h">窓・網戸・建具</div><div class="pick"><label><input type="radio" name="r10" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r10" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="エアコン・設備"><div class="place-h">エアコン・設備</div><div class="pick"><label><input type="radio" name="r11" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r11" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div><div class="place" data-p="その他（上にない、気になるところ）"><div class="place-h">その他（上にない、気になるところ）</div><div class="pick"><label><input type="radio" name="r12" value="ok" checked="" style=""><span>問題なし</span></label><label class="ng"><input type="radio" name="r12" value="ng" style=""><span>気になる</span></label></div><div class="detail hide"><textarea placeholder="箇所と状態をご記入ください（例：北側の壁に10cm程度のキズ）" style=""></textarea><div class="shots"><div class="addshot"><b>＋</b>写真</div></div></div></div></div>
+    </div>
+  </section>
+
+  <!-- ===== ② ご説明の確認 ===== -->
+  <section id="s2" class="">
+    <div class="card">
+      <h2>ご契約時のご説明について</h2>
+      <p class="lead">
+        不動産会社から説明を受け、内容をご理解いただいたものに印を付けてください。<br>
+        ご不明な点は、印を付けずに送信してください。管理会社よりご連絡いたします。<br>
+        <b>ご質問は、この画面ではお受けできません。</b>下の「ひとこと」欄には、
+        印を付けなかった理由のみをご記入ください。
+      </p>
+      <div class="sec-h">お金に関すること</div>
+      <div id="cl-money"><div class="clwrap" data-t="水道料金について"><label class="chk on" data-t="水道料金について"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">水道料金について<span class="tag money">お金</span></div></div><div class="chk-b">水道料金は、偶数月に検針し、翌月の27日に、お家賃とあわせて引き落としとなります。</div></label><div class="why hide"><div class="why-q">印を付けなかった理由をお選びください</div><label class="whyr"><input type="radio" name="w1" value="説明を受けていない" style=""><span>説明を受けていない</span></label><label class="whyr"><input type="radio" name="w1" value="説明は受けたが、内容が理解できなかった" style=""><span>説明は受けたが、内容が理解できなかった</span></label><label class="whyr"><input type="radio" name="w1" value="内容に納得できない" style=""><span>内容に納得できない</span></label><textarea class="why-n" placeholder="補足（任意）" style=""></textarea></div></div><div class="clwrap" data-t="入居者過失による破損について（サンプル少額短期保険）"><label class="chk on" data-t="入居者過失による破損について（サンプル少額短期保険）"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">入居者過失による破損について（サンプル少額短期保険）<span class="tag money">お金</span></div></div><div class="chk-b">お部屋の設備などを、入居者様の過失により破損された場合は、<br>ご加入の保険をご利用いただける場合がございます。<br>まずは サンプル少額短期保険 <a href="tel:0120000001">0120-000-001</a> へご連絡ください。</div></label><div class="why hide"><div class="why-q">印を付けなかった理由をお選びください</div><label class="whyr"><input type="radio" name="w2" value="説明を受けていない" style=""><span>説明を受けていない</span></label><label class="whyr"><input type="radio" name="w2" value="説明は受けたが、内容が理解できなかった" style=""><span>説明は受けたが、内容が理解できなかった</span></label><label class="whyr"><input type="radio" name="w2" value="内容に納得できない" style=""><span>内容に納得できない</span></label><textarea class="why-n" placeholder="補足（任意）" style=""></textarea></div></div></div>
+      <div class="sec-h">その他</div>
+      <div id="cl-other"><div class="clwrap" data-t="ゴミの分別について（さくら市）"><label class="chk on" data-t="ゴミの分別について（さくら市）"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">ゴミの分別について（さくら市）</div></div><div class="chk-b">ゴミの分け方・出し方は、さくら市の案内をご確認ください。<br><a href="https://example.com/gomi-a" target="_blank" rel="noopener">https://example.com/gomi-a</a></div></label><div class="why hide"><div class="why-q">印を付けなかった理由をお選びください</div><label class="whyr"><input type="radio" name="w3" value="説明を受けていない" style=""><span>説明を受けていない</span></label><label class="whyr"><input type="radio" name="w3" value="説明は受けたが、内容が理解できなかった" style=""><span>説明は受けたが、内容が理解できなかった</span></label><label class="whyr"><input type="radio" name="w3" value="内容に納得できない" style=""><span>内容に納得できない</span></label><textarea class="why-n" placeholder="補足（任意）" style=""></textarea></div></div><div class="clwrap" data-t="ゴミの回収業者について（A清掃サービス株式会社）"><label class="chk on" data-t="ゴミの回収業者について（A清掃サービス株式会社）"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">ゴミの回収業者について（A清掃サービス株式会社）</div></div><div class="chk-b">ゴミの回収は、A清掃サービス株式会社 が行っています。<br>回収に関するお問い合わせは、<a href="tel:00000000001">000-0000-0001</a> へお願いいたします。</div></label><div class="why hide"><div class="why-q">印を付けなかった理由をお選びください</div><label class="whyr"><input type="radio" name="w4" value="説明を受けていない" style=""><span>説明を受けていない</span></label><label class="whyr"><input type="radio" name="w4" value="説明は受けたが、内容が理解できなかった" style=""><span>説明は受けたが、内容が理解できなかった</span></label><label class="whyr"><input type="radio" name="w4" value="内容に納得できない" style=""><span>内容に納得できない</span></label><textarea class="why-n" placeholder="補足（任意）" style=""></textarea></div></div></div>
+      <div class="sec-h">暮らしのルール（すべてに印が必要です）</div>
+      <div id="manners"><label class="chk mn on" data-t="ゴミは、決められた場所に出してください。ゴミ置き場には24時間いつでも出せますが、回収は週3回です。必ず袋に入れ、決められたとおりに分別してください。分別されていないゴミは回収されません（タバコの吸いがら・おむつなども、そのまま捨てないでください）。分別の方法がご不明な場合は、お住まいの市区町村のホームページでご確認ください。粗大ゴミなど有料のゴミは、ご自身で回収業者へご連絡のうえ、回収してもらってください"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">ゴミは、決められた場所に出してください。ゴミ置き場には24時間いつでも出せますが、回収は週3回です。必ず袋に入れ、決められたとおりに分別してください。分別されていないゴミは回収されません（タバコの吸いがら・おむつなども、そのまま捨てないでください）。分別の方法がご不明な場合は、お住まいの市区町村のホームページでご確認ください。粗大ゴミなど有料のゴミは、ご自身で回収業者へご連絡のうえ、回収してもらってください</div></div></label><label class="chk mn on" data-t="音楽やテレビの音量は上げすぎないでください。周囲には、想像以上に音が響きます。夜間の物音（掃除機・洗濯機・話し声・足音）にもご配慮ください"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">音楽やテレビの音量は上げすぎないでください。周囲には、想像以上に音が響きます。夜間の物音（掃除機・洗濯機・話し声・足音）にもご配慮ください</div></div></label><label class="chk mn on" data-t="契約した区画以外には駐車しないでください。共用部分への駐車、ご来客の駐車についても、厳守でお願いいたします"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">契約した区画以外には駐車しないでください。共用部分への駐車、ご来客の駐車についても、厳守でお願いいたします</div></div></label><label class="chk mn on" data-t="共用部分（廊下・階段）に、私物を置かないでください"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">共用部分（廊下・階段）に、私物を置かないでください</div></div></label><label class="chk mn on" data-t="入居審査は、お支払い能力だけでなく、ルールを守れること、相手の立場に立って考えられることも含めて通過いただいたものです。入居者同士のトラブルや迷惑行為への弊社の対応は、ご加入の「あんしんサポート」による対応と、その結果に沿ったものとさせていただきます。その結果がご満足のいかないものであったとしましても、お一人おひとりのモラルの感覚まで弊社が管理することはできかねます。何とぞご理解いただき、お互いが気持ちよく過ごせるよう、ご配慮をお願いいたします"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">入居審査は、お支払い能力だけでなく、ルールを守れること、相手の立場に立って考えられることも含めて通過いただいたものです。入居者同士のトラブルや迷惑行為への弊社の対応は、ご加入の「あんしんサポート」による対応と、その結果に沿ったものとさせていただきます。その結果がご満足のいかないものであったとしましても、お一人おひとりのモラルの感覚まで弊社が管理することはできかねます。何とぞご理解いただき、お互いが気持ちよく過ごせるよう、ご配慮をお願いいたします</div></div></label><label class="chk mn on" data-t="ご転居や連絡先の変更、修繕のご依頼、ご契約・ご解約に関するご連絡は、弊社ホームページのお問い合わせよりお願いいたします（記録が残るため、行き違いを防ぐことができます）"><input type="checkbox" checked="" style=""><div class="chk-h"><i class="box"></i><div class="chk-t">ご転居や連絡先の変更、修繕のご依頼、ご契約・ご解約に関するご連絡は、弊社ホームページのお問い合わせよりお願いいたします（記録が残るため、行き違いを防ぐことができます）</div></div></label></div>
+    </div>
+  </section>
+
+  <!-- ===== ③ 送信 ===== -->
+  <section id="s3" class="hide">
+    <div class="card">
+      <h2>この内容で送ります</h2>
+      <p class="lead">お間違いがなければ、最下部の「送信する」を押してください。</p>
+      <div class="sum" id="sum"></div>
+      <p class="note">
+        送信後の控えは、管理会社にて保管いたします。<br>
+        修正が必要な場合は、管理会社までご連絡ください。<br>
+        <b>期限までにご返信がないと</b>、入居前からあったキズや汚れであっても、
+        ご退去のときにご負担をお願いすることがあります。
+      </p>
+    </div>
+    <div class="askbox" id="ask3"></div>
+  </section>
+
+  <!-- ===== お部屋のご案内（いつでも見返せます） ===== -->
+  <section id="s-info" class="hide">
+    <div class="card">
+      <h2 id="info-ttl">お部屋のご案内</h2>
+      <p class="lead">ご入居後に必要となる事項を、まとめております。<br>
+        <b>このページは、いつでもご確認いただけます。</b>ご案内のメールは削除せず、保管してください。</p>
+    </div>
+    <div id="info-body"></div>
+    <div class="askbox" id="ask5"></div>
+    <button class="btn ghost" id="info-back" style="margin:18px 0 40px;">戻る</button>
+  </section>
+
+  <!-- ===== 完了 ===== -->
+  <section id="s-done" class="hide">
+    <div class="done">
+      <div class="mk">✓</div>
+      <h2>送信しました</h2>
+      <p class="lead" id="done-msg">ご協力ありがとうございました。</p>
+      <button class="btn" id="done-info" style="max-width:420px;margin:26px auto 0;">
+        お部屋のご案内を見る</button>
+      <p class="note" style="margin-top:12px;">
+        駐車場の区画・集合ポストのダイヤル・ゴミの出し方などを、まとめております。</p>
+      <!-- ご返信は何度でもいただけます。あとから気づいたことがあれば、ここから -->
+      <button class="btn ghost" id="done-again" style="max-width:420px;margin:22px auto 0;">
+        もう一度ご返信する</button>
+      <p class="note" style="margin-top:12px;">
+        あとからお気づきのことがあれば、何度でもお送りいただけます。<br>
+        いただいた内容は、そのつど担当者へ届きます。</p>
+    </div>
+    <div class="askbox" id="ask4"></div>
+  </section>
+
+</main>
+
+<footer id="foot" class="">
+  <!-- ★ 途中でやめても、続きから入力できるように、こちらでお預かりします -->
+  <button id="hold" type="button">入力を一時保存する</button>
+  <div class="inner">
+    <button class="btn ghost" id="back">戻る</button>
+    <button class="btn" id="next">確認</button>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+<div id="veil" class=""><div class="in"><div class="spin"></div><span id="veil-msg">確認しています…</span></div></div>
+<div id="zoom"><img alt=""></div>
+
+
+
+
+
+
+<script>addEventListener("DOMContentLoaded",function(){var m=[["window",565],["#pf-scroll-1",565]];m.forEach(function(p){if(p[0]==="window"){window.scrollTo(0,p[1]);return;}var e=document.querySelector(p[0]); if(e) e.scrollTop=p[1];});});</script></body></html>
