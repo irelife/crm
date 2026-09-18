@@ -597,6 +597,22 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;color:#fff;}
 .count{font-size:14px;color:rgba(255,255,255,.7);padding:0 22px 12px;}
 .buildtag{font-size:11px;color:var(--ink-3);padding:26px 22px 0;letter-spacing:0;}
 
+/* ★★ 見出しの帯（2026/9/18）
+     濃紺の中に、画面の名前と数字をまとめます。 */
+.hero{display:flex;align-items:flex-end;justify-content:space-between;
+  gap:20px;flex-wrap:wrap;padding:4px 22px 6px}
+.hero-t{min-width:0}
+.hero-h{font-size:26px;font-weight:600;letter-spacing:-.02em;color:#fff;line-height:1.2}
+.hero-s{font-size:12.5px;color:rgba(255,255,255,.62);margin-top:4px}
+.hero .stats{display:flex;gap:4px;margin:0;padding:0;border:0;background:transparent}
+@media (max-width:560px){
+  .hero{padding:4px 16px 6px}
+  .hero-h{font-size:21px}
+  .hero .stats{width:100%}
+  .hero .stat{flex:1;padding:8px 10px 10px}
+  .hero .stat .v{font-size:27px}
+}
+
 /* ★★ カードに「旅のどこにいるか」を出します（2026/9/18）
      受信 → 返信案 → 承認まち → 送信 → 返事まち → 完了 の6段。
      済んだ段はオレンジ、これからの段は灰色です。 */
@@ -624,7 +640,6 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;color:#fff;}
 .tab.on{background:var(--az-navy);color:#fff;font-weight:600;box-shadow:none;}
 .tab.on .tab-n{color:var(--az-orange);}
 .tab-n{font-size:12px;color:var(--ink-3);background:transparent;}
-.tab.on .tab-n{color:rgba(255,255,255,.66);}
 
 /* ---- 用件のしぼり込み ---- */
 .filters{
@@ -1531,10 +1546,9 @@ button.tl-card.go:focus-visible{outline:none;box-shadow:inset 3px 0 0 var(--acce
 .card.done .hl .room{color:#8b8b90;}
 .card.done .kind{border-color:#cfcfd4;color:#8b8b90;background:transparent;}
 
-/* ---- 上の件数 ---- */
-.stat .v{font-size:32px;font-weight:600;letter-spacing:-.035em;}
-.stat .k{font-size:12px;color:var(--ink-3);}
-#btnDone.on{background:rgba(0,0,0,.055);}
+/* ---- 上の件数 ----
+   ここは白地だったころの決めごとでした。いまは濃紺の帯の中なので、
+   薄い灰色の文字だと読めません。色と大きさは上の帯のほうに一本化しました。 */
 
 @media (max-width:640px){
   .ficon{width:104px;}
@@ -1812,11 +1826,18 @@ body.view-rows .card.eigyou{aspect-ratio:auto;}
       <h1>CRM</h1>
       <span class="badge" id="mode">確認中</span>
     </div>
-    <!-- いま何件たまっているか。開いてすぐ目に入る場所に置きます -->
-    <div class="stats">
-      <button class="stat" id="btnOpen" type="button"><span class="v" id="sOpen">–</span><span class="k">未返信</span></button>
-      <button class="stat" id="btnLate" type="button"><span class="v muted" id="sLate">–</span><span class="k">3日以上</span></button>
-      <button class="stat" id="btnDone" type="button"><span class="v muted" id="sDone">–</span><span class="k">完了</span></button>
+    <!-- ★★ 見出しの帯（2026/9/18）
+         何の画面で、いま何件たまっているかを、開いてすぐ目に入る場所に置きます -->
+    <div class="hero">
+      <div class="hero-t">
+        <div class="hero-h">ダッシュボード</div>
+        <div class="hero-s">福山・倉敷・岡山の問い合わせを、支社ごとに見ます</div>
+      </div>
+      <div class="stats">
+        <button class="stat" id="btnOpen" type="button"><span class="v" id="sOpen">–</span><span class="k">未返信</span></button>
+        <button class="stat" id="btnLate" type="button"><span class="v muted" id="sLate">–</span><span class="k">3日以上</span></button>
+        <button class="stat" id="btnDone" type="button"><span class="v muted" id="sDone">–</span><span class="k">完了</span></button>
+      </div>
     </div>
     <div class="count" id="count"></div>
   </header>
