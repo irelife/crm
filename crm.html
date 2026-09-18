@@ -20,6 +20,13 @@
   --line:#e3e6ea;
   --line-2:#eef0f3;
   --accent:#3350c9;
+  /* ★★ Amazon 風の色（2026/9/18）
+       navy #131921 ／ orange #FF9900 ／ yellow #FFD814 */
+  --az-navy:#131921;
+  --az-navy2:#1f2a37;
+  --az-orange:#FF9900;
+  --az-orange-soft:#FFF4E5;
+  --az-yellow:#FFD814;
   --accent-d:#263a9c;
   --late:#c2352a;
   --warn:#a8690c;
@@ -88,6 +95,39 @@ h1{font-size:14px;margin:0;letter-spacing:.02em;font-weight:700;flex:1}
 .tab-n{font-family:var(--mono);font-size:11px;font-weight:400;padding:0;
   border-radius:0;background:transparent;color:var(--ink-3)}
 .tab.on .tab-n{background:transparent;color:var(--accent);font-weight:500}
+
+/* ★★ 支社でしぼるカード（2026/9/18）
+     問い合わせの住所から支社を見分けて分けます。
+     見分けられなかったものは「未分類」へ。隠しません。
+     押すとその支社だけに、もう一度押すと全社に戻ります。 */
+.areatabs{display:grid;gap:12px;padding:14px;background:transparent;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr))}
+.atab{text-align:left;padding:14px 16px;border:2px solid var(--line);
+  border-radius:12px;background:#fff;cursor:pointer;
+  display:flex;flex-direction:column;gap:3px;
+  transition:border-color .15s,box-shadow .15s}
+.atab:hover{border-color:var(--g3)}
+.atab.on{border-color:var(--az-orange);box-shadow:0 2px 10px rgba(255,153,0,.18)}
+.atab-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.atab-nm{display:flex;align-items:center;gap:6px;
+  font-size:13px;color:var(--ink-2);font-weight:400}
+.atab-pin{width:8px;height:8px;border-radius:50%;background:var(--az-orange);
+  flex:0 0 auto}
+.atab-n{font-family:var(--mono);font-size:24px;font-weight:700;color:var(--ink);
+  line-height:1.1;font-variant-numeric:tabular-nums}
+.atab-sub{font-size:11px;color:var(--ink-3)}
+/* 見分けられなかったもの。気づけるように印の色を変えます */
+.atab.unk .atab-pin{background:var(--warn-bar)}
+.atab.unk.on{border-color:var(--warn-bar);box-shadow:0 2px 10px rgba(224,163,60,.2)}
+
+/* ★★ 1本の縦スクロールに、状態ごとに積みます（check と同じ並べかた） */
+.lsec{margin:0}
+.lsec-h{display:flex;align-items:baseline;gap:8px;
+  padding:4px 2px 0;background:transparent;border:0}
+.lsec-t{font-size:17px;font-weight:700;color:var(--ink);letter-spacing:-.01em}
+.lsec-n{font-family:var(--mono);font-size:13px;color:var(--ink-3)}
+.lsec-d{font-size:12px;color:var(--ink-3);margin-left:auto}
+.lsec-e{padding:14px 2px 26px;font-size:12.5px;color:var(--ink-3)}
 
 /* ---- 用件でしぼる ---- */
 .filters{display:flex;gap:6px;overflow-x:auto;margin:0;
@@ -515,19 +555,21 @@ body{
 .wrap{max-width:1200px;padding:0 0 80px;}
 
 /* ---- 上の帯：すりガラス ---- */
+/* ★★ 上のところを、濃紺にしました（2026/9/18）
+     白い一覧とはっきり分かれて、数字が目に入ります。 */
 header{
-  background:rgba(255,255,255,.72);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid var(--line-2);
+  background:var(--az-navy);
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+  border-bottom:0;color:#fff;
 }
 .hd{padding:14px 22px 12px;gap:10px;}
-h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
+h1{font-size:19px;font-weight:600;letter-spacing:-.015em;color:#fff;}
 .badge{
   font-size:11px;font-weight:500;letter-spacing:0;padding:3px 9px;
-  border-radius:980px;background:var(--g1);color:var(--ink-2);border:0;
+  border-radius:980px;background:rgba(255,255,255,.14);color:rgba(255,255,255,.88);
+  border:0;
 }
-.badge.live{background:var(--ink);color:#fff;}
+.badge.live{background:var(--az-yellow);color:var(--az-navy);font-weight:700;}
 
 /* ---- 数字：Apple の見出しのように大きく、字間を詰めて ---- */
 .stats{
@@ -541,17 +583,29 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
   display:flex;flex-direction:column;align-items:flex-start;gap:2px;
   font-family:inherit;transition:background .16s;
 }
-.stat:hover{background:rgba(0,0,0,.04);}
-.stat.on{background:rgba(0,0,0,.06);}
-.stat.on .v{color:var(--ink);}
-.stat.on .v.late{color:var(--late);}
+.stat:hover{background:rgba(255,255,255,.08);}
+/* 選んでいることは、背景で示します。数字の色は変えません
+   （オレンジのままのほうが、どこに何件あるか目で追いやすいためです） */
+.stat.on{background:rgba(255,255,255,.12);}
 .stat:last-child{border-right:0;}
-.stat .v{font-size:34px;font-weight:600;letter-spacing:-.025em;line-height:1.05;}
-.stat .v.late{color:var(--late);}
-.stat .v.muted{color:var(--ink-3);}
-.stat .k{font-size:12px;color:var(--ink-2);margin-top:3px;}
-.count{font-size:14px;color:var(--ink-2);padding:0 22px 12px;}
+.stat .v{font-size:34px;font-weight:600;letter-spacing:-.025em;line-height:1.05;
+  color:var(--az-orange);}
+/* 3日以上たっているものは、黄色にして真っ先に目が行くようにします */
+.stat .v.late,.stat.on .v.late{color:var(--az-yellow);}
+.stat .v.muted{color:rgba(255,255,255,.55);}
+.stat .k{font-size:12px;color:rgba(255,255,255,.62);margin-top:3px;}
+.count{font-size:14px;color:rgba(255,255,255,.7);padding:0 22px 12px;}
 .buildtag{font-size:11px;color:var(--ink-3);padding:26px 22px 0;letter-spacing:0;}
+
+/* ★★ カードに「旅のどこにいるか」を出します（2026/9/18）
+     受信 → 返信案 → 承認まち → 送信 → 返事まち → 完了 の6段。
+     済んだ段はオレンジ、これからの段は灰色です。 */
+.jny{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:10px}
+.jny-b{display:flex;gap:3px;flex:1;min-width:0}
+.jny-s{height:4px;flex:1;border-radius:980px;background:var(--g2)}
+.jny-s.go{background:var(--az-orange)}
+.jny-t{font-size:11px;color:var(--ink-3);white-space:nowrap;
+  font-family:var(--mono)}
 
 /* ---- タブ：ピル型 ---- */
 .tabs{
@@ -567,7 +621,8 @@ h1{font-size:19px;font-weight:600;letter-spacing:-.015em;}
   background:transparent;box-shadow:none;
 }
 .tab:hover{background:rgba(0,0,0,.045);color:var(--ink);box-shadow:none;}
-.tab.on{background:var(--ink);color:#fff;font-weight:500;box-shadow:none;}
+.tab.on{background:var(--az-navy);color:#fff;font-weight:600;box-shadow:none;}
+.tab.on .tab-n{color:var(--az-orange);}
 .tab-n{font-size:12px;color:var(--ink-3);background:transparent;}
 .tab.on .tab-n{color:rgba(255,255,255,.66);}
 
@@ -1522,6 +1577,14 @@ h1{letter-spacing:-.03em;}
   background:transparent;box-shadow:none;overflow:visible;border-radius:0;
 }
 #list > .empty,#list > .eigyou-note{grid-column:1 / -1;}
+/* ★ 状態の区切りは、横いっぱいに置きます。
+     これを入れないと、区切りそのものがカードのように段組みされ、
+     未返信・返事待ち・完了が横3列に並んでしまいます。 */
+#list > .lsec{grid-column:1 / -1;display:block;}
+/* 区切りの中のカードは、これまでどおり並べます */
+.lsec-b{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));
+  gap:16px;padding:14px 0 26px;}
+.lsec-b:empty{padding:0;}
 /* 分析タブは、カードを並べずに1枚ずつ横いっぱいで見せます */
 #list > .an-hero,#list > .an-card{grid-column:1 / -1;margin-left:0;margin-right:0;}
 
@@ -1761,10 +1824,14 @@ body.view-rows .card.eigyou{aspect-ratio:auto;}
   <!-- 一覧 -->
   <div class="split" id="split">
   <section id="listView">
+    <!-- ★★ 支社でしぼる（2026/9/18）
+         問い合わせの住所から、どの支社の話かを見分けて分けます。
+         見分けられなかったものは「未分類」に入れます。
+         取りこぼしを作らないためで、隠すことはしません。 -->
+    <div class="areatabs" id="areatabs"></div>
+
     <div class="tabs">
-      <button class="tab on" id="tabOpen" type="button">未返信<span class="tab-n" id="nOpen"></span></button>
-      <button class="tab" id="tabWait" type="button">返事待ち<span class="tab-n" id="nWait"></span></button>
-      <button class="tab" id="tabDone" type="button">完了<span class="tab-n" id="nDone"></span></button>
+      <button class="tab on" id="tabList" type="button">案件<span class="tab-n" id="nList"></span></button>
       <button class="tab" id="tabEigyou" type="button">営業<span class="tab-n" id="nEigyou"></span></button>
       <button class="tab" id="tabAnalytics" type="button">分析</button>
       <!-- 並べ方の切り替え。選んだ形はこの端末に覚えさせます -->
@@ -1982,7 +2049,59 @@ function esc(s) {
 let listOpen = [];
 let listWait = [];
 let listDone = [];
-let listTab  = "open";
+let listTab  = "list";
+
+/* ★★ 支社の見分け（2026/9/18）
+ *
+ *  いまの一覧には「支社」も「住所」も入っていません。
+ *  台帳にあるのは 物件名・件名・お問い合わせ本文 です。
+ *  そこで、本文にある市の名前から見分けます。
+ *
+ *  ★見分けられなかったものは「未分類」に入れます。
+ *    どこにも出ない、という取りこぼしを作らないためです。
+ *
+ *  ★順番が大事です。倉敷市の住所は「岡山県倉敷市…」なので、
+ *    岡山より先に倉敷を見ないと、倉敷が岡山支社に流れます。
+ *
+ *  サーバーが将来 x.area を返すようになれば、そちらを優先します。
+ */
+const AREAS = ["福山", "倉敷", "岡山"];
+const AREA_WORDS = [
+  ["倉敷", ["倉敷", "玉島", "児島", "水島", "早島", "総社", "船穂", "真備"]],
+  ["福山", ["福山", "広島", "尾道", "三原", "府中", "神辺", "松永", "駅家"]],
+  ["岡山", ["岡山", "玉野", "瀬戸内", "赤磐", "備前", "妹尾", "高屋", "西大寺"]]
+];
+function areaOf(x) {
+  /* サーバーが持っていれば、それが正です */
+  const given = String((x && x.area) || "").trim();
+  if (given) {
+    for (let i = 0; i < AREAS.length; i++) {
+      if (given.indexOf(AREAS[i]) >= 0) return AREAS[i];
+    }
+  }
+  const t = [x && x.content, x && x.building, x && x.subject]
+    .map(function (v) { return String(v || ""); }).join(" ");
+  if (!t.trim()) return "";
+  for (let i = 0; i < AREA_WORDS.length; i++) {
+    const nm = AREA_WORDS[i][0], ws = AREA_WORDS[i][1];
+    for (let j = 0; j < ws.length; j++) {
+      if (t.indexOf(ws[j]) >= 0) return nm;
+    }
+  }
+  return "";                       /* 見分けられません → 未分類 */
+}
+let areaTab = "";                  /* "" は全社 */
+try { areaTab = localStorage.getItem("crm_area") || ""; } catch (e) { areaTab = ""; }
+function areaKeep(v) {
+  areaTab = v;
+  try { localStorage.setItem("crm_area", v); } catch (e) {}
+}
+/* いま選んでいる支社のものだけにします */
+function areaPick(rows) {
+  if (!areaTab) return rows;
+  if (areaTab === "?") return rows.filter(function (x) { return !areaOf(x); });
+  return rows.filter(function (x) { return areaOf(x) === areaTab; });
+}
 
 /* ★返事待ちの残り日数
  *
@@ -2206,6 +2325,18 @@ function cardHtml(x, done, wait) {
   /* 物件名が空のときに用件を出すと、左のアイコンと同じ言葉が二重に並ぶので出しません */
   const head   = bp.name || (room ? "" : "\u7269\u4EF6\u540D\u306A\u3057");
 
+  /* ★ 旅のどこにいるか。段は FLOW_STEPS（受信→…→完了）と同じものです */
+  const ji = done ? 5 : (wait ? 4 : (x.making ? 1 : 2));
+  const jny = '<div class="jny">'
+            +   '<div class="jny-b">'
+            +     FLOW_STEPS.map(function (nm, i) {
+                    return '<span class="jny-s' + (i <= ji ? ' go' : '') + '"></span>';
+                  }).join("")
+            +   '</div>'
+            +   '<span class="jny-t">' + esc(FLOW_STEPS[ji] || "")
+            +     '　' + (ji + 1) + '/' + FLOW_STEPS.length + '</span>'
+            + '</div>';
+
   return '<div class="card ' + cls + '" tabindex="0" data-row="' + x.rowNo + '">'
        +   '<div class="crow">'
        +     '<div class="cico">'
@@ -2230,6 +2361,7 @@ function cardHtml(x, done, wait) {
        +         '<span class="time">' + esc(x.received) + '</span>'
        +       '</div>'
        +       '<p class="snip">' + esc(snip) + '</p>'
+       +       jny
        +     '</div>'
        +   '</div>'
        + '</div>';
@@ -2261,8 +2393,7 @@ function eigyouCard(x) {
 }
 
 async function drawEigyou() {
-  $("tabOpen").className   = "tab";
-  $("tabDone").className   = "tab";
+  $("tabList").className   = "tab";
   $("tabEigyou").className = "tab on";
   $("tabAnalytics").className = "tab";
 
@@ -2657,9 +2788,7 @@ function advise(a) {
 }
 
 function drawStats() {
-  $("tabOpen").className = "tab";
-  $("tabWait").className = "tab";
-  $("tabDone").className = "tab";
+  $("tabList").className = "tab";
   $("tabEigyou").className = "tab";
   $("tabAnalytics").className = "tab on";
   $("filters").innerHTML = "";
@@ -2758,47 +2887,126 @@ function drawStats() {
   });
 }
 
+/* 上の数字ボタンを押したとき、その区切りまで動きます。
+   タブで切り替えるのをやめたので、代わりに「そこへ飛ぶ」にしました。 */
+function jumpSec(k) {
+  const el = document.getElementById("lsec-" + k);
+  if (!el) return;
+  try { el.scrollIntoView({ behavior: "smooth", block: "start" }); }
+  catch (e) { el.scrollIntoView(); }
+}
+
+/* ★★ 支社のならびを描きます（件数つき） */
+function drawAreaTabs() {
+  const box = $("areatabs");
+  if (!box) return;
+  const all = listOpen.concat(listWait, listDone);
+  const n = { "": all.length, "?": 0 };
+  AREAS.forEach(function (a) { n[a] = 0; });
+  all.forEach(function (x) {
+    const a = areaOf(x);
+    if (a) n[a]++; else n["?"]++;
+  });
+  /* まだ終わっていないもの（未返信＋返事待ち）を、大きい数字に出します。
+     完了まで数えると、数字が増えるばかりで見る意味が薄れるためです */
+  const live = {};
+  live[""] = 0; live["?"] = 0;
+  AREAS.forEach(function (a) { live[a] = 0; });
+  listOpen.concat(listWait).forEach(function (x) {
+    const a = areaOf(x) || "?";
+    live[a]++; live[""]++;
+  });
+
+  const btn = function (key, label, sub, cls) {
+    return '<button type="button" class="atab' + (cls ? " " + cls : "")
+         + (areaTab === key ? " on" : "") + '" data-area="' + esc(key) + '">'
+         +   '<div class="atab-top">'
+         +     '<span class="atab-nm"><span class="atab-pin"></span>' + esc(label) + '</span>'
+         +     '<span class="atab-n">' + live[key] + '</span>'
+         +   '</div>'
+         +   '<span class="atab-sub">' + esc(sub) + '　全 ' + n[key] + ' 件</span>'
+         + '</button>';
+  };
+  let h = btn("", "全社", "未返信・返事待ち", "");
+  AREAS.forEach(function (a) { h += btn(a, a + "支社", "未返信・返事待ち", ""); });
+  /* 見分けられなかったものは、0件のときは出しません（ふだんは邪魔なので） */
+  if (n["?"]) h += btn("?", "未分類", "住所から支社が分かりません", "unk");
+  box.innerHTML = h;
+}
+
+/* ★★ 1本の縦スクロールに、状態ごとに積みます（check と同じ並べかた）
+ *
+ *  【改良前】未返信・返事待ち・完了が、押し替えるタブでした。
+ *    いま何件あるのかを見るのに、3回押す必要がありました。
+ *  【改良後】3つとも1本の流れに積みます。見出しは上に貼りつきます。
+ */
+const LSECS = [
+  { k:"open", t:"未返信", d:"返信案を確かめて、送ってください",
+    e:"未返信の案件はありません" },
+  { k:"wait", t:"返事待ち", d:"こちらの返信は済んでいます。相手の返事待ちです",
+    e:"返事を待っている案件はありません" },
+  { k:"done", t:"完了",   d:"送信が済んだ案件です",
+    e:"完了した案件はまだありません" }
+];
+
 function drawList() {
-  if (listTab === "eigyou") { $("filters").innerHTML = ""; drawEigyou(); return; }
-  if (listTab === "stats")  { drawStats(); return; }
+  if (listTab === "eigyou") { $("filters").innerHTML = ""; drawAreaTabs(); drawEigyou(); return; }
+  if (listTab === "stats")  { drawAreaTabs(); drawStats(); return; }
 
-  const wait = (listTab === "wait");
-  const done = (listTab === "done");
-  /* 3日以上でしぼるのは未返信のときだけです */
-  if (wait || done) lateOnly = false;
-  const base = wait ? listWait : (done ? listDone : listOpen);
-  const all  = lateOnly
-    ? base.filter(function (x) { return x.days >= LATE_DAYS; })
-    : base;
+  drawAreaTabs();
 
-  $("btnOpen").className = "stat" + (!wait && !done && !lateOnly ? " on" : "");
+  /* まず支社でしぼり、そのあと用件でしぼります */
+  const src = {
+    open: areaPick(listOpen),
+    wait: areaPick(listWait),
+    done: areaPick(listDone)
+  };
+  /* 3日以上でしぼるのは、未返信だけにかけます */
+  if (lateOnly) {
+    src.open = src.open.filter(function (x) { return x.days >= LATE_DAYS; });
+  }
+
+  $("btnOpen").className = "stat" + (!lateOnly ? " on" : "");
   $("btnLate").className = "stat" + (lateOnly ? " on" : "");
-  $("btnDone").className = "stat" + (done ? " on" : "");
+  $("btnDone").className = "stat";
 
-  $("tabOpen").className   = "tab" + (!wait && !done ? " on" : "");
-  $("tabWait").className   = "tab" + (wait ? " on" : "");
-  $("tabDone").className   = "tab" + (done ? " on" : "");
+  $("tabList").className   = "tab on";
   $("tabEigyou").className = "tab";
   $("tabAnalytics").className = "tab";
 
-  drawFilters(all);
+  /* 用件のしぼり込みは、3つを合わせたものから作ります */
+  const whole = src.open.concat(src.wait, src.done);
+  drawFilters(whole);
+  $("nList").textContent = whole.length ? whole.length : "";
 
-  const rows = topicFilter
-    ? all.filter(function (x) { return topicOf(x.content) === topicFilter; })
-    : all;
+  const pick = function (rows) {
+    return topicFilter
+      ? rows.filter(function (x) { return topicOf(x.content) === topicFilter; })
+      : rows;
+  };
 
-  if (!rows.length) {
-    $("list").innerHTML = '<div class="empty">'
-      + (topicFilter
-          ? "「" + esc(topicFilter) + "」の案件はありません"
-          : (lateOnly ? "3日以上たっている案件はありません"
-              : (wait ? "返事を待っている案件はありません"
-                  : (done ? "完了した案件はまだありません" : "未返信の案件はありません"))))
-      + '</div>';
-    return;
-  }
-
-  $("list").innerHTML = rows.map(function (x) { return cardHtml(x, done, wait); }).join("");
+  let html = "";
+  LSECS.forEach(function (sec) {
+    const rows = pick(src[sec.k]);
+    const done = (sec.k === "done"), wait = (sec.k === "wait");
+    html += '<div class="lsec" id="lsec-' + sec.k + '">'
+         +   '<div class="lsec-h">'
+         +     '<span class="lsec-t">' + esc(sec.t) + '</span>'
+         +     '<span class="lsec-n">' + rows.length + '</span>'
+         +     '<span class="lsec-d">' + esc(sec.d) + '</span>'
+         +   '</div>'
+         +   (rows.length
+               ? '<div class="lsec-b">'
+                 + rows.map(function (x) { return cardHtml(x, done, wait); }).join("")
+                 + '</div>'
+               : '<div class="lsec-e">'
+                 + esc(topicFilter ? ("「" + topicFilter + "」の案件はありません")
+                                   : (lateOnly && sec.k === "open"
+                                        ? "3日以上たっている案件はありません" : sec.e))
+                 + '</div>')
+         + '</div>';
+  });
+  $("list").innerHTML = html;
   if (cur) {
     const on = $("list").querySelector('.card[data-row="' + cur.rowNo + '"]');
     if (on) on.classList.add("on");
@@ -2888,9 +3096,9 @@ async function loadList() {
       + " ／ API "  + (r.build || "?")
       + " ／ 一覧 " + (r.listBuild || "?");
 
-    $("nOpen").textContent = listOpen.length;
-    $("nWait").textContent = listWait.length;
-    $("nDone").textContent = listDone.length;
+    /* ★ 未返信・返事待ち・完了は、1本の流れの中に件数を出すようにしました。
+         ここで数えるのは「案件ぜんぶ」だけです。 */
+    $("nList").textContent = listOpen.length + listWait.length + listDone.length;
     $("nEigyou").textContent = (r.nEigyou != null) ? r.nEigyou : "";
 
     /* ヘッダーの数字。件数はここで見せるので、下の文章は0件のときだけにします */
@@ -3077,9 +3285,7 @@ function finishRow(rowNo, toDone, toWait) {
       }
     }
   }
-  $("nOpen").textContent = listOpen.length;
-  $("nWait").textContent = listWait.length;
-  $("nDone").textContent = listDone.length;
+  $("nList").textContent = listOpen.length + listWait.length + listDone.length;
   const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
   $("count").textContent = listOpen.length
     ? "返信を待っている案件が " + listOpen.length + " 件"
@@ -3282,9 +3488,7 @@ function removeRow(rowNo) {
     const i = arr.map(function (x) { return x.rowNo; }).indexOf(rowNo);
     if (i >= 0) arr.splice(i, 1);
   });
-  $("nOpen").textContent = listOpen.length;
-  $("nWait").textContent = listWait.length;
-  $("nDone").textContent = listDone.length;
+  $("nList").textContent = listOpen.length + listWait.length + listDone.length;
   $("sOpen").textContent = listOpen.length;
   $("sDone").textContent = listDone.length;
   const late = listOpen.filter(function (x) { return x.days >= LATE_DAYS; }).length;
@@ -3697,13 +3901,16 @@ async function dropAttach(id) {
 /* ---------- 起動 ---------- */
 /* 上の数字を押すと、その並びに切り替わります */
 $("btnOpen").addEventListener("click", function () {
-  listTab = "open"; lateOnly = false; topicFilter = ""; drawList();
+  listTab = "list"; lateOnly = false; topicFilter = ""; drawList();
+  jumpSec("open");
 });
 $("btnLate").addEventListener("click", function () {
-  listTab = "open"; lateOnly = !lateOnly; topicFilter = ""; drawList();
+  listTab = "list"; lateOnly = !lateOnly; topicFilter = ""; drawList();
+  jumpSec("open");
 });
 $("btnDone").addEventListener("click", function () {
-  listTab = "done"; lateOnly = false; topicFilter = ""; drawList();
+  listTab = "list"; lateOnly = false; topicFilter = ""; drawList();
+  jumpSec("done");
 });
 
 /* 用件の並びを左右に送る */
@@ -3716,10 +3923,17 @@ $("fNext").addEventListener("click", function () {
 $("filters").addEventListener("scroll", syncFilterArrows);
 window.addEventListener("resize", syncFilterArrows);
 
-$("tabOpen").addEventListener("click", function () { listTab = "open"; lateOnly = false; topicFilter = ""; drawList(); });
-$("tabWait").addEventListener("click", function () { listTab = "wait"; lateOnly = false; topicFilter = ""; drawList(); });
-$("tabDone").addEventListener("click", function () { listTab = "done"; lateOnly = false; topicFilter = ""; drawList(); });
+$("tabList").addEventListener("click", function () { listTab = "list"; lateOnly = false; topicFilter = ""; drawList(); });
 $("tabEigyou").addEventListener("click", function () { listTab = "eigyou"; lateOnly = false; topicFilter = ""; drawList(); });
+/* ★ 支社のならび。押すと、その支社のものだけになります */
+$("areatabs").addEventListener("click", function (ev) {
+  const b = ev.target.closest ? ev.target.closest(".atab") : null;
+  if (!b) return;
+  areaKeep(b.getAttribute("data-area") || "");
+  listTab = "list"; topicFilter = "";
+  drawList();
+  try { window.scrollTo({ top: 0, behavior: "auto" }); } catch (e) { window.scrollTo(0, 0); }
+});
 $("tabAnalytics").addEventListener("click", function () { listTab = "stats"; lateOnly = false; topicFilter = ""; drawList(); });
 $("dFile").addEventListener("change", function (e) {
   const f = e.target.files && e.target.files[0];
