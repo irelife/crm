@@ -1881,7 +1881,11 @@ body{
 
 /* ---- 支社のカード（grid-cols-1 sm:grid-cols-3 gap-4）---- */
 .b44-areas{display:grid;grid-template-columns:1fr;gap:16px;}
-@media (min-width:640px){ .b44-areas{grid-template-columns:repeat(3,minmax(0,1fr));} }
+/* 普段は3つ。未分類が出たときだけ4つ並びます */
+@media (min-width:640px){ .b44-areas{grid-template-columns:repeat(auto-fit,minmax(190px,1fr));} }
+.b44-area.unk{border-style:dashed;}
+.b44-area.unk .b44-area-nm svg{color:hsl(var(--b44-muted-foreground));}
+.b44-area.unk.on{border-style:solid;border-color:hsl(var(--b44-primary));}
 .b44-area{
   text-align:left;padding:16px;border-radius:12px;
   border:2px solid hsl(var(--b44-border));
@@ -2678,19 +2682,67 @@ let listTab  = "list";
  *  サーバーが将来 x.area を返すようになれば、そちらを優先します。
  */
 const AREAS = ["福山", "倉敷", "岡山"];
+
+/* ★★ 物件名 → 支社の表（2026/9/19）
+ *
+ *  いえらぶCLOUD の通知メールには、住所が1字も入っていません。
+ *  入っているのは、お名前・連絡先・物件名・用件だけです。
+ *  だから、本文から地名を探すやり方では支社は分かりません。
+ *  物件名で引くしかありません。
+ *
+ *  【使いかた】左に物件名（号室は付けない）、右に支社を書きます。
+ *    "エルキュール": "倉敷",
+ *  前から順に見て、物件名の頭が一致したものを使います。
+ *  （「エルキュールA棟」「エルキュールC203」のどちらでも当たります）
+ *  ★ここだけを直せば、画面全体の振り分けが揃います。 */
+const BLDG_AREA = {
+  /* まだ空です。物件の一覧をいただいたらここに入れます */
+};
+
+/* ★★ 住所から支社を決める見分け（2026/9/19 に教えていただいた見分け方）
+ *
+ *    倉敷市老松町・玉島乙島 → 福山（本社）
+ *    岡山市                 → 岡山支社
+ *    倉敷市・総社市       → 倉敷支社
+ *    福山市                 → 福山（本社）
+ *
+ *  ★並び順に意味があります。老松町・玉島乙島を先に見ないと、
+ *    どちらも倉敷市なので倉敷支社に流れてしまいます。
+ *  ★「岡山県」だけで市名が無いものは、推測せず未分類にします。 */
 const AREA_WORDS = [
-  ["倉敷", ["倉敷", "玉島", "児島", "水島", "早島", "総社", "船穂", "真備"]],
-  ["福山", ["福山", "広島", "尾道", "三原", "府中", "神辺", "松永", "駅家"]],
-  ["岡山", ["岡山", "玉野", "瀬戸内", "赤磐", "備前", "妹尾", "高屋", "西大寺"]]
+  ["福山", ["老松町", "玉島乙島"]],
+  ["岡山", ["岡山市"]],
+  ["倉敷", ["倉敷市", "総社市"]],
+  ["福山", ["福山市"]]
 ];
+
+/* 物件名から支社を引きます。号室を落としてから、頭が一致するものを探します */
+function bldgArea(b) {
+  const nm = splitBldg(b).name.replace(/[\s　]/g, "");
+  if (!nm) return "";
+  const keys = Object.keys(BLDG_AREA);
+  /* 長い名前から見ます。「エルキュールA棟」と「エルキュール」の
+     両方を書いたときに、細かいほうが勝つようにするためです */
+  keys.sort(function (x, y) { return y.length - x.length; });
+  for (let i = 0; i < keys.length; i++) {
+    const k = keys[i].replace(/[\s　]/g, "");
+    if (k && nm.indexOf(k) === 0) return BLDG_AREA[keys[i]];
+  }
+  return "";
+}
+
 function areaOf(x) {
-  /* サーバーが持っていれば、それが正です */
+  /* ① サーバーが持っていれば、それが正です */
   const given = String((x && x.area) || "").trim();
   if (given) {
     for (let i = 0; i < AREAS.length; i++) {
       if (given.indexOf(AREAS[i]) >= 0) return AREAS[i];
     }
   }
+  /* ② 物件名の表。いちばん確かなので、住所より先に見ます */
+  const byB = bldgArea(x && x.building);
+  if (byB) return byB;
+  /* ③ 本文に住所が入っているときだけ、市名で見分けます */
   const t = [x && x.content, x && x.building, x && x.subject]
     .map(function (v) { return String(v || ""); }).join(" ");
   if (!t.trim()) return "";
@@ -2868,8 +2920,10 @@ function nameOf(x) {
   /* ① ［個人 / 佐藤咲桜 / 07075674888］ の真ん中 */
   let m = t.match(/\uFF3B[^\uFF3D]*?[\/\uFF0F]\s*([^\/\uFF0F\uFF3D]{2,24})\s*[\/\uFF0F]/);
   if (m && !/^[0-9\-\s]+$/.test(m[1])) return m[1].trim();
-  /* ② 「氏名：◯◯」「お名前：◯◯」 */
-  m = t.match(/(?:\u304A\u540D\u524D|\u6C0F\u540D)\s*[:\uFF1A]\s*([^\n]{2,24})/);
+  /* ② 「氏名：◯◯」「お名前：◯◯」
+   *   ★いえらぶCLOUD の通知は【お名前】：◯◯ と、かぎかっこで囲まれています。
+   *     閉じかっこを飛ばさないと拾えませんでした（2026/9/19 に直しました）。 */
+  m = t.match(/[\u3010\u300C\uFF3B\[]?\s*(?:\u304A\u540D\u524D|\u6C0F\u540D)\s*[\u3011\u300D\uFF3D\]]?\s*[:\uFF1A]\s*([^\n]{2,24})/);
   if (m) return m[1].trim();
   return "";
 }
@@ -3528,16 +3582,27 @@ function drawAreaTabs() {
     if (live[k] !== undefined) live[k]++;
   });
 
-  box.innerHTML = AREAS.map(function (a) {
-    return '<button type="button" class="b44-area' + (areaTab === a ? " on" : "") + '"'
-         + ' data-area="' + esc(a) + '">'
+  /* ★見分けられなかったものは、あるときだけ四つめのカードに出します。
+     いただいた画面には無いものですが、出さないとその件数が
+     どこにも見えず、取りこぼしに気づけないためです。 */
+  let unk = 0;
+  listOpen.concat(listWait).forEach(function (x) { if (!areaOf(x)) unk++; });
+
+  const cell = function (key, label, sub, cls) {
+    return '<button type="button" class="b44-area' + (cls ? " " + cls : "")
+         + (areaTab === key ? " on" : "") + '" data-area="' + esc(key) + '">'
          +   '<div class="b44-area-top">'
-         +     '<div class="b44-area-nm">' + b44Icon("pin") + esc(a) + 'エリア</div>'
-         +     '<span class="b44-area-n">' + live[a] + '</span>'
+         +     '<div class="b44-area-nm">' + b44Icon("pin") + esc(label) + '</div>'
+         +     '<span class="b44-area-n">' + (key === "?" ? unk : live[key]) + '</span>'
          +   '</div>'
-         +   '<p class="b44-area-s">未対応・対応中</p>'
+         +   '<p class="b44-area-s">' + esc(sub) + '</p>'
          + '</button>';
-  }).join("");
+  };
+
+  box.innerHTML = AREAS.map(function (a) {
+    return cell(a, a + "エリア", "未対応・対応中", "");
+  }).join("")
+  + (unk ? cell("?", "未分類", "物件名から支社が引けません", "unk") : "");
 }
 
 /* ★★ 1本の縦スクロールに、状態ごとに積みます（check と同じ並べかた）
