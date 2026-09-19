@@ -1843,27 +1843,6 @@ body{
 }
 .wrap{background:transparent;border-left:0;border-right:0;box-shadow:none;}
 
-/* ---- いちばん上の帯（Layout のかわり）----
- * Layout.jsx はいただいていないので、--sidebar-background と同じ濃紺で
- * 細い帯だけを置いています。いただければ、そのとおりに直します。 */
-header{
-  position:sticky;top:0;z-index:30;
-  background:hsl(var(--b44-amazon-navy));
-  color:#fff;border-bottom:0;box-shadow:none;
-  display:flex;align-items:center;gap:10px;
-  height:52px;padding:0 16px;
-}
-header .hd{display:flex;align-items:center;gap:10px;margin:0;padding:0;border:0;}
-header h1{font-size:17px;font-weight:600;letter-spacing:.01em;color:#fff;margin:0;}
-header .badge{
-  border:0;border-radius:6px;padding:3px 9px;font-size:11px;font-weight:600;
-  background:rgba(255,255,255,.14);color:rgba(255,255,255,.88);
-}
-header .badge.live{
-  background:hsl(var(--b44-amazon-yellow));
-  color:hsl(var(--b44-amazon-yellow-foreground));
-}
-
 /* ---- 中身の器：max-w-6xl mx-auto px-4 py-6 space-y-6 ---- */
 #listView{padding:0;width:auto;}
 .b44{max-width:1152px;margin:0 auto;padding:24px 16px;}
@@ -2064,6 +2043,271 @@ header .badge.live{
 .b44-empty p{margin-top:8px;color:hsl(var(--b44-muted-foreground));font-size:14px;}
 
 .buildtag{color:hsl(var(--b44-muted-foreground) / .7);padding:0;font-size:11px;}
+
+/* ============================================================
+ *  上の帯（src/components/Layout.jsx）
+ * ============================================================ */
+header{
+  position:sticky;top:0;z-index:30;
+  background:hsl(var(--b44-amazon-navy));color:#fff;
+  border-bottom:0;box-shadow:0 4px 6px -1px rgba(0,0,0,.1),0 2px 4px -2px rgba(0,0,0,.1);
+  display:block;height:auto;padding:0;
+}
+.b44-hd{
+  max-width:1152px;margin:0 auto;padding:0 16px;height:56px;
+  display:flex;align-items:center;gap:16px;
+}
+.b44-logo{
+  display:flex;align-items:center;gap:8px;flex-shrink:0;
+  text-decoration:none;color:#fff;
+}
+.b44-logo-i{
+  width:32px;height:32px;border-radius:8px;flex-shrink:0;
+  background:hsl(var(--b44-primary));
+  display:flex;align-items:center;justify-content:center;
+}
+.b44-logo-i svg{width:20px;height:20px;color:hsl(var(--b44-amazon-navy));}
+.b44-logo-t{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap;}
+@media (max-width:640px){ .b44-logo-t{display:none;} }
+
+.b44-nav{display:flex;align-items:center;gap:4px;margin-left:8px;}
+.b44-nv{
+  display:flex;align-items:center;gap:8px;padding:0 12px;height:36px;
+  border:0;border-radius:8px;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:14px;color:rgba(255,255,255,.7);
+  transition:background .15s,color .15s;white-space:nowrap;
+}
+.b44-nv svg{width:16px;height:16px;flex-shrink:0;}
+.b44-nv:hover{color:#fff;background:rgba(255,255,255,.05);}
+.b44-nv.on{background:rgba(255,255,255,.1);color:#fff;}
+.b44-nn{font-size:12px;opacity:.7;margin-left:5px;}
+@media (max-width:640px){ .b44-nv > span{display:none;} .b44-nv{padding:0 9px;} }
+
+.b44-hr{margin-left:auto;display:flex;align-items:center;gap:8px;}
+.b44-search{
+  display:flex;align-items:center;background:rgba(255,255,255,.1);
+  border-radius:8px;padding:0 8px;height:36px;width:224px;
+}
+.b44-search svg{width:16px;height:16px;color:rgba(255,255,255,.5);flex-shrink:0;}
+.b44-search input{
+  background:transparent;border:0;outline:none;box-shadow:none;
+  font-size:14px;font-family:inherit;color:#fff;padding:0 8px;width:100%;min-width:0;
+}
+.b44-search input::placeholder{color:rgba(255,255,255,.4);}
+.b44-search input::-webkit-search-cancel-button{-webkit-appearance:none;}
+@media (max-width:900px){ .b44-search{display:none;} }
+header .badge{
+  border:0;border-radius:8px;padding:0 10px;height:36px;
+  display:inline-flex;align-items:center;white-space:nowrap;
+  font-size:12px;font-weight:600;
+  background:rgba(255,255,255,.14);color:rgba(255,255,255,.88);
+}
+header .badge.live{
+  background:hsl(var(--b44-amazon-yellow));
+  color:hsl(var(--b44-amazon-yellow-foreground));
+  border:1px solid rgba(180,83,9,.2);
+}
+
+/* ============================================================
+ *  詳細（src/pages/InquiryDetail.jsx）
+ *  上の帯は出したまま、その下いっぱいに開きます。
+ * ============================================================ */
+#detailView{
+  position:fixed;inset:56px 0 0 0;overflow:auto;z-index:20;padding:0;
+  background:hsl(var(--b44-background));
+  -webkit-backdrop-filter:none;backdrop-filter:none;
+}
+.dcard{
+  max-width:896px;margin:0 auto;padding:24px 16px 48px;
+  background:transparent;box-shadow:none;border-radius:0;min-height:0;
+}
+.dcard > * + *{margin-top:24px;}
+
+.b44-back{
+  display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;
+  border:0;border-radius:6px;background:transparent;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:500;color:hsl(var(--b44-foreground));
+}
+.b44-back svg{width:16px;height:16px;}
+.b44-back:hover{background:hsl(var(--b44-accent));}
+
+.b44-dhead{
+  border-radius:12px;padding:20px;color:#fff;
+  background:linear-gradient(to right,hsl(var(--b44-amazon-navy)),hsl(var(--b44-amazon-navy2)));
+  display:flex;align-items:flex-start;gap:12px;
+}
+.b44-dhead-i{
+  width:40px;height:40px;border-radius:8px;flex-shrink:0;
+  background:hsl(var(--b44-primary));
+  display:flex;align-items:center;justify-content:center;
+}
+.b44-dhead-i svg{width:22px;height:22px;color:hsl(var(--b44-amazon-navy));}
+.b44-dhead-t{min-width:0;flex:1;}
+.b44-dhead-m{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin:0 0 4px;
+  font-size:13px;line-height:18px;color:rgba(255,255,255,.72);
+}
+.b44-dhead-m span{display:inline-flex;align-items:center;gap:4px;}
+.b44-dhead-m svg{width:13px;height:13px;}
+.b44-dhead-m .b44-dot{color:rgba(255,255,255,.4);gap:0;}
+.b44-dhead h1{
+  font-size:22px;line-height:1.3;font-weight:600;letter-spacing:-.02em;
+  margin:0;color:#fff;
+}
+.b44-dbadges{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
+.b44-bd{
+  display:inline-flex;align-items:center;border-radius:4px;
+  padding:2px 8px;font-size:12px;line-height:16px;font-weight:600;
+}
+.b44-bd.out{border:1px solid rgba(255,255,255,.35);color:#fff;}
+.b44-bd.pri{background:hsl(var(--b44-primary));color:hsl(var(--b44-amazon-navy));}
+.b44-bd.day{background:rgba(255,255,255,.14);color:rgba(255,255,255,.9);}
+.b44-bd.day.late{background:rgba(255,255,255,.95);color:hsl(var(--b44-destructive));}
+.b44-bd.warn{background:hsl(var(--b44-amazon-yellow));color:hsl(var(--b44-amazon-yellow-foreground));}
+
+.b44-card{
+  background:hsl(var(--b44-card));border:1px solid hsl(var(--b44-border));
+  border-radius:12px;padding:20px;
+  box-shadow:0 1px 2px 0 rgba(0,0,0,.05);
+}
+.b44-card > h2,.b44-card-h > h2{
+  font-size:15px;font-weight:600;letter-spacing:0;
+  color:hsl(var(--b44-foreground));margin:0 0 12px;
+}
+.b44-card-h{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  flex-wrap:wrap;margin-bottom:12px;
+}
+.b44-card-h > h2{margin:0;}
+.b44-note{font-size:12px;line-height:1.6;color:hsl(var(--b44-muted-foreground));margin:0;}
+.b44-outbtn{
+  height:32px;padding:0 12px;border-radius:6px;cursor:pointer;
+  border:1px solid hsl(var(--b44-border));background:hsl(var(--b44-card));
+  font-family:inherit;font-size:13px;font-weight:500;color:hsl(var(--b44-foreground));
+}
+.b44-outbtn:hover{background:hsl(var(--b44-accent));border-color:hsl(var(--b44-primary));}
+
+.b44-dgrid{display:grid;grid-template-columns:1fr;gap:24px;}
+@media (min-width:900px){ .b44-dgrid{grid-template-columns:minmax(0,1fr) 288px;} }
+.b44-dmain{display:grid;gap:24px;align-content:start;}
+.b44-dside{display:grid;gap:24px;align-content:start;}
+
+.b44-info{display:grid;gap:12px;}
+.b44-irow{
+  display:grid;grid-template-columns:16px auto 1fr;align-items:baseline;gap:8px;
+  font-size:13px;line-height:1.6;
+}
+.b44-irow svg{width:16px;height:16px;color:hsl(var(--b44-muted-foreground));
+  align-self:center;}
+.b44-ik{color:hsl(var(--b44-muted-foreground));white-space:nowrap;}
+.b44-iv{color:hsl(var(--b44-foreground));overflow-wrap:anywhere;}
+
+/* ---- 対応ジャーニー（丸と ＞）---- */
+#dFlow .fl{
+  display:flex;align-items:flex-start;gap:2px;
+  overflow-x:auto;padding-bottom:8px;scrollbar-width:none;
+}
+#dFlow .fl::-webkit-scrollbar{display:none;}
+/* 前は丸のうしろに線を引いていました。いまは › でつなぐので止めます */
+#dFlow .st::before{display:none;}
+#dFlow{margin:0;padding:0;}
+#dFlow .st{
+  display:flex;flex-direction:column;align-items:center;gap:6px;
+  min-width:82px;flex-shrink:0;border:0;background:transparent;padding:0;
+}
+#dFlow .st .dot{
+  width:44px;height:44px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  font-size:15px;font-weight:700;font-family:inherit;
+  background:hsl(var(--b44-card));border:2px solid hsl(var(--b44-border));
+  color:hsl(var(--b44-muted-foreground));box-shadow:none;
+}
+#dFlow .st.done .dot{
+  background:hsl(var(--b44-primary));border-color:hsl(var(--b44-primary));
+  color:#fff;font-size:18px;
+}
+#dFlow .st.now .dot{
+  background:hsl(var(--b44-primary));border-color:hsl(var(--b44-primary));color:#fff;
+}
+#dFlow .st .nm{
+  font-size:12px;line-height:1.4;text-align:center;
+  color:hsl(var(--b44-muted-foreground));
+}
+#dFlow .st.now .nm{font-weight:700;color:hsl(var(--b44-primary));}
+#dFlow .sep{
+  flex:none;align-self:flex-start;margin-top:14px;
+  color:hsl(var(--b44-border));display:flex;
+}
+#dFlow .sep svg{width:16px;height:16px;}
+#dFlow .fl-next{
+  display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;
+  margin-top:8px;padding:12px 14px;border-radius:8px;
+  background:hsl(var(--b44-accent));
+}
+#dFlow .fl-next .lb{
+  font-size:11px;font-weight:700;letter-spacing:.06em;
+  color:hsl(var(--b44-primary));white-space:nowrap;
+}
+#dFlow .fl-next .tx{font-size:13px;line-height:1.7;color:hsl(var(--b44-foreground));}
+
+/* ---- 押しボタンのならび ---- */
+.dcard .acts{
+  display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;padding:0;border:0;background:transparent;
+}
+.dcard .act{
+  height:40px;padding:0 16px;border-radius:8px;cursor:pointer;
+  border:1px solid hsl(var(--b44-border));background:hsl(var(--b44-card));
+  font-family:inherit;font-size:14px;font-weight:500;color:hsl(var(--b44-foreground));
+  box-shadow:0 1px 2px 0 rgba(0,0,0,.05);
+}
+.dcard .act:hover{background:hsl(var(--b44-accent));}
+.dcard .act.send{
+  background:hsl(var(--b44-amazon-yellow));color:hsl(var(--b44-amazon-yellow-foreground));
+  border-color:rgba(180,83,9,.2);font-weight:600;
+}
+.dcard .act.send:hover{opacity:.9;background:hsl(var(--b44-amazon-yellow));}
+.dcard .act.send.wait{
+  background:hsl(var(--b44-primary));color:#fff;border-color:rgba(180,83,9,.2);
+}
+.dcard .act.send.wait:hover{opacity:.9;background:hsl(var(--b44-primary));}
+.dcard .act.danger{color:hsl(var(--b44-destructive));}
+.dcard .act.danger:hover{background:hsl(var(--b44-destructive) / .08);}
+.dcard .act.ai{
+  background:hsl(var(--b44-primary));color:#fff;border-color:rgba(180,83,9,.2);font-weight:600;
+}
+.dcard .act.ai:hover{opacity:.9;background:hsl(var(--b44-primary));}
+.dcard .act[disabled]{opacity:.5;cursor:default;}
+
+/* ---- 本文・原文・指示の欄 ---- */
+.dcard .box{
+  background:hsl(var(--b44-muted));border:1px solid hsl(var(--b44-border));
+  border-radius:8px;padding:14px 16px;
+  font-size:14px;line-height:1.85;color:hsl(var(--b44-foreground));
+  white-space:pre-wrap;overflow-wrap:anywhere;box-shadow:none;
+}
+.dcard .rawbox{margin-top:12px;}
+.dcard .rawbox summary{
+  font-size:13px;color:hsl(var(--b44-muted-foreground));cursor:pointer;padding:4px 0;
+}
+.dcard .box.raw{margin-top:8px;font-size:12.5px;max-height:320px;overflow:auto;}
+#dDraft{display:none;}
+.dcard textarea.order{
+  width:100%;min-height:84px;border-radius:8px;box-shadow:none;
+  border:1px solid hsl(var(--b44-input));background:hsl(var(--b44-card));
+  padding:12px 14px;font-size:14px;line-height:1.8;font-family:inherit;
+  color:hsl(var(--b44-foreground));
+}
+.dcard textarea.order:focus{outline:2px solid hsl(var(--b44-ring) / .5);outline-offset:1px;}
+.dcard .order-acts{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:12px;}
+.dcard .order-note{font-size:12px;color:hsl(var(--b44-muted-foreground));}
+.dcard .att{display:flex;align-items:center;gap:12px;flex-wrap:wrap;}
+.dcard .att-pick{
+  height:36px;padding:0 14px;border-radius:6px;cursor:pointer;
+  display:inline-flex;align-items:center;
+  border:1px solid hsl(var(--b44-border));background:hsl(var(--b44-card));
+  font-size:13px;font-weight:500;color:hsl(var(--b44-foreground));
+}
+.dcard .att-pick:hover{background:hsl(var(--b44-accent));}
 </style>
 </head>
 <body>
@@ -2090,12 +2334,36 @@ header .badge.live{
 
 <div class="wrap">
 
-  <!-- いちばん上の帯。Layout.jsx はいただいていないので、
-       いただいた index.css の --sidebar-background と同じ濃紺で細く置いています -->
+  <!-- ★★ 上の帯（いただいた src/components/Layout.jsx のとおり）
+       濃紺・高さ56px・max-w-6xl。左に名前、その右にならび、
+       右端に検索と、いまの送り先（本番／テスト）を出します。 -->
   <header>
-    <div class="hd">
-      <h1>CRM</h1>
-      <span class="badge" id="mode">確認中</span>
+    <div class="b44-hd">
+      <a class="b44-logo" href="#" id="bHome">
+        <span class="b44-logo-i"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/></svg></span>
+        <span class="b44-logo-t">CRM 問い合わせジャーニー</span>
+      </a>
+      <nav class="b44-nav">
+        <button class="b44-nv on" id="tabList" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="7" height="9" x="3" y="3" rx="1"/><rect width="7" height="5" x="14" y="3" rx="1"/><rect width="7" height="9" x="14" y="12" rx="1"/><rect width="7" height="5" x="3" y="16" rx="1"/></svg>
+          <span>案件<span class="b44-nn" id="nList"></span></span>
+        </button>
+        <button class="b44-nv" id="tabEigyou" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          <span>営業<span class="b44-nn" id="nEigyou"></span></span>
+        </button>
+        <button class="b44-nv" id="tabAnalytics" type="button">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
+          <span>分析</span>
+        </button>
+      </nav>
+      <div class="b44-hr">
+        <div class="b44-search">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <input id="fWord" type="search" placeholder="問い合わせを検索…" autocomplete="off">
+        </div>
+        <span class="badge" id="mode">確認中</span>
+      </div>
     </div>
   </header>
 
@@ -2140,11 +2408,6 @@ header .badge.live{
       <select class="b44-sel w32" id="fKind" aria-label="用件"></select>
       <select class="b44-sel w44" id="fBldg" aria-label="物件"></select>
       <button class="b44-ghost" id="fClear" type="button" hidden>クリア</button>
-      <!-- 案件／営業／分析は、いただいた画面には無いものです。
-           いまある機能なので、同じ帯の中に小さく残しています -->
-      <button class="b44-ghost on" id="tabList" type="button">案件<span class="b44-gn" id="nList"></span></button>
-      <button class="b44-ghost" id="tabEigyou" type="button">営業<span class="b44-gn" id="nEigyou"></span></button>
-      <button class="b44-ghost" id="tabAnalytics" type="button">分析</button>
       <div class="b44-fcount" id="count"></div>
     </div>
 
@@ -2163,70 +2426,104 @@ header .badge.live{
    </div>
   </section>
 
-  <!-- 詳細 -->
+  <!-- 詳細（いただいた src/pages/InquiryDetail.jsx のとおり） -->
   <section id="detailView" class="hide">
     <div class="dcard">
-    <button class="back" id="back">← 一覧にもどる</button>
+    <button class="b44-back" id="back" type="button">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+      ダッシュボード
+    </button>
 
-    <div class="sec">
-      <p class="meta" id="dMeta"></p>
-      <p class="meta" id="dSubject"></p>
-    </div>
-
-    <!-- いまどこまで進んでいるか。受信から完了までを一直線に出します -->
-    <div class="flow" id="dFlow"></div>
-
-    <div class="sec">
-      <h2>今回の問い合わせ</h2>
-      <div class="box quiet" id="dContent"></div>
-      <details class="rawbox">
-        <summary>通知メールの原文を見る</summary>
-        <div class="box quiet raw" id="dRaw"></div>
-      </details>
-    </div>
-
-    <div class="sec" id="dThreadSec">
-      <h2>やりとりの履歴<span class="th-note" id="dThreadNote"></span></h2>
-      <div class="thread" id="dThread"></div>
-    </div>
-
-    <!-- ★返信は「いま ここ」から開きます。ここには欄を置きません。
-         #dDraft だけは残してあります。保存・送信・AI指示がこの値を
-         読むためで、display:none でも .click() は届きます。 -->
-    <textarea id="dDraft" spellcheck="false"></textarea>
-
-    <div class="sec">
-      <h2>AIに書いてもらう<span class="att-note">どう返すかを一言で。文面はAIが整えます</span></h2>
-      <textarea id="dOrder" class="order" spellcheck="false"
-        placeholder="例：2番手申込の1番手確認への回答。1番手は審査中で、結果が出たら連絡すると伝えて。"></textarea>
-      <div class="order-acts">
-        <button class="act ai" id="bAi" type="button">この指示で書いてもらう</button>
-        <span class="order-note" id="dOrderNote"></span>
+    <!-- 見出し（濃紺） -->
+    <div class="b44-dhead">
+      <span class="b44-dhead-i" id="dIco"></span>
+      <div class="b44-dhead-t">
+        <p class="b44-dhead-m" id="dMeta"></p>
+        <h1 id="dTitle">読み込んでいます…</h1>
+        <div class="b44-dbadges" id="dBadges"></div>
       </div>
     </div>
 
-    <div class="sec">
-      <h2>添付ファイル<span class="att-note">請求書・領収書など。2件まで</span></h2>
-      <div class="att">
-        <label class="att-pick" for="dFile">ファイルを選ぶ</label>
-        <input type="file" id="dFile" accept=".pdf,application/pdf,image/*" hidden>
-        <div class="att-list" id="dFiles"></div>
+    <!-- 対応ジャーニー -->
+    <div class="b44-card">
+      <h2>対応ジャーニー</h2>
+      <div class="flow" id="dFlow"></div>
+      <div class="status hide" id="status"></div>
+      <div class="acts">
+        <button class="act send" id="bSend">送信して完了</button>
+        <button class="act send wait" id="bSendWait">送信して返事待ち</button>
+        <button class="act" id="bSave">下書きを保存</button>
+        <button class="act skip" id="bSkip">完了にする</button>
+        <button class="act danger" id="bDel" type="button">削除する</button>
       </div>
     </div>
 
-    <!-- ★「実際に送られる形を見る」は外しました。
-         書く画面のうえ／したに、宛名と署名をそのまま出しています。 -->
+    <div class="b44-dgrid">
+     <div class="b44-dmain">
 
-    <div class="status hide" id="status"></div>
+      <div class="b44-card">
+        <h2>問い合わせ内容</h2>
+        <div class="box quiet" id="dContent"></div>
+        <details class="rawbox">
+          <summary>通知メールの原文を見る</summary>
+          <div class="box quiet raw" id="dRaw"></div>
+        </details>
+      </div>
 
-    <div class="acts">
-      <button class="act" id="bSave">下書きを保存</button>
-      <button class="act skip" id="bSkip">完了にする</button>
-      <!-- ★削除は元に戻せないので、押す前に必ず確認を出します -->
-      <button class="act danger" id="bDel" type="button">削除する</button>
-      <button class="act send wait" id="bSendWait">送信して返事待ち</button>
-      <button class="act send" id="bSend">送信して完了</button>
+      <div class="b44-card">
+        <div class="b44-card-h">
+          <h2>メール返信</h2>
+          <button class="b44-outbtn" id="bWrite" type="button">返信作成</button>
+        </div>
+        <!-- ★#dDraft は残してあります。保存・送信・AI指示がこの値を読み、
+             display:none でも .click() は届きます。 -->
+        <textarea id="dDraft" spellcheck="false"></textarea>
+        <p class="b44-note">「返信作成」を押すと、大きな画面で書けます。宛名と署名は自動で付きます。</p>
+      </div>
+
+      <div class="b44-card">
+        <div class="b44-card-h">
+          <h2>AIに書いてもらう</h2>
+          <span class="b44-note">どう返すかを一言で。文面はAIが整えます</span>
+        </div>
+        <textarea id="dOrder" class="order" spellcheck="false"
+          placeholder="例：2番手申込の1番手確認への回答。1番手は審査中で、結果が出たら連絡すると伝えて。"></textarea>
+        <div class="order-acts">
+          <button class="act ai" id="bAi" type="button">この指示で書いてもらう</button>
+          <span class="order-note" id="dOrderNote"></span>
+        </div>
+      </div>
+
+      <div class="b44-card">
+        <div class="b44-card-h">
+          <h2>添付ファイル</h2>
+          <span class="b44-note">請求書・領収書など。2件まで</span>
+        </div>
+        <div class="att">
+          <label class="att-pick" for="dFile">ファイルを選ぶ</label>
+          <input type="file" id="dFile" accept=".pdf,application/pdf,image/*" hidden>
+          <div class="att-list" id="dFiles"></div>
+        </div>
+      </div>
+
+      <div class="b44-card">
+        <div class="b44-card-h">
+          <h2>対応履歴タイムライン</h2>
+          <span class="th-note b44-note" id="dThreadNote"></span>
+        </div>
+        <div class="thread" id="dThread"></div>
+      </div>
+
+     </div>
+
+     <aside class="b44-dside">
+      <div class="b44-card">
+        <h2>管理情報</h2>
+        <div class="b44-info" id="dInfo"></div>
+      </div>
+     </aside>
     </div>
+
     </div>
   </section>
   </div>
@@ -3206,7 +3503,11 @@ const B44_ICONS = {
   pin:   '<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/><circle cx="12" cy="10" r="3"/>',
   bldg:  '<path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M6 12H4a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2"/><path d="M18 9h2a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-2"/><path d="M10 6h4"/><path d="M10 10h4"/><path d="M10 14h4"/><path d="M10 18h4"/>',
   clock: '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
-  chev:  '<path d="m9 18 6-6-6-6"/>'
+  chev:  '<path d="m9 18 6-6-6-6"/>',
+  user:  '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
+  mail:  '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
+  tag:   '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
+  file:  '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>'
 };
 function b44Icon(name, cls) {
   const d = B44_ICONS[name] || "";
@@ -3260,6 +3561,7 @@ const LSECS = [
  *  合わせています。エリアは上のカードと同じ値を見ます。
  * ============================================================ */
 let bldgFilter = "";
+let wordFilter = "";        /* 上の帯の検索。実際に読むのは pickAll です */
 
 function bldgOf(x) {
   const n = splitBldg(x.building).name;
@@ -3296,7 +3598,7 @@ function drawSelects(all) {
   fill("fArea", "全エリア", AREAS.concat(["未分類"]), areaTab === "?" ? "未分類" : areaTab);
   fill("fKind", "全カテゴリ", byN(kinds), topicFilter);
   fill("fBldg", "全物件", byN(blds), bldgFilter);
-  $("fClear").hidden = !(areaTab || topicFilter || bldgFilter);
+  $("fClear").hidden = !(areaTab || topicFilter || bldgFilter || wordFilter);
 }
 
 function pickAll(rows) {
@@ -3305,6 +3607,11 @@ function pickAll(rows) {
     else if (areaTab && areaOf(x) !== areaTab) return false;
     if (topicFilter && (topicOf(x.content) || x.kind || "") !== topicFilter) return false;
     if (bldgFilter && bldgOf(x) !== bldgFilter) return false;
+    if (wordFilter) {
+      const t = [x.subject, x.building, x.content, x.draft, x.from, nameOf(x)]
+        .map(function (v) { return String(v || ""); }).join(" ");
+      if (t.indexOf(wordFilter) < 0) return false;
+    }
     return true;
   });
 }
@@ -3323,9 +3630,9 @@ function drawList() {
   const whole = listOpen.concat(listWait, listDone);
   drawSelects(whole);
 
-  $("tabList").className      = "b44-ghost" + (listTab === "list"   ? " on" : "");
-  $("tabEigyou").className    = "b44-ghost" + (listTab === "eigyou" ? " on" : "");
-  $("tabAnalytics").className = "b44-ghost" + (listTab === "stats"  ? " on" : "");
+  $("tabList").className      = "b44-nv" + (listTab === "list"   ? " on" : "");
+  $("tabEigyou").className    = "b44-nv" + (listTab === "eigyou" ? " on" : "");
+  $("tabAnalytics").className = "b44-nv" + (listTab === "stats"  ? " on" : "");
 
   if (listTab === "eigyou") { $("list").className = ""; drawEigyou(); return; }
   if (listTab === "stats")  { $("list").className = ""; drawStats();  return; }
@@ -3513,10 +3820,17 @@ function drawFlow(rowNo, hint) {
   const box = $("dFlow");
   if (!box) return;
   const now = flowIndexOf(rowNo);
+  /* 済んだ段は✓、いまの段は数字。あいだは › でつなぎます
+     （いただいた画面と同じです） */
   const steps = FLOW_STEPS.map(function (nm, i) {
     const cls = i < now ? "st done" : (i === now ? "st now" : "st");
-    const mark = i < now ? "✓" : String(i + 1);
-    return '<div class="' + cls + '">'
+    const mark = i < now
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"'
+        + ' stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"'
+        + ' style="width:20px;height:20px"><path d="M20 6 9 17l-5-5"/></svg>'
+      : String(i + 1);
+    return (i ? '<span class="sep">' + b44Icon("chev") + '</span>' : '')
+         + '<div class="' + cls + '">'
          +   '<span class="dot">' + mark + '</span>'
          +   '<span class="nm">' + esc(nm) + '</span>'
          + '</div>';
@@ -3525,6 +3839,66 @@ function drawFlow(rowNo, hint) {
   box.innerHTML = '<div class="fl">' + steps + '</div>'
     + (next ? '<div class="fl-next"><span class="lb">次にやること</span>'
             + '<span class="tx">' + esc(next) + '</span></div>' : "");
+}
+
+
+/* ============================================================
+ *  詳細の見出し（濃紺）と、右の「管理情報」
+ *  いただいた InquiryDetail.jsx の並びに合わせています。
+ *  x は、一覧が持っている行（先に描く用）でも、
+ *  detail の返り値（読み込んだあと）でも、どちらでも渡せます。
+ * ============================================================ */
+function drawDetailHead(x) {
+  if (!x) return;
+  const bp    = splitBldg(x.building);
+  const room  = bp.room || roomOf(x.content);
+  const kind  = topicOf(x.content) || x.kind || "その他";
+  const area  = areaOf(x) || "未分類";
+  const rowNo = x.rowNo;
+  const inDone = listDone.some(function (r) { return r.rowNo === rowNo; });
+  const inWait = listWait.some(function (r) { return r.rowNo === rowNo; });
+
+  $("dIco").innerHTML = topicIconSvg(kind);
+
+  $("dMeta").innerHTML =
+      '<span>' + b44Icon("pin") + esc(area) + '</span>'
+    + '<span class="b44-dot">・</span>'
+    + '<span>' + b44Icon("bldg") + esc(bp.name || "物件名なし")
+    + (room ? " / " + esc(room) : "") + '</span>';
+
+  const title = x.making
+    ? "返信案を作っています…"
+    : (summarize(x.content || x.draft, 70) || esc(x.subject) || "（本文なし）");
+  $("dTitle").textContent = title;
+
+  const state = inDone ? "完了" : (inWait ? "返事待ち" : (x.making ? "作成中" : "未返信"));
+  let wait = "";
+  if (inWait) {
+    const w = listWait.filter(function (r) { return r.rowNo === rowNo; })[0];
+    wait = waitLabel(w && w.waitLeft);
+  }
+  const days = inDone ? "" : (inWait ? wait : daysLabel(x.days));
+  const dcls = (!inDone && !inWait && daysClass(x.days) === "late") ? " late" : "";
+
+  $("dBadges").innerHTML =
+      '<span class="b44-bd out">' + esc(kind) + '</span>'
+    + '<span class="b44-bd pri">' + esc(state) + '</span>'
+    + (days ? '<span class="b44-bd day' + dcls + '">' + esc(days) + '</span>' : '')
+    + ((x.tmplMark)
+        ? '<span class="b44-bd warn">' + esc(x.tmplMark) + '</span>' : '')
+    + ((x.manual) ? '<span class="b44-bd warn">要手入力</span>' : '');
+
+  const row = function (icon, label, value) {
+    return '<div class="b44-irow">' + b44Icon(icon)
+         + '<span class="b44-ik">' + esc(label) + '</span>'
+         + '<span class="b44-iv">' + esc(value || "—") + '</span></div>';
+  };
+  $("dInfo").innerHTML =
+      row("user", "お名前", nameOf(x) ? nameOf(x) + " 様" : "")
+    + row("mail", "差出人", x.from || "")
+    + row("clock", "受信日時", x.received || "")
+    + row("tag", "台帳の分類", x.kind || "")
+    + row("file", "件名", x.subject || "");
 }
 
 /* ---------- 詳細 ---------- */
@@ -3539,23 +3913,16 @@ async function openDetail(rowNo) {
   const hint = (listOpen.concat(listWait, listDone))
     .filter(function (x) { return x.rowNo === rowNo; })[0];
 
-  Array.prototype.forEach.call($("list").querySelectorAll(".card"), function (el) {
+  Array.prototype.forEach.call($("list").querySelectorAll(".b44-c"), function (el) {
     el.classList.toggle("on", Number(el.dataset.row) === rowNo);
   });
 
   cur = { rowNo: rowNo };
-  /* ★送信前に人の作業が要る案件は、見出しにも出します。
-   *   一覧のチップだけだと、詳細を開いた時点で見えなくなるためです。
-   *   送信ボタンを押す直前に目に入る位置に置いています。 */
-  const markHtml = (hint && hint.tmplMark)
-    ? '　<span class="topic ' + (hint.tmplMark === "要添付" ? "attach" : "edit") + '">'
-      + esc(hint.tmplMark) + '</span>'
-    : "";
-  $("dMeta").innerHTML = hint
-    ? "<b>" + esc(hint.building || "物件名なし") + "</b>　" + esc(hint.kind)
-      + '　<span class="nw">' + esc(hint.received) + "</span>" + markHtml
-    : "読み込んでいます…";
-  $("dSubject").innerHTML   = "";
+  if (hint) drawDetailHead(hint);
+  else {
+    $("dTitle").textContent = "読み込んでいます…";
+    $("dMeta").innerHTML = ""; $("dBadges").innerHTML = ""; $("dInfo").innerHTML = "";
+  }
   $("dContent").textContent = "";
   $("dRaw").textContent     = "読み込んでいます…";
   $("dDraft").value         = hint ? (hint.draft || "") : "";
@@ -3589,10 +3956,18 @@ async function openDetail(rowNo) {
     if (!d.ok) { toast(d.error, true); return; }
 
     cur = d;
-    $("dMeta").innerHTML    = "<b>" + esc(d.building || "物件名なし") + "</b>　"
-                            + esc(d.kind)
-                            + '　<span class="nw">' + esc(d.received) + "</span>";
-    $("dSubject").innerHTML = "件名：" + esc(d.subject);
+    /* ★一覧が持っていない「お名前・差出人・件名」は、ここで入ります。
+       見出しと管理情報は、同じ関数で描き直します */
+    d.rowNo = rowNo;
+    /* ★向こうが返さなかった項目は、一覧が持っていたものを使います。
+       片方だけを見ると、開いた瞬間に物件名が消えることがあるためです */
+    if (hint) {
+      ["building","kind","received","subject","from","content","days",
+       "making","manual","tmplMark","area"].forEach(function (k) {
+        if (d[k] === undefined || d[k] === null || d[k] === "") d[k] = hint[k];
+      });
+    }
+    drawDetailHead(d);
     $("dContent").textContent = d.content;
     $("dRaw").textContent     = d.raw || "（原文がありません。crmFillRaw を実行してください）";
     if (!$("dDraft").value) $("dDraft").value = d.draft;   // 入力中なら上書きしない
@@ -4260,6 +4635,7 @@ $("fBldg").addEventListener("change", function () {
 });
 $("fClear").addEventListener("click", function () {
   areaKeep(""); topicFilter = ""; bldgFilter = ""; lateOnly = false;
+  wordFilter = ""; $("fWord").value = "";
   listTab = "list"; syncCounts(); drawList();
 });
 
@@ -4291,6 +4667,24 @@ $("dFile").addEventListener("change", function (e) {
   if (f) pickAttach(f);
 });
 $("back").addEventListener("click", backToList);
+$("bWrite").addEventListener("click", openWriter);
+$("bHome").addEventListener("click", function (e) {
+  e.preventDefault();
+  if (!$("detailView").classList.contains("hide")) backToList();
+  listTab = "list"; drawList();
+  try { window.scrollTo({ top: 0, behavior: "auto" }); } catch (e2) { window.scrollTo(0, 0); }
+});
+/* 上の帯の検索。読み込んでいる案件の中から、
+   件名・物件名・お名前・本文を見て、当たったものだけにします */
+let _wordT = 0;
+$("fWord").addEventListener("input", function () {
+  const v = this.value;
+  clearTimeout(_wordT);
+  _wordT = setTimeout(function () {
+    wordFilter = String(v || "").trim();
+    listTab = "list"; drawList();
+  }, 180);
+});
 
 /* 背景をクリック、または Esc で閉じます。
  * ★集中編集が開いているときは、そちらが先に閉じます（二重で閉じません）。 */
