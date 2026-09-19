@@ -2912,6 +2912,26 @@ function bldgArea(b) {
   return hit;
 }
 
+/* ★★ HP のフォームの「お住まいの地域」を読みます（2026/9/19 に追加されました）
+ *
+ *  いえらぶCLOUD の通知はこの形で届きます。
+ *    ■お住まいの地域
+ *    福山市
+ *    ■物件名・号数
+ *    モデルノ
+ *  解約通知フォームは「倉敷市・総社市」とひとつになっています。
+ *  「その他」を選ばれたものは、決めつけず未分類にします。 */
+function areaFromForm(t) {
+  const m = String(t || "").match(
+    /(?:■|【)\s*お住まいの地域\s*(?:】)?\s*[:：]?\s*\n?([^\n]*)/);
+  if (!m) return "";
+  const v = m[1];
+  if (v.indexOf("福山市") >= 0) return "福山";
+  if (v.indexOf("岡山市") >= 0) return "岡山";
+  if (v.indexOf("倉敷市") >= 0 || v.indexOf("総社市") >= 0) return "倉敷";
+  return "";                       /* 「その他」や空欄 */
+}
+
 function areaOf(x) {
   /* ① サーバーが持っていれば、それが正です */
   const given = String((x && x.area) || "").trim();
@@ -2920,12 +2940,19 @@ function areaOf(x) {
       if (given.indexOf(AREAS[i]) >= 0) return AREAS[i];
     }
   }
-  /* ② 物件名の表。いちばん確かなので、住所より先に見ます */
+  /* ② 物件名の表。これがいちばん確かです。
+   *   倉敷市老松町・玉島乙島の例外もここで入ります */
   const byB = bldgArea(x && x.building);
   if (byB) return byB;
-  /* ③ 本文に住所が入っているときだけ、市名で見分けます */
-  const t = [x && x.content, x && x.building, x && x.subject]
-    .map(function (v) { return String(v || ""); }).join(" ");
+  const t = [x && x.content, x && x.raw, x && x.subject]
+    .map(function (v) { return String(v || ""); }).join("\n");
+  /* ③ HP のフォームで選んでいただいた地域。
+   *   これが一番はっきりしています。
+   *   ただし②の表のほうが先です。倉敷市老松町・玉島乙島の方は
+   *   「倉敷市」を選ばれますが、担当は福山本社だからです。 */
+  const byF = areaFromForm(t);
+  if (byF) return byF;
+  /* ④ 本文に住所が書かれているときだけ、市名で見分けます */
   if (!t.trim()) return "";
   for (let i = 0; i < AREA_WORDS.length; i++) {
     const nm = AREA_WORDS[i][0], ws = AREA_WORDS[i][1];
@@ -3122,11 +3149,29 @@ const FILLER = [
 ];
 
 /* 本文を、用件だけの短い一文にまとめます */
-function summarize(text, limit) {
-  let t = String(text || "")
-    .replace(/\uFF3B[^\uFF3D]*\uFF3D/g, " ")        /* ［個人 / 氏名 / 電話］ */
-    .replace(/^[\s\S]*?\u5185\u5BB9[:\uFF1A]/, "") /* 「内容：」より前を落とす */
+/* ★いえらぶCLOUD の通知メールの、要件でないところを落とします。
+ *  ① 「いえらぶCLOUDをご利用…」のあいさつ文（【内容】より前）
+ *  ② 「管理画面にログイン…」以下の署名
+ *  ③ ■お住まいの地域と ■物件名・号数（カードのほかの場所に出ています）
+ *  ④ 残った ■ の見出しだけ（中身は残します） */
+function stripMail(t) {
+  return String(t || "")
     .replace(/\r/g, "")
+    /* ① 【内容】：もしくは 内容： より前を落とす */
+    .replace(/^[\s\S]*?\u5185\u5BB9\u3011?\s*[:\uFF1A]/, "")
+    /* ② しめくくりの線よりあとを落とす */
+    .replace(/\u25C7\u25C6-{5,}[\s\S]*$/, "")
+    .replace(/\u7BA1\u7406\u753B\u9762\u306B\u30ED\u30B0\u30A4\u30F3[\s\S]*$/, "")
+    /* ③ 地域と物件名の段を丸ごと落とす */
+    .replace(/\u25A0\s*\u304A\u4F4F\u307E\u3044\u306E\u5730\u57DF[^\u25A0]*/g, "")
+    .replace(/\u25A0\s*\u7269\u4EF6\u540D[^\u25A0]*/g, "")
+    /* ④ 残った ■ の見出しの行だけを消す */
+    .replace(/^\u25A0[^\n]*$/gm, "");
+}
+
+function summarize(text, limit) {
+  let t = stripMail(text)
+    .replace(/\uFF3B[^\uFF3D]*\uFF3D/g, " ")        /* ［個人 / 氏名 / 電話］ */
     .replace(/[ \t\u3000]+/g, " ");
   const parts = t.split(/[\u3002\n]+/).map(function (v) { return v.trim(); })
                  .filter(function (v) { return v.length > 0; });
