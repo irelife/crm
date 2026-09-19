@@ -1914,6 +1914,7 @@ body{
 }
 
 /* ---- しぼり込みの帯 ---- */
+.b44-filters[hidden],.b44-areas[hidden]{display:none!important;}
 .b44-filters{
   display:flex;flex-wrap:wrap;align-items:center;gap:8px;
   background:hsl(var(--b44-card));padding:12px;border-radius:12px;
@@ -2047,6 +2048,65 @@ body{
 .b44-empty p{margin-top:8px;color:hsl(var(--b44-muted-foreground));font-size:14px;}
 
 .buildtag{color:hsl(var(--b44-muted-foreground) / .7);padding:0;font-size:11px;}
+/* ---- 支社を手で決めるボタン（未分類のカードに出ます）---- */
+.b44-pick{
+  display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:8px;
+  padding:8px;border-radius:6px;background:hsl(var(--b44-accent));
+}
+.b44-pick-t{font-size:12px;font-weight:600;color:#8a5200;white-space:nowrap;}
+.b44-pick-b{
+  height:26px;padding:0 10px;border-radius:980px;cursor:pointer;
+  border:1px solid hsl(var(--b44-primary));background:hsl(var(--b44-card));
+  font-family:inherit;font-size:12px;font-weight:600;color:#8a5200;
+}
+.b44-pick-b:hover{background:hsl(var(--b44-primary));color:#fff;}
+
+/* ---- ゴミ箱 ---- */
+#list.b44-gomi-wrap{
+  display:block;background:transparent;box-shadow:none;border:0;margin:0;padding:0;
+}
+.b44-gomi-note{margin-bottom:16px;}
+.b44-gomi-list{
+  display:grid;grid-template-columns:1fr;gap:12px;
+}
+@media (min-width:900px){ .b44-gomi-list{grid-template-columns:repeat(2,minmax(0,1fr));} }
+.b44-gomi .b44-c-ico{background:hsl(var(--b44-muted));}
+.b44-gomi .b44-c-ico svg{color:hsl(var(--b44-muted-foreground));}
+.b44-gomi.doubt .b44-c-ico{background:hsl(var(--b44-accent));}
+.b44-gomi.doubt .b44-c-ico svg{color:hsl(var(--b44-primary));}
+.b44-gomi{cursor:default;}
+.b44-gomi:hover{box-shadow:0 1px 2px 0 rgba(0,0,0,.05);}
+.b44-gomi-b{
+  font-size:13px;line-height:1.7;color:hsl(var(--b44-muted-foreground));
+  margin:0 0 8px;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
+.b44-gomi .b44-c-foot{margin-top:10px;gap:10px;}
+.b44-gomi .unbtn{flex:none;}
+
+/* ---- 覚えた振り分け ---- */
+.b44-mem{
+  margin-left:8px;height:32px;padding:0 12px;border-radius:6px;cursor:pointer;
+  border:1px dashed hsl(var(--b44-primary));background:hsl(var(--b44-accent));
+  font-family:inherit;font-size:13px;font-weight:600;color:#8a5200;
+}
+.b44-mem:hover{background:hsl(var(--b44-primary));color:#fff;border-style:solid;}
+.b44-memrow{
+  display:flex;align-items:center;gap:10px;padding:8px 0;
+  border-bottom:1px solid hsl(var(--b44-border));font-size:14px;
+}
+.b44-memrow:last-child{border-bottom:0;}
+.b44-memrow .nm{flex:1;min-width:0;overflow-wrap:anywhere;}
+.b44-memrow .ar{
+  font-weight:600;color:hsl(var(--b44-foreground));white-space:nowrap;
+  background:hsl(var(--b44-accent));border-radius:4px;padding:2px 8px;font-size:12px;
+}
+.b44-memrow .x{
+  width:28px;height:28px;border-radius:6px;border:0;background:transparent;cursor:pointer;
+  color:hsl(var(--b44-muted-foreground));font-size:16px;line-height:1;flex:none;
+}
+.b44-memrow .x:hover{background:hsl(var(--b44-muted));color:hsl(var(--b44-destructive));}
+
 
 /* ============================================================
  *  上の帯（src/components/Layout.jsx）
@@ -2353,8 +2413,8 @@ header .badge.live{
           <span>案件<span class="b44-nn" id="nList"></span></span>
         </button>
         <button class="b44-nv" id="tabEigyou" type="button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
-          <span>営業<span class="b44-nn" id="nEigyou"></span></span>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/></svg>
+          <span>ゴミ箱<span class="b44-nn" id="nEigyou"></span></span>
         </button>
         <button class="b44-nv" id="tabAnalytics" type="button">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 3v16a2 2 0 0 0 2 2h16"/><path d="M18 17V9"/><path d="M13 17V5"/><path d="M8 17v-3"/></svg>
@@ -2412,6 +2472,8 @@ header .badge.live{
       <select class="b44-sel w32" id="fKind" aria-label="用件"></select>
       <select class="b44-sel w44" id="fBldg" aria-label="物件"></select>
       <button class="b44-ghost" id="fClear" type="button" hidden>クリア</button>
+      <!-- 手で決めた支社。0件のときは出しません -->
+      <button class="b44-mem" id="bMem" type="button" hidden></button>
       <div class="b44-fcount" id="count"></div>
     </div>
 
@@ -2537,6 +2599,29 @@ header .badge.live{
 <div class="toast" id="toast"></div>
 
 <!-- 集中編集：返信本文をクリックすると開きます（ui-2026-08-19i） -->
+<!-- 手で決めた支社の一覧。取り消しと、写して送ることができます -->
+<div class="veil" id="memVeil" role="dialog" aria-modal="true" aria-label="覚えた振り分け">
+  <div class="zen" style="width:min(560px,94vw);max-height:84vh">
+    <div class="zen-head">
+      <h3>覚えた振り分け</h3>
+      <p class="meta">この端末だけに覚えています。他の方の画面には出ません</p>
+      <button class="zen-close" id="memClose" type="button">閉じる</button>
+    </div>
+    <div style="padding:18px 22px;overflow:auto">
+      <p class="b44-note" style="margin-bottom:12px">
+        まちがえたものは ✕ で取り消せます。<br>
+        下の「写す」で全部を写してお送りいただければ、
+        こちらで全員の画面に入れます。
+      </p>
+      <div id="memList"></div>
+    </div>
+    <div class="zen-foot">
+      <button class="act" id="memCopy" type="button">全部を写す</button>
+      <span class="order-note" id="memNote"></span>
+    </div>
+  </div>
+</div>
+
 <div class="veil" id="veil" role="dialog" aria-modal="true" aria-label="返信本文の編集">
   <div class="zen">
     <div class="zen-head">
@@ -2682,6 +2767,42 @@ let listTab  = "list";
  *  サーバーが将来 x.area を返すようになれば、そちらを優先します。
  */
 const AREAS = ["福山", "倉敷", "岡山"];
+
+/* ============================================================
+ *  ★★ 手で決めた支社（2026/9/19）
+ *
+ *  HP のフォームで「その他」を選ばれたものや、
+ *  地域が入っていない古い案件は、機械的には分けられません。
+ *  中身を見て人が決められるようにします。
+ *
+ *  ★一度決めると、その物件の他の案件もまとめて分かれます。
+ *  ★覚える先はこの端末です。他の方の画面には反映されません。
+ *    「覚えた振り分け」から写して送っていただければ、
+ *    こちらで全員の画面に入れられます。
+ * ============================================================ */
+const MANUAL_KEY = "crm.bldgArea.v1";
+let MANUAL = {};
+try { MANUAL = JSON.parse(localStorage.getItem(MANUAL_KEY) || "{}") || {}; }
+catch (e) { MANUAL = {}; }
+
+function manualSave() {
+  try { localStorage.setItem(MANUAL_KEY, JSON.stringify(MANUAL)); } catch (e) {}
+}
+/* 物件名で覚えます。物件名が無いものは、その行だけ覚えます */
+function manualKeyOf(x) {
+  const nm = bldgKey(splitBldg(x && x.building).name);
+  return nm.length >= 2 ? nm : ("#" + ((x && x.rowNo) || ""));
+}
+function manualArea(x) {
+  const k = manualKeyOf(x);
+  return (k && MANUAL[k]) ? MANUAL[k] : "";
+}
+function manualSet(x, area) {
+  const k = manualKeyOf(x);
+  if (!k) return;
+  if (area) MANUAL[k] = area; else delete MANUAL[k];
+  manualSave();
+}
 
 /* ★★ 物件名 → 支社の表（2026/9/19）
  *
@@ -2940,19 +3061,23 @@ function areaOf(x) {
       if (given.indexOf(AREAS[i]) >= 0) return AREAS[i];
     }
   }
-  /* ② 物件名の表。これがいちばん確かです。
-   *   倉敷市老松町・玉島乙島の例外もここで入ります */
+  /* ② 人が見て決めたもの。人の判断が一番強いです */
+  const byM = manualArea(x);
+  if (byM) return byM;
+  /* ③ 物件名の表。
+   *   倉敷市老松町・玉島乙島の例外もここで入ります。
+   *   （お住まいの方は「倉敷市」を選ばれますが、担当は福山本社です） */
   const byB = bldgArea(x && x.building);
   if (byB) return byB;
   const t = [x && x.content, x && x.raw, x && x.subject]
     .map(function (v) { return String(v || ""); }).join("\n");
-  /* ③ HP のフォームで選んでいただいた地域。
+  /* ④ HP のフォームで選んでいただいた地域。
    *   これが一番はっきりしています。
    *   ただし②の表のほうが先です。倉敷市老松町・玉島乙島の方は
    *   「倉敷市」を選ばれますが、担当は福山本社だからです。 */
   const byF = areaFromForm(t);
   if (byF) return byF;
-  /* ④ 本文に住所が書かれているときだけ、市名で見分けます */
+  /* ⑤ 本文に住所が書かれているときだけ、市名で見分けます */
   if (!t.trim()) return "";
   for (let i = 0; i < AREA_WORDS.length; i++) {
     const nm = AREA_WORDS[i][0], ws = AREA_WORDS[i][1];
@@ -3223,6 +3348,18 @@ function cardHtml(x, done, wait) {
 
   const bldg = (bp.name || "物件名なし") + (room ? " / " + room + "号室" : "");
 
+  /* ★支社が分からないものは、ここで決められるようにします。
+   *  本文を見てから押していただくことを想定しています。
+   *  一度押せば、同じ物件の他の案件もまとめて分かれます。 */
+  const pick = areaOf(x) ? "" :
+      '<div class="b44-pick">'
+    +   '<span class="b44-pick-t">どの支社？</span>'
+    +   AREAS.map(function (a) {
+          return '<button type="button" class="b44-pick-b" data-pick="' + esc(a) + '">'
+               + esc(a) + '</button>';
+        }).join("")
+    + '</div>';
+
   return '<div class="b44-c" tabindex="0" role="button" data-row="' + x.rowNo + '">'
        +   '<div class="b44-c-top">'
        +     '<div class="b44-c-ico">' + topicIconSvg(kind) + '</div>'
@@ -3237,6 +3374,7 @@ function cardHtml(x, done, wait) {
        +     '<span class="b44-c-kind">' + esc(kind) + '</span>'
        +     '<span class="b44-c-step">ステップ ' + (ji + 1) + '/' + FLOW_STEPS.length + '</span>'
        +   '</div>'
+       +   pick
        +   '<div class="b44-c-bar">' + bar + '</div>'
        +   '<div class="b44-c-foot">'
        +     '<span class="b44-c-now">' + b44Icon("clock") + esc(FLOW_STEPS[ji] || "") + '</span>'
@@ -3245,62 +3383,67 @@ function cardHtml(x, done, wait) {
        + '</div>';
 }
 
+/* ============================================================
+ *  ★★ ゴミ箱（2026/9/19）
+ *
+ *  営業メールは、受けた時点でここに入ります。
+ *  未返信の一覧には一切出ませんし、返信案も作りません。
+ *  お客様からの問い合わせが混ざっていたときだけ、
+ *  「これは営業ではない」で戻します。
+ * ============================================================ */
 function eigyouCard(x) {
-  const cls = x.flag === "疑い" ? "doubt" : "";
-  /* ★ここも一覧と同じ並びにします。左に「営業」の絵と文字を置き、
-   *   目を通さなくても、返信せずに完了へ送るものだと分かるようにします */
-  return '<div class="card eigyou" data-row="' + x.rowNo + '">'
-       +   '<div class="crow">'
-       +     '<div class="cico">'
-       +       '<span class="ic">' + topicIconSvg("営業") + '</span>'
-       +       '<span class="ct">営業</span>'
+  const doubt = x.flag === "疑い" ? " doubt" : "";
+  return '<div class="b44-c b44-gomi' + doubt + '" data-row="' + x.rowNo + '">'
+       +   '<div class="b44-c-top">'
+       +     '<div class="b44-c-ico">' + b44Icon("trash") + '</div>'
+       +     '<div class="b44-c-t">'
+       +       '<h4>' + esc(x.subject || "（件名なし）") + '</h4>'
+       +       '<div class="b44-c-area">' + b44Icon("mail") + esc(x.from || "") + '</div>'
        +     '</div>'
-       +     '<div class="cbody">'
-       +       '<div class="card-top">'
-       +         '<span class="flag ' + cls + '">' + esc(x.flag) + '</span>'
-       +         '<span class="bldg">' + esc(x.subject || "（件名なし）") + '</span>'
-       +       '</div>'
-       +       '<div class="card-top"><span class="time">' + esc(x.received) + '　'
-       +         esc(x.from) + '</span></div>'
-       +       '<p class="snip">' + esc(x.content) + '</p>'
-       +       (x.reason ? '<p class="reason">判定の根拠：' + esc(x.reason) + '</p>' : "")
-       +       '<button class="unbtn" type="button">営業ではない（承認待ちに戻す）</button>'
-       +     '</div>'
+       +     '<span class="b44-c-pri' + (doubt ? " warn" : "") + '">' + esc(x.flag || "営業") + '</span>'
+       +   '</div>'
+       +   '<p class="b44-gomi-b">' + esc(String(x.content || "").slice(0, 160)) + '</p>'
+       +   (x.reason ? '<p class="b44-note">判定の根拠：' + esc(x.reason) + '</p>' : "")
+       +   '<div class="b44-c-foot">'
+       +     '<span class="b44-c-now">' + b44Icon("clock") + esc(x.received || "") + '</span>'
+       +     '<button class="unbtn b44-outbtn" type="button">これは営業ではない</button>'
        +   '</div>'
        + '</div>';
 }
 
 async function drawEigyou() {
-  $("tabList").className   = "tab";
-  $("tabEigyou").className = "tab on";
-  $("tabAnalytics").className = "tab";
-
-  $("list").innerHTML = '<div class="empty">読み込んでいます…</div>';
+  $("list").className = "b44-gomi-wrap";
+  $("list").innerHTML = '<div class="b44-col-e">読み込んでいます…</div>';
   let rows = [];
   try {
     const r = await api({ mode: "eigyou" });
     rows = (r && r.rows) || [];
     $("nEigyou").textContent = rows.length;
   } catch (e) {
-    $("list").innerHTML = '<div class="empty">読み込めませんでした</div>';
+    $("list").innerHTML = '<div class="b44-col-e">読み込めませんでした</div>';
     return;
   }
+  $("count").textContent = rows.length + "件表示";
 
-  const note = '<div class="eigyou-note">'
-    + '営業メールとして自動で弾いたものです。承認画面には出ていません。<br>'
-    + 'お客様からの問い合わせが混ざっていたら、下のボタンで戻してください。'
-    + '戻すと返信案が作られ、承認待ちに並びます。</div>';
+  const note = '<div class="b44-card b44-gomi-note">'
+    + '<h2>ゴミ箱</h2>'
+    + '<p class="b44-note">営業メールは、受けた時点で自動でここに入ります。'
+    + '案件の一覧には出ませんし、返信案も作りません。<br>'
+    + 'お客様からの問い合わせが混ざっていたら、'
+    + '「これは営業ではない」を押してください。'
+    + '返信案が作られ、未返信に並びます。</p></div>';
 
   if (!rows.length) {
-    $("list").innerHTML = note + '<div class="empty">営業と判定したものはありません</div>';
+    $("list").innerHTML = note
+      + '<div class="b44-col-e">営業と判定したものはありません</div>';
     return;
   }
-
-  $("list").innerHTML = note + rows.map(eigyouCard).join("");
+  $("list").innerHTML = note + '<div class="b44-gomi-list">'
+    + rows.map(eigyouCard).join("") + '</div>';
 
   Array.prototype.forEach.call($("list").querySelectorAll(".unbtn"), function (b) {
     b.addEventListener("click", async function () {
-      const card = b.closest(".card");
+      const card = b.closest(".b44-c");
       const n = Number(card.dataset.row);
       if (!confirm("この案件を承認待ちに戻します。\n返信案が作られ、通常の流れに乗ります。\n\nよろしいですか？")) return;
       b.disabled = true; b.textContent = "戻しています…";
@@ -3313,11 +3456,11 @@ async function drawEigyou() {
           if (!isNaN(now) && now > 0) $("nEigyou").textContent = now - 1;
           toast("承認待ちに戻しました。返信案ができるまで数分かかります。");
         } else {
-          b.disabled = false; b.textContent = "営業ではない（承認待ちに戻す）";
+          b.disabled = false; b.textContent = "これは営業ではない";
           toast((r && r.error) || "戻せませんでした", true);
         }
       } catch (e) {
-        b.disabled = false; b.textContent = "営業ではない（承認待ちに戻す）";
+        b.disabled = false; b.textContent = "これは営業ではない";
         toast(e.message, true);
       }
     });
@@ -3787,7 +3930,8 @@ const B44_ICONS = {
   user:  '<path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>',
   mail:  '<rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>',
   tag:   '<path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/>',
-  file:  '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>'
+  file:  '<path d="M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z"/><path d="M14 2v4a2 2 0 0 0 2 2h4"/>',
+  trash: '<path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 11v6"/><path d="M14 11v6"/>'
 };
 function b44Icon(name, cls) {
   const d = B44_ICONS[name] || "";
@@ -3925,6 +4069,12 @@ function drawList() {
   $("tabEigyou").className    = "b44-nv" + (listTab === "eigyou" ? " on" : "");
   $("tabAnalytics").className = "b44-nv" + (listTab === "stats"  ? " on" : "");
 
+  /* ゴミ箱と分析のときは、案件のためのエリアカードと
+     しぼり込みをしまいます。件数がちぐはぐに見えるためです */
+  const other = (listTab !== "list");
+  $("areatabs").hidden = other;
+  document.querySelector(".b44-filters").hidden = other;
+
   if (listTab === "eigyou") { $("list").className = ""; drawEigyou(); return; }
   if (listTab === "stats")  { $("list").className = ""; drawStats();  return; }
 
@@ -3942,6 +4092,7 @@ function drawList() {
 
   const shown = src.open.length + src.wait.length + src.done.length;
   $("count").textContent = shown + "件表示";
+  drawMem();
 
   if (!shown) {
     $("list").className = "";
@@ -3980,6 +4131,22 @@ function drawList() {
     el.addEventListener("click", function () { openDetail(n); });
     el.addEventListener("keydown", function (e) {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openDetail(n); }
+    });
+  });
+
+  /* 支社を手で決める。カードが開かないように止めます */
+  Array.prototype.forEach.call($("list").querySelectorAll(".b44-pick-b"), function (b) {
+    b.addEventListener("click", function (ev) {
+      ev.stopPropagation();
+      const n = Number(b.closest(".b44-c").dataset.row);
+      const x = listOpen.concat(listWait, listDone)
+        .filter(function (r) { return r.rowNo === n; })[0];
+      if (!x) return;
+      manualSet(x, b.getAttribute("data-pick"));
+      const nm = splitBldg(x.building).name;
+      toast(nm ? ("「" + nm + "」を " + b.getAttribute("data-pick") + " にしました")
+               : (b.getAttribute("data-pick") + " にしました"));
+      drawList();
     });
   });
 }
@@ -4905,6 +5072,41 @@ async function dropAttach(id) {
   } catch (e) { setStatus("bad", "はずせませんでした\n理由：" + e.message); }
 }
 
+/* 覚えた振り分けを描きます */
+function drawMem() {
+  const keys = Object.keys(MANUAL);
+  const b = $("bMem");
+  b.hidden = !keys.length;
+  b.textContent = "覚えた振り分け " + keys.length;
+  if (!$("memVeil").classList.contains("on")) return;
+  $("memList").innerHTML = keys.length
+    ? keys.sort().map(function (k) {
+        return '<div class="b44-memrow">'
+             +   '<span class="nm">' + esc(k.charAt(0) === "#" ? ("行 " + k.slice(1)) : k) + '</span>'
+             +   '<span class="ar">' + esc(MANUAL[k]) + '</span>'
+             +   '<button class="x" type="button" data-k="' + esc(k) + '" aria-label="取り消す">✕</button>'
+             + '</div>';
+      }).join("")
+    : '<p class="b44-note">まだありません</p>';
+  Array.prototype.forEach.call($("memList").querySelectorAll(".x"), function (x) {
+    x.addEventListener("click", function () {
+      delete MANUAL[x.getAttribute("data-k")];
+      manualSave(); drawMem(); drawList();
+    });
+  });
+}
+
+function memOpen() {
+  $("memVeil").classList.add("on");
+  $("memVeil").setAttribute("data-open", "true");
+  $("memNote").textContent = "";
+  drawMem();
+}
+function memClose() {
+  $("memVeil").classList.remove("on");
+  $("memVeil").setAttribute("data-open", "false");
+}
+
 /* ---------- 起動 ---------- */
 /* ヒーローの「3日以上たっている」を押すと、そのぶんだけになります */
 $("btnLate").addEventListener("click", function () {
@@ -4959,6 +5161,28 @@ $("dFile").addEventListener("change", function (e) {
 });
 $("back").addEventListener("click", backToList);
 $("bWrite").addEventListener("click", openWriter);
+$("bMem").addEventListener("click", memOpen);
+$("memClose").addEventListener("click", memClose);
+$("memVeil").addEventListener("mousedown", function (e) {
+  if (e.target === $("memVeil")) memClose();
+});
+$("memCopy").addEventListener("click", function () {
+  const t = Object.keys(MANUAL).sort().map(function (k) {
+    return k + "\uFF1A" + MANUAL[k];
+  }).join("\n");
+  const done = function () { $("memNote").textContent = "\u5199\u3057\u307e\u3057\u305f\u3002\u8cbc\u308a\u4ed8\u3051\u3066\u304a\u9001\u308a\u304f\u3060\u3055\u3044"; };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(t).then(done, function () {
+      $("memNote").textContent = "\u5199\u305b\u307e\u305b\u3093\u3067\u3057\u305f";
+    });
+  } else {
+    const a = document.createElement("textarea");
+    a.value = t; document.body.appendChild(a); a.select();
+    try { document.execCommand("copy"); done(); }
+    catch (e) { $("memNote").textContent = "\u5199\u305b\u307e\u305b\u3093\u3067\u3057\u305f"; }
+    a.remove();
+  }
+});
 $("bHome").addEventListener("click", function (e) {
   e.preventDefault();
   if (!$("detailView").classList.contains("hide")) backToList();
