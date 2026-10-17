@@ -2649,7 +2649,12 @@ header .badge.live{
 
 
 <script>
-const API = "https://script.google.com/macros/s/AKfycbws85BB01CV2U4yJO6z3gHnH5ZjQp0rPviQ_XTpGR2c5p5uxJUKCwxz_M47y3TViLD1/exec";
+/* ★2026/10/17 ここに CRM の Apps Script の本物の URL が書かれていました。
+     公開リポジトリなので外し、ブラウザの控え（localStorage）から読む形にしました。
+     使うときは、この画面を開いて検証ツールのコンソールで一度だけ
+       localStorage.setItem("crm_gas_url_v1", "……/exec")
+     を実行してください。 */
+const API = (function(){ try{ return localStorage.getItem("crm_gas_url_v1") || ""; }catch(e){ return ""; } })();
 
 /* ★★ 合言葉（2026/9/18）
  *
